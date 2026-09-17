@@ -1,0 +1,66 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: istpet-bar:latest
+    container_name: istpet_bar_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:80"
+    environment:
+      APP_NAME: "${APP_NAME:-ISTPET Bar}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_KEY: "${APP_KEY}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "${APP_URL:-http://localhost:8000}"
+      DB_CONNECTION: "${DB_CONNECTION:-mysql}"
+      DB_HOST: "${DB_HOST:-db}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_DATABASE: "${DB_DATABASE:-istpet_bar}"
+      DB_USERNAME: "${DB_USERNAME:-istpet_user}"
+      DB_PASSWORD: "${DB_PASSWORD:-SecretPassword2026!}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-database}"
+      CACHE_STORE: "${CACHE_STORE:-database}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
+      RUN_MIGRATIONS: "${RUN_MIGRATIONS:-true}"
+      RUN_SEEDERS: "${RUN_SEEDERS:-false}"
+    volumes:
+      - storage_data:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - istpet_network
+
+  db:
+    image: mysql:8.0
+    container_name: istpet_bar_db
+    restart: unless-stopped
+    ports:
+      - "${DB_EXTERNAL_PORT:-3307}:3306"
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE:-istpet_bar}"
+      MYSQL_USER: "${DB_USERNAME:-istpet_user}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-SecretPassword2026!}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-RootSecret2026!}"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - istpet_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-RootSecret2026!}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  storage_data:
+    driver: local
+  db_data:
+    driver: local
+
+networks:
+  istpet_network:
+    driver: bridge
