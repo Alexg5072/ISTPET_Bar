@@ -80,8 +80,12 @@ class Producto extends Model
             ->where('stock_actual', '>', 0);
     }
 
-    public function scopeDeSede(Builder $query, int $sedeId): Builder
+    public function scopeDeSede(Builder $query, ?int $sedeId = null): Builder
     {
+        if (!$sedeId) {
+            return $query;
+        }
+
         return $query->where(function (Builder $subQuery) use ($sedeId) {
             $subQuery->where('sede_id', $sedeId)
                 ->orWhereNull('sede_id');

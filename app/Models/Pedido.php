@@ -63,8 +63,12 @@ class Pedido extends Model
         return $query->whereDate('created_at', today());
     }
 
-    public function scopeDeSede(Builder $query, int $sedeId): Builder
+    public function scopeDeSede(Builder $query, ?int $sedeId = null): Builder
     {
+        if (!$sedeId) {
+            return $query;
+        }
+
         return $query->where('sede_id', $sedeId);
     }
 

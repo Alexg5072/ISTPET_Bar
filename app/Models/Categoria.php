@@ -38,8 +38,12 @@ class Categoria extends Model
         return $query->where('activo', true)->orderBy('orden');
     }
 
-    public function scopeDeSede(Builder $query, int $sedeId): Builder
+    public function scopeDeSede(Builder $query, ?int $sedeId = null): Builder
     {
+        if (!$sedeId) {
+            return $query;
+        }
+
         return $query->where(
             fn (Builder $subQuery) => $subQuery
                 ->where('sede_id', $sedeId)

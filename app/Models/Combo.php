@@ -62,8 +62,12 @@ class Combo extends Model
         return $query->where('activo', true);
     }
 
-    public function scopeDeSede(Builder $query, int $sedeId): Builder
+    public function scopeDeSede(Builder $query, ?int $sedeId = null): Builder
     {
+        if (!$sedeId) {
+            return $query;
+        }
+
         return $query->where(fn ($q) => $q->where('sede_id', $sedeId)->orWhereNull('sede_id'));
     }
 }

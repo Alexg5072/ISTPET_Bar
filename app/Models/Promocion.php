@@ -71,8 +71,12 @@ class Promocion extends Model
         return $query->where('activo', true)->orderBy('orden');
     }
 
-    public function scopeDeSede(Builder $query, int $sedeId): Builder
+    public function scopeDeSede(Builder $query, ?int $sedeId = null): Builder
     {
+        if (!$sedeId) {
+            return $query;
+        }
+
         return $query->where(function (Builder $subquery) use ($sedeId) {
             $subquery->where('sede_id', $sedeId)
                 ->orWhereNull('sede_id');
