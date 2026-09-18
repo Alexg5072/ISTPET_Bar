@@ -68,6 +68,7 @@
             @hasanyrole('superadmin|admin')
                 <p class="sb-section" style="margin-top:1.2rem; color:rgba(255,255,255,0.45);">Administración</p>
                 <x-admin.nav-item route="admin.usuarios.index" icon="usuarios" label="Usuarios" />
+                <x-admin.nav-item route="admin.qr-cuentas.index" icon="qr" label="Cuentas QR" />
             @endhasanyrole
             @role('superadmin')
                 <x-admin.nav-item route="admin.configuracion.index" icon="configuracion" label="Configuración" />
@@ -79,7 +80,6 @@
                 <x-admin.nav-item-extra route="admin.areas-venta.index" icon="areas-venta" label="Áreas de Venta" />
                 <x-admin.nav-item-extra route="admin.invitados.index"   icon="invitados" label="Invitados" />
                 <x-admin.nav-item-extra route="admin.inventario.index"  icon="inventario" label="Inventario Av." />
-                <x-admin.nav-item-extra route="admin.qr-cuentas.index"  icon="qr" label="Cuentas QR" />
             @endhasanyrole
         </nav>
 

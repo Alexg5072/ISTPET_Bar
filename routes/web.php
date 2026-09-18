@@ -107,6 +107,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/promociones/reordenar', [PromocionController::class, 'reordenar'])->name('promociones.reordenar');
         Route::resource('usuarios', UsuarioController::class);
         Route::patch('/usuarios/{usuario}/toggle', [UsuarioController::class, 'toggle'])->name('usuarios.toggle');
+        Route::resource('qr-cuentas', QrCuentaController::class);
     });
 
     // ── Solo Superadmin ────────────────────────────────────────────
@@ -139,13 +140,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::middleware('modulo:inventario_avanzado')->prefix('inventario')->name('inventario.')->group(function () {
         Route::get('/',           [InventarioController::class, 'index'])->name('index');
-    });
-
-    Route::middleware('modulo:qr_multiple')->prefix('qr-cuentas')->name('qr-cuentas.')->group(function () {
-        Route::get('/',           [QrCuentaController::class, 'index'])->name('index');
-        Route::resource('/', QrCuentaController::class)->except(['index'])->names([
-            'create' => 'create', 'store' => 'store',
-            'edit' => 'edit', 'update' => 'update', 'destroy' => 'destroy',
-        ]);
     });
 });

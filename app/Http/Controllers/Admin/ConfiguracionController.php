@@ -58,32 +58,7 @@ class ConfiguracionController extends Controller
             $guardados[$clave] = $valor;
         }
 
-        if ($request->hasFile('imagen_qr')) {
-            $request->validate([
-                'imagen_qr' => 'image|mimes:jpg,jpeg,png,webp|max:3072',
-            ]);
-
-            $file = $request->file('imagen_qr');
-            $ext  = $file->getClientOriginalExtension() ?: 'jpg';
-            $filename = 'deuna-qr-' . time() . '.' . $ext;
-
-            $file->storeAs('qr', $filename, 'public');
-            $file->storeAs('qr', 'DEUNA.jpg', 'public');
-
-            $titular = $guardados['pago.titular_deuna']
-                ?? $submitted['pago_titular_deuna']
-                ?? Configuracion::get('pago.titular_deuna', 'Bar ISTPET');
-
-            \App\Models\QrCuenta::updateOrCreate(
-                ['is_global' => true],
-                [
-                    'nombre'         => 'DeUna Bar ISTPET',
-                    'titular'        => $titular,
-                    'imagen_qr_path' => 'qr/' . $filename,
-                    'activo'         => true,
-                ]
-            );
-        } elseif (!empty($guardados['pago.titular_deuna'])) {
+        if (!empty($guardados['pago.titular_deuna'])) {
             \App\Models\QrCuenta::where('is_global', true)->update([
                 'titular' => $guardados['pago.titular_deuna'],
             ]);
