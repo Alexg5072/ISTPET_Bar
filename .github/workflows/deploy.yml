@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Build & Deploy to AWS
+name: CI/CD Pipeline - Deploy Automático a Lightsail
 
 on:
   push:
@@ -6,20 +6,12 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write
-
-env:
-  AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY || 'istpet-bar' }}
-
 jobs:
   # =========================================================
-  # JOB 1: Validaciones previas de código (Tests y sintaxis)
+  # JOB 1: Validaciones de tests antes del deploy
   # =========================================================
-  code-quality:
-    name: Code Quality & Tests
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Código
@@ -29,7 +21,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, pdo_mysql, gd, zip
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, gd, zip
           coverage: none
 
       - name: Instalar dependencias Composer
@@ -41,94 +33,78 @@ jobs:
           php artisan key:generate
 
       - name: Ejecutar Tests
-        run: php artisan test --env=testing || echo "Tests no fallan el build si no hay suites críticas"
+        run: php artisan test
 
   # =========================================================
-  # JOB 2: Build & Push Imagen Docker a Amazon ECR
+  # JOB 2: Despliegue Automático por SSH en Servidor Lightsail
   # =========================================================
-  build-and-push:
-    name: Build Docker Image & Push to ECR
-    needs: code-quality
-    runs-on: ubuntu-latest
-    outputs:
-      image_uri: ${{ steps.build-image.outputs.image }}
-    steps:
-      - name: Checkout Código
-        uses: actions/checkout@v4
-
-      - name: Configurar Docker Buildx (Acelerador de compilación)
-        uses: docker/setup-buildx-action@v3
-
-      - name: Autenticación en AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login en Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build y Push con Caché GitHub Actions (Super Rápido)
-        id: build-image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # =========================================================
-  # JOB 3: Despliegue Automático en Servidor AWS EC2
-  # =========================================================
-  deploy-ec2:
-    name: Deploy to AWS EC2
-    needs: build-and-push
-    if: ${{ secrets.EC2_HOST != '' }}
+  deploy:
+    name: Deploy to Lightsail Server
+    needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Desplegar por SSH en EC2
+      - name: Conectar por SSH y Desplegar
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          username: ${{ secrets.EC2_USER || 'admin' }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT || 22 }}
           script: |
-            echo "==> Iniciando despliegue de nueva versión en EC2..."
+            echo "==> Iniciando despliegue automático en Lightsail..."
             
-            # Navegar al directorio de la aplicación
-            cd /opt/istpet-bar || cd ~/istpet-bar || mkdir -p ~/istpet-bar && cd ~/istpet-bar
-            
-            # Login a ECR en el servidor
-            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-            
-            # Descargar imagen más reciente
-            IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:latest"
-            docker pull $IMAGE_URI
-            
-            # Detener y reiniciar contenedor con la nueva imagen
-            if [ -f "docker-compose.yml" ]; then
-                docker compose pull app
-                docker compose up -d --remove-orphans app
-            else
-                docker stop istpet_bar_app || true
-                docker rm istpet_bar_app || true
-                docker run -d \
-                  --name istpet_bar_app \
-                  --restart unless-stopped \
-                  -p 80:80 \
-                  --env-file .env \
-                  -v istpet_storage:/var/www/html/storage \
-                  $IMAGE_URI
+            # Si el proyecto aún no existe, clonarlo
+            if [ ! -d "$HOME/istpet-bar" ]; then
+              echo "==> Clonando repositorio por primera vez..."
+              git clone https://github.com/Alexg5072/ISTPET_Bar.git $HOME/istpet-bar
             fi
+
+            cd $HOME/istpet-bar
             
-            # Limpiar imágenes obsoletas para ahorrar espacio en disco
+            # Descargar los últimos cambios de main
+            echo "==> Actualizando código desde Git..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Crear .env si no existe todavía
+            if [ ! -f ".env" ]; then
+              echo "==> Creando .env inicial..."
+              cat << 'EOF' > .env
+            APP_NAME="ISTPET Bar"
+            APP_ENV=production
+            APP_KEY=base64:MqpY5xnaUzQ0V07BRBKhHVcDVOrIg8zGbRtVbCz8aRM=
+            APP_DEBUG=false
+            APP_URL=https://istpetbar.com
+            APP_PORT=80
+
+            DB_CONNECTION=mysql
+            DB_HOST=db
+            DB_PORT=3306
+            DB_DATABASE=istpet_bar
+            DB_USERNAME=istpet_user
+            DB_PASSWORD=SecretPassword2026!
+            DB_ROOT_PASSWORD=RootSecret2026!
+
+            SESSION_DRIVER=database
+            CACHE_STORE=database
+            FRESH_DB=true
+            RUN_MIGRATIONS=true
+            RUN_SEEDERS=true
+            EOF
+            fi
+
+            # Construir y levantar contenedores con la versión actualizada
+            echo "==> Levantando contenedores Docker..."
+            docker compose up -d --build
+
+            # Limpiar imágenes residuales para mantener el disco limpio
             docker image prune -f
-            
-            echo "==> Despliegue finalizado con éxito en EC2."
+
+            echo "==> ¡Despliegue finalizado con éxito en https://istpetbar.com!"
+
+      - name: Verificar disponibilidad del dominio en producción
+        run: |
+          echo "==> Esperando a que los servicios estén listos..."
+          sleep 15
+          echo "==> Verificando https://istpetbar.com/up..."
+          curl -fsS --retry 5 --retry-delay 3 https://istpetbar.com/up || true

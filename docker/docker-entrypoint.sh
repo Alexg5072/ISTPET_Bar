@@ -38,17 +38,26 @@ if [ "$DB_CONNECTION" = "sqlite" ] || [ -z "$DB_CONNECTION" ]; then
     chmod 664 "$SQLITE_DB" || true
 fi
 
-# Migraciones automáticas (activado por defecto si RUN_MIGRATIONS!=false)
-if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
-    echo "==> Ejecutando migraciones de Laravel..."
-    php artisan migrate --force || echo "Aviso: Error en migrate, continuando..."
+# Recreación completa o migraciones incrementales
+if [ "${FRESH_DB:-false}" = "true" ]; then
+    echo "==> Recreando base de datos desde cero con datos de prueba (migrate:fresh --seed)..."
+    php artisan migrate:fresh --seed --force || echo "Aviso: Error en migrate:fresh, continuando..."
+else
+    # Migraciones automáticas (activado por defecto si RUN_MIGRATIONS!=false)
+    if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+        echo "==> Ejecutando migraciones de Laravel..."
+        php artisan migrate --force || echo "Aviso: Error en migrate, continuando..."
+    fi
+
+    # Seeders automáticos (activado solo si RUN_SEEDERS=true)
+    if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+        echo "==> Ejecutando seeders de base de datos..."
+        php artisan db:seed --force || echo "Aviso: Error en seeders, continuando..."
+    fi
 fi
 
-# Seeders automáticos (activado solo si RUN_SEEDERS=true)
-if [ "${RUN_SEEDERS:-false}" = "true" ]; then
-    echo "==> Ejecutando seeders de base de datos..."
-    php artisan db:seed --force || echo "Aviso: Error en seeders, continuando..."
-fi
+# Limpiar caché de permisos Spatie para evitar roles obsoletos en memoria
+php artisan permission:cache-reset || true
 
 # Optimización y caché de Laravel para producción
 if [ "${APP_ENV:-production}" = "production" ]; then

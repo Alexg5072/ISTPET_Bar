@@ -7,7 +7,7 @@ services:
     container_name: istpet_bar_app
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8000}:80"
+      - "${APP_PORT:-80}:80"
     environment:
       APP_NAME: "${APP_NAME:-ISTPET Bar}"
       APP_ENV: "${APP_ENV:-production}"
@@ -25,6 +25,7 @@ services:
       QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
       RUN_MIGRATIONS: "${RUN_MIGRATIONS:-true}"
       RUN_SEEDERS: "${RUN_SEEDERS:-false}"
+      FRESH_DB: "${FRESH_DB:-false}"
     volumes:
       - storage_data:/var/www/html/storage
     depends_on:
