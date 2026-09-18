@@ -52,7 +52,7 @@ $opcionesConexion = ['usb' => 'USB', 'red' => 'Red (Wi-Fi / Ethernet)', 'bluetoo
 $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm — Estándar', '112mm' => '112 mm — Tickets grandes'];
 @endphp
 
-<form id="config-form" action="{{ route('admin.configuracion.update') }}" method="POST" class="space-y-6 pt-2">
+<form id="config-form" action="{{ route('admin.configuracion.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6 pt-2">
     @csrf
 
     @foreach($grupos as $grupo => $configs)
@@ -174,6 +174,50 @@ $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm �
             </div>
             @endforeach
 
+            {{-- Panel extra pagos: Carga directa de Código QR DeUna --}}
+            @if($grupo === 'pagos')
+            @php
+                $qrActual = \App\Models\QrCuenta::activa();
+            @endphp
+            <div class="px-6 py-5" style="background:rgba(201,168,76,0.03);border-top:1px solid rgba(201,168,76,0.12);">
+                <div class="flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between">
+                    <div class="flex gap-4 items-center">
+                        <div style="width:70px;height:70px;border-radius:0.75rem;background:white;padding:0.4rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);overflow:hidden;flex-shrink:0;">
+                            @if($qrActual && $qrActual->qr_url)
+                                <img src="{{ $qrActual->qr_url }}" id="preview-qr-img" alt="QR DeUna" style="width:100%;height:100%;object-fit:contain;">
+                            @else
+                                <div id="preview-qr-placeholder" style="color:#9ca3af;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                                    <x-admin.icon name="qr" class="w-7 h-7 opacity-60 text-gray-400" />
+                                    <span style="font-size:0.5rem;font-weight:700;margin-top:2px;">Sin QR</span>
+                                </div>
+                                <img src="" id="preview-qr-img" alt="QR DeUna" style="display:none;width:100%;height:100%;object-fit:contain;">
+                            @endif
+                        </div>
+                        <div>
+                            <div class="font-display font-bold text-sm text-white flex items-center gap-2">
+                                <span>Imagen del Código QR DeUna</span>
+                                @if($qrActual && $qrActual->qr_url)
+                                    <span class="badge badge-success text-[0.65rem] py-0.5">Configurado</span>
+                                @else
+                                    <span class="badge badge-danger text-[0.65rem] py-0.5">No configurado</span>
+                                @endif
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1" style="line-height:1.5;">
+                                Sube la foto o captura del código QR de tu cuenta DeUna para que los clientes lo escaneen en el Kiosco.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="file" name="imagen_qr" id="input-imagen-qr" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewQrConfig(this)">
+                        <button type="button" onclick="document.getElementById('input-imagen-qr').click()" class="btn-ghost text-xs py-2 px-4 flex items-center gap-2 w-full sm:w-auto justify-center">
+                            <x-admin.icon name="qr" class="w-4 h-4 text-amber-400" />
+                            <span>{{ ($qrActual && $qrActual->qr_url) ? 'Cambiar imagen QR' : 'Subir imagen QR' }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             {{-- Panel extra impresora: info visual según conexión --}}
             @if($grupo === 'impresora')
             <div id="info-impresora" class="px-6 py-4"
@@ -244,6 +288,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectConexion = document.getElementById('cfg_impresora_tipo_conexion');
     if (selectConexion) toggleCamposImpresora(selectConexion.value);
 });
+
+function previewQrConfig(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('preview-qr-img');
+            const ph = document.getElementById('preview-qr-placeholder');
+            if (img) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            if (ph) ph.style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 //recarga automatica
 // ── Submit ────────────────────────────────────────────────────────

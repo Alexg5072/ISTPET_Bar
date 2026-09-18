@@ -79,6 +79,7 @@
                 <x-admin.nav-item-extra route="admin.areas-venta.index" icon="areas-venta" label="Áreas de Venta" />
                 <x-admin.nav-item-extra route="admin.invitados.index"   icon="invitados" label="Invitados" />
                 <x-admin.nav-item-extra route="admin.inventario.index"  icon="inventario" label="Inventario Av." />
+                <x-admin.nav-item-extra route="admin.qr-cuentas.index"  icon="qr" label="Cuentas QR" />
             @endhasanyrole
         </nav>
 
