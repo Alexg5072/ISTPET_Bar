@@ -53,8 +53,8 @@ jobs:
           script: |
             echo "==> Iniciando despliegue automático en Lightsail..."
             
-            # Si el proyecto aún no existe, clonarlo
-            if [ ! -d "$HOME/istpet-bar" ]; then
+            # Si el proyecto aún no existe o no es un repo git, clonarlo
+            if [ ! -d "$HOME/istpet-bar/.git" ]; then
               echo "==> Clonando repositorio por primera vez..."
               git clone https://github.com/Alexg5072/ISTPET_Bar.git $HOME/istpet-bar
             fi
