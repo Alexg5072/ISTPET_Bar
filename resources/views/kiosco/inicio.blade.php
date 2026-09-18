@@ -1,220 +1,7 @@
 @extends('layouts.kiosco')
 @section('title', 'ISTPET Bar')
 
-@section('content')
-<div class="kiosco-root">
-
-    {{-- ░░ FONDO CINEMATOGRÁFICO ░░ --}}
-    <div class="bg-scene">
-        <div class="bg-grid"></div>
-        <div class="bg-orb bg-orb-1"></div>
-        <div class="bg-orb bg-orb-2"></div>
-        <div class="bg-orb bg-orb-3"></div>
-        <div class="bg-noise"></div>
-        <div class="bg-vignette"></div>
-    </div>
-
-    {{-- ░░ LÍNEA SUPERIOR ░░ --}}
-    <div class="top-bar">
-        <div class="top-bar-line"></div>
-        <div class="top-bar-glow"></div>
-    </div>
-
-    {{-- ░░ CONTENIDO PRINCIPAL ░░ --}}
-    <main class="main-content">
-
-        {{-- HEADER INSTITUCIONAL --}}
-        <header class="inst-header">
-            <div class="inst-logo-block">
-                <div class="inst-wordmark">
-                    <span class="wm-ist">IST</span><span class="wm-pet">PET</span>
-                </div>
-                <div class="inst-divider"></div>
-                <div class="inst-name">
-                    <div class="inst-name-top">Instituto Superior Tecnológico Mayor</div>
-                    <div class="inst-name-sub">Pedro Traversari</div>
-                </div>
-            </div>
-            <div class="inst-badge">
-                <span class="inst-badge-dot"></span>
-                <span class="inst-badge-text">Sistema de Pedidos — Bar Institucional</span>
-                <span class="inst-badge-dot" style="animation-delay:0.5s"></span>
-            </div>
-        </header>
-
-        {{-- HEADLINE --}}
-        <div class="headline-block">
-            <div class="headline-eyebrow">
-                <div class="eyebrow-line"></div>
-                <span>Selecciona tu sede</span>
-                <div class="eyebrow-line"></div>
-            </div>
-            <h1 class="headline-title">
-                ¿A qué <em>sede</em><br>perteneces?
-            </h1>
-            <p class="headline-sub">Elige tu sede para ver el menú y hacer tu pedido</p>
-        </div>
-
-        {{-- CARDS DE SEDE --}}
-        <div class="sedes-grid">
-            @foreach($sedes as $i => $sede)
-            <a href="{{ route('kiosco.menu', ['sede' => $sede->slug]) }}"
-               class="sede-card sede-card-{{ $sede->slug }}"
-               style="animation-delay: {{ $i * 0.12 + 0.35 }}s">
-
-                {{-- Glow de fondo --}}
-                <div class="card-bg-glow"></div>
-
-                {{-- Patrón geométrico --}}
-                <div class="card-pattern">
-                    @for($r = 0; $r < 5; $r++)
-                        <div class="pattern-row">
-                            @for($c = 0; $c < 8; $c++)
-                                <div class="pattern-dot"></div>
-                            @endfor
-                        </div>
-                    @endfor
-                </div>
-
-                {{-- Línea superior dorada --}}
-                <div class="card-topline"></div>
-
-                {{-- Badge sede --}}
-                <div class="card-badge">
-                    <span>{{ strtoupper($sede->slug === 'instituto' ? 'Instituto' : 'Conducción') }}</span>
-                </div>
-
-                {{-- Número decorativo --}}
-                <div class="card-number">0{{ $i + 1 }}</div>
-
-                {{-- Ícono grande --}}
-                <div class="card-icon-wrap">
-                    <div class="card-icon-ring"></div>
-                    <div class="card-icon flex items-center justify-center">
-                        @if($sede->slug === 'instituto')
-                            <svg class="w-12 h-12 text-amber-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333M4.5 21V10.333"/></svg>
-                        @else
-                            <svg class="w-12 h-12 text-blue-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.948c0-.621-.504-1.125-1.125-1.125H5.625c-.621 0-1.125.504-1.125 1.125v12.25"/></svg>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Texto --}}
-                <div class="card-body">
-                    <h2 class="card-title">
-                        @if($sede->slug === 'instituto')
-                            Instituto<br><span>Tecnológico</span>
-                        @else
-                            Escuela de<br><span>Conducción</span>
-                        @endif
-                    </h2>
-                    <p class="card-desc">{{ $sede->descripcion }}</p>
-                </div>
-
-                {{-- CTA --}}
-                <div class="card-cta">
-                    <span>Entrar al menú</span>
-                    <div class="cta-arrow">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </div>
-
-                {{-- Shimmer hover --}}
-                <div class="card-shimmer"></div>
-            </a>
-            @endforeach
-        </div>
-
-    </main>
-
-    {{-- FOOTER --}}
-    <footer class="kiosco-footer">
-        <span>ISTPET © {{ date('Y') }}</span>
-        <span class="footer-sep">·</span>
-        <span>Sistema de Pedidos v2.0</span>
-    </footer>
-
-    {{-- Botón admin oculto — solo visible si NO es usuario del kiosco --}}
-    @if(!auth()->check() || !auth()->user()->hasRole('usuario'))
-    <a href="{{ route('admin.dashboard') }}" class="admin-btn flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-        <span>Iniciar Sesión</span>
-    </a>
-    @endif
-
-    {{-- Botón registro / sesión --}}
-    @auth
-        @if(auth()->user()->hasRole('usuario'))
-        <button type="button" onclick="abrirMisPedidos()" class="mis-pedidos-btn flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Mis pedidos</span>
-        </button>
-        <div class="user-session-btn flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            <span>{{ explode(' ', auth()->user()->name)[0] }}</span>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;display:inline;">
-                @csrf
-                <button type="submit" style="background:none;border:none;color:inherit;cursor:pointer;font-size:0.72rem;opacity:0.6;padding:0;margin-left:0.25rem;" title="Cerrar sesión">✕</button>
-            </form>
-        </div>
-        @endif
-    @else
-        <a href="{{ route('register') }}" class="register-btn flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-            <span>Registrarse</span>
-        </a>
-    @endauth
-
-</div>
-
-{{-- ═══════════ MODAL MIS PEDIDOS ═══════════ --}}
-@auth
-@if(auth()->user()->hasRole('usuario'))
-<div id="modal-mis-pedidos" class="mp-modal-bg" style="display:none;" onclick="if(event.target===this)cerrarMisPedidos()">
-    <div class="mp-modal" onclick="event.stopPropagation()">
-        <div class="mp-sticky-top">
-            <div class="mp-modal-header">
-                <div>
-                    <div class="mp-modal-title">Mis Pedidos</div>
-                    <div class="mp-modal-sub">Historial de compras de {{ explode(' ', auth()->user()->name)[0] }}</div>
-                </div>
-                <button onclick="cerrarMisPedidos()" class="mp-modal-close">✕</button>
-            </div>
-
-            <div class="mp-filtros">
-                <div class="mp-filtro-group">
-                    <label class="mp-filtro-label">Método de pago</label>
-                    <select id="mp-filtro-metodo" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
-                        <option value="">Todos</option>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="qr_deuna">QR DeUna</option>
-                    </select>
-                </div>
-                <div class="mp-filtro-group">
-                    <label class="mp-filtro-label">Desde</label>
-                    <input type="date" id="mp-filtro-desde" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
-                </div>
-                <div class="mp-filtro-group">
-                    <label class="mp-filtro-label">Hasta</label>
-                    <input type="date" id="mp-filtro-hasta" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
-                </div>
-                <button type="button" class="mp-filtro-clear" onclick="limpiarFiltrosMisPedidos()" title="Quitar filtros">Limpiar</button>
-            </div>
-        </div>
-
-        <div class="mp-modal-body" id="mp-modal-body">
-            <div class="mp-loading">
-                <div class="mp-spinner"></div>
-                <span>Cargando tus pedidos…</span>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-@endauth
+@push('styles')
 <style>
 /* ═══════════════════════════════════════════════════
    VARIABLES
@@ -1020,7 +807,231 @@
     .headline-title { font-size: clamp(2rem, 4vw, 3rem) !important; }
 }
 
+@keyframes toast-in {
+    from { opacity:0; transform:translateX(-50%) translateY(1rem); }
+    to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+@keyframes spin {
+    to { transform:rotate(360deg); }
+}
 </style>
+@endpush
+
+@section('content')
+<div class="kiosco-root">
+
+    {{-- ░░ FONDO CINEMATOGRÁFICO ░░ --}}
+    <div class="bg-scene">
+        <div class="bg-grid"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+    </div>
+
+    {{-- ░░ LÍNEA SUPERIOR ░░ --}}
+    <div class="top-bar">
+        <div class="top-bar-line"></div>
+        <div class="top-bar-glow"></div>
+    </div>
+
+    {{-- ░░ CONTENIDO PRINCIPAL ░░ --}}
+    <main class="main-content">
+
+        {{-- HEADER INSTITUCIONAL --}}
+        <header class="inst-header">
+            <div class="inst-logo-block">
+                <div class="inst-wordmark">
+                    <span class="wm-ist">IST</span><span class="wm-pet">PET</span>
+                </div>
+                <div class="inst-divider"></div>
+                <div class="inst-name">
+                    <div class="inst-name-top">Instituto Superior Tecnológico Mayor</div>
+                    <div class="inst-name-sub">Pedro Traversari</div>
+                </div>
+            </div>
+            <div class="inst-badge">
+                <span class="inst-badge-dot"></span>
+                <span class="inst-badge-text">Sistema de Pedidos — Bar Institucional</span>
+                <span class="inst-badge-dot" style="animation-delay:0.5s"></span>
+            </div>
+        </header>
+
+        {{-- HEADLINE --}}
+        <div class="headline-block">
+            <div class="headline-eyebrow">
+                <div class="eyebrow-line"></div>
+                <span>Selecciona tu sede</span>
+                <div class="eyebrow-line"></div>
+            </div>
+            <h1 class="headline-title">
+                ¿A qué <em>sede</em><br>perteneces?
+            </h1>
+            <p class="headline-sub">Elige tu sede para ver el menú y hacer tu pedido</p>
+        </div>
+
+        {{-- CARDS DE SEDE --}}
+        <div class="sedes-grid">
+            @foreach($sedes as $i => $sede)
+            <a href="{{ route('kiosco.menu', ['sede' => $sede->slug]) }}"
+               class="sede-card sede-card-{{ $sede->slug }}"
+               style="animation-delay: {{ $i * 0.12 + 0.35 }}s">
+
+                {{-- Glow de fondo --}}
+                <div class="card-bg-glow"></div>
+
+                {{-- Patrón geométrico --}}
+                <div class="card-pattern">
+                    @for($r = 0; $r < 5; $r++)
+                        <div class="pattern-row">
+                            @for($c = 0; $c < 8; $c++)
+                                <div class="pattern-dot"></div>
+                            @endfor
+                        </div>
+                    @endfor
+                </div>
+
+                {{-- Línea superior dorada --}}
+                <div class="card-topline"></div>
+
+                {{-- Badge sede --}}
+                <div class="card-badge">
+                    <span>{{ strtoupper($sede->slug === 'instituto' ? 'Instituto' : 'Conducción') }}</span>
+                </div>
+
+                {{-- Número decorativo --}}
+                <div class="card-number">0{{ $i + 1 }}</div>
+
+                {{-- Ícono grande --}}
+                <div class="card-icon-wrap">
+                    <div class="card-icon-ring"></div>
+                    <div class="card-icon flex items-center justify-center">
+                        @if($sede->slug === 'instituto')
+                            <svg class="w-12 h-12 text-amber-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333M4.5 21V10.333"/></svg>
+                        @else
+                            <svg class="w-12 h-12 text-blue-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.948c0-.621-.504-1.125-1.125-1.125H5.625c-.621 0-1.125.504-1.125 1.125v12.25"/></svg>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Texto --}}
+                <div class="card-body">
+                    <h2 class="card-title">
+                        @if($sede->slug === 'instituto')
+                            Instituto<br><span>Tecnológico</span>
+                        @else
+                            Escuela de<br><span>Conducción</span>
+                        @endif
+                    </h2>
+                    <p class="card-desc">{{ $sede->descripcion }}</p>
+                </div>
+
+                {{-- CTA --}}
+                <div class="card-cta">
+                    <span>Entrar al menú</span>
+                    <div class="cta-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                {{-- Shimmer hover --}}
+                <div class="card-shimmer"></div>
+            </a>
+            @endforeach
+        </div>
+
+    </main>
+
+    {{-- FOOTER --}}
+    <footer class="kiosco-footer">
+        <span>ISTPET © {{ date('Y') }}</span>
+        <span class="footer-sep">·</span>
+        <span>Sistema de Pedidos v2.0</span>
+    </footer>
+
+    {{-- Botón admin oculto — solo visible si NO es usuario del kiosco --}}
+    @if(!auth()->check() || !auth()->user()->hasRole('usuario'))
+    <a href="{{ route('admin.dashboard') }}" class="admin-btn flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        <span>Iniciar Sesión</span>
+    </a>
+    @endif
+
+    {{-- Botón registro / sesión --}}
+    @auth
+        @if(auth()->user()->hasRole('usuario'))
+        <button type="button" onclick="abrirMisPedidos()" class="mis-pedidos-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Mis pedidos</span>
+        </button>
+        <div class="user-session-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>{{ explode(' ', auth()->user()->name)[0] }}</span>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;display:inline;">
+                @csrf
+                <button type="submit" style="background:none;border:none;color:inherit;cursor:pointer;font-size:0.72rem;opacity:0.6;padding:0;margin-left:0.25rem;" title="Cerrar sesión">✕</button>
+            </form>
+        </div>
+        @endif
+    @else
+        <a href="{{ route('register') }}" class="register-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            <span>Registrarse</span>
+        </a>
+    @endauth
+
+</div>
+
+{{-- ═══════════ MODAL MIS PEDIDOS ═══════════ --}}
+@auth
+@if(auth()->user()->hasRole('usuario'))
+<div id="modal-mis-pedidos" class="mp-modal-bg" style="display:none;" onclick="if(event.target===this)cerrarMisPedidos()">
+    <div class="mp-modal" onclick="event.stopPropagation()">
+        <div class="mp-sticky-top">
+            <div class="mp-modal-header">
+                <div>
+                    <div class="mp-modal-title">Mis Pedidos</div>
+                    <div class="mp-modal-sub">Historial de compras de {{ explode(' ', auth()->user()->name)[0] }}</div>
+                </div>
+                <button onclick="cerrarMisPedidos()" class="mp-modal-close">✕</button>
+            </div>
+
+            <div class="mp-filtros">
+                <div class="mp-filtro-group">
+                    <label class="mp-filtro-label">Método de pago</label>
+                    <select id="mp-filtro-metodo" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
+                        <option value="">Todos</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="qr_deuna">QR DeUna</option>
+                    </select>
+                </div>
+                <div class="mp-filtro-group">
+                    <label class="mp-filtro-label">Desde</label>
+                    <input type="date" id="mp-filtro-desde" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
+                </div>
+                <div class="mp-filtro-group">
+                    <label class="mp-filtro-label">Hasta</label>
+                    <input type="date" id="mp-filtro-hasta" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
+                </div>
+                <button type="button" class="mp-filtro-clear" onclick="limpiarFiltrosMisPedidos()" title="Quitar filtros">Limpiar</button>
+            </div>
+        </div>
+
+        <div class="mp-modal-body" id="mp-modal-body">
+            <div class="mp-loading">
+                <div class="mp-spinner"></div>
+                <span>Cargando tus pedidos…</span>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@endauth
+
 
 @push('scripts')
 <script>
@@ -1214,15 +1225,5 @@ function renderPedidoCard(p) {
 @endpush
 @endif
 @endauth
-
-<style>
-@keyframes toast-in {
-    from { opacity:0; transform:translateX(-50%) translateY(1rem); }
-    to   { opacity:1; transform:translateX(-50%) translateY(0); }
-}
-@keyframes spin {
-    to { transform:rotate(360deg); }
-}
-</style>
 
 @endsection

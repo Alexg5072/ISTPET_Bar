@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" class="h-full" style="background-color: #080d1e; color: #ffffff;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -8,6 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/kiosco.js'])
+    <style>
+        html, body {
+            background-color: #080d1e !important;
+            color: #ffffff !important;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
     @stack('styles')
     <style>
         * { -webkit-user-select:none; user-select:none; }
@@ -67,7 +75,7 @@
         }
     </style>
 </head>
-<body class="h-full bg-gray-100 font-sans overflow-x-hidden" x-data>
+<body class="h-full bg-[#080d1e] text-white font-sans overflow-x-hidden" x-data>
 
     @yield('content')
 
