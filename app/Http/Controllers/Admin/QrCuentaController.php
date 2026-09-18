@@ -22,6 +22,7 @@ class QrCuentaController extends Controller
         ]);
 
         $data = $request->validate([
+            'id'       => 'nullable|exists:qr_cuentas,id',
             'nombre'   => 'required|string|min:3|max:100',
             'titular'  => 'required|string|min:3|max:100|regex:/^[\pL\s]+$/u',
             'imagen'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
@@ -36,13 +37,27 @@ class QrCuentaController extends Controller
         if ($request->hasFile('imagen')) {
             $filename = 'deuna-qr-'.time().'.'.$request->imagen->extension();
             $request->imagen->storeAs('qr', $filename, 'public');
+            $request->imagen->storeAs('qr', 'DEUNA.jpg', 'public');
             $data['imagen_qr_path'] = 'qr/'.$filename;
         }
 
-        $qr = QrCuenta::create(array_merge($data, ['activo' => true, 'is_global' => true]));
-        AuditLog::registrar('QR cuenta creada — '.$qr->nombre, QrCuenta::class, $qr->id);
+        $id = $request->input('id');
+        $qr = $id ? QrCuenta::find($id) : QrCuenta::where('is_global', true)->first();
 
-        return back()->with('success', 'Cuenta QR guardada.');
+        if ($qr) {
+            $qr->update($data);
+            AuditLog::registrar('QR cuenta actualizada — '.$qr->nombre, QrCuenta::class, $qr->id);
+        } else {
+            $qr = QrCuenta::create(array_merge($data, ['activo' => true, 'is_global' => true]));
+            AuditLog::registrar('QR cuenta creada — '.$qr->nombre, QrCuenta::class, $qr->id);
+        }
+
+        // Sincronizar titular con configuración general
+        \App\Models\Configuracion::where('clave', 'pago.titular_deuna')->update([
+            'valor' => $qr->titular,
+        ]);
+
+        return back()->with('success', 'Cuenta QR guardada correctamente.');
     }
 
     public function update(Request $r, $id) { return redirect()->route('admin.qr-cuentas.index'); }

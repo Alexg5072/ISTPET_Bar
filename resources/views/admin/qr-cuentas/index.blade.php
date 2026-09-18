@@ -16,11 +16,10 @@
 <div class="space-y-6 pt-2">
 
     {{-- Info de funcionamiento actual --}}
-    <div class="p-4 bg-blue-400/5 border border-blue-400/15 rounded-xl flex gap-3 items-start">
-        <x-admin.icon name="alert" class="w-5 h-5 text-blue-400" />
-        <div class="text-sm text-blue-300">
-            <strong>Versión actual:</strong> El sistema usa una sola cuenta QR global para ambas sedes.
-            El módulo de múltiples QR por sede estará disponible en la siguiente fase.
+    <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex gap-3 items-center">
+        <x-admin.icon name="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0" />
+        <div class="text-sm text-emerald-300">
+            <strong>Cuenta QR Principal lista:</strong> Sube la foto del código QR de DeUna para que los clientes puedan escanearlo y transferir directamente desde la pantalla de pago del Kiosco.
         </div>
     </div>
 
@@ -51,7 +50,16 @@
                         <span class="badge badge-blue">Global</span>
                     @endif
                 </div>
-                <p class="text-xs text-gray-500 mt-3">{{ $qr->descripcion }}</p>
+                <p class="text-xs text-gray-500 mt-2">{{ $qr->descripcion }}</p>
+
+                <div class="mt-4 pt-3 border-t border-white/5 flex gap-2">
+                    <button type="button"
+                            onclick="abrirModalEditarQR({{ $qr->id }}, '{{ addslashes($qr->nombre) }}', '{{ addslashes($qr->titular) }}')"
+                            class="btn-gold text-xs py-2 px-3 flex items-center gap-1.5 font-bold">
+                        <x-admin.icon name="qr" class="w-4 h-4" />
+                        <span>{{ $qr->qr_url ? 'Cambiar imagen QR' : 'Subir imagen QR' }}</span>
+                    </button>
+                </div>
             </div>
         </div>
         @empty
@@ -86,17 +94,18 @@
         </div>
         <form action="{{ route('admin.qr-cuentas.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
+            <input type="hidden" name="id" id="modal-qr-id" value="">
             <div>
                 <label class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-1">Nombre</label>
-                <input name="nombre" class="admin-input" placeholder="Ej: DeUna Bar ISTPET" required>
+                <input name="nombre" id="modal-qr-nombre" class="admin-input" placeholder="Ej: DeUna Bar ISTPET" required>
             </div>
             <div>
                 <label class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-1">Titular</label>
-                <input name="titular" class="admin-input" placeholder="Nombre del titular" required>
+                <input name="titular" id="modal-qr-titular" class="admin-input" placeholder="Nombre del titular" required>
             </div>
             <div>
                 <label class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-1">Imagen del QR</label>
-                <input type="file" name="imagen" accept="image/*" class="admin-input py-1.5 text-xs">
+                <input type="file" name="imagen" accept="image/jpeg,image/png,image/webp" class="admin-input py-1.5 text-xs">
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="submit" class="btn-gold flex-1 justify-center py-3">Guardar</button>
@@ -105,4 +114,13 @@
         </form>
     </div>
 </div>
+
+<script>
+function abrirModalEditarQR(id, nombre, titular) {
+    document.getElementById('modal-qr-id').value = id || '';
+    document.getElementById('modal-qr-nombre').value = nombre || 'DeUna Bar ISTPET';
+    document.getElementById('modal-qr-titular').value = titular || 'Bar ISTPET';
+    document.getElementById('modal-qr').classList.remove('hidden');
+}
+</script>
 @endsection
