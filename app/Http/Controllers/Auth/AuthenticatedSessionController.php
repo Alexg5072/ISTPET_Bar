@@ -31,11 +31,23 @@ class AuthenticatedSessionController extends Controller
             'password.required' => 'La contraseña es obligatoria.',
         ]);
 
+        $throttleKey = \Illuminate\Support\Str::transliterate(\Illuminate\Support\Str::lower((string) $request->input('email')).'|'.$request->ip());
+
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($throttleKey);
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => "Demasiados intentos fallidos. Por favor, intenta de nuevo en {$seconds} segundos.",
+            ])->status(429);
+        }
+
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+            \Illuminate\Support\Facades\RateLimiter::hit($throttleKey, 60);
             throw ValidationException::withMessages([
                 'email' => 'Las credenciales no coinciden con nuestros registros.',
             ]);
         }
+
+        \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
 
         /** @var User|null $user */
         $user = Auth::user();

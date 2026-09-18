@@ -94,31 +94,37 @@ class Producto extends Model
 
     public function decrementarStock(int $cantidad, ?int $pedidoId = null, ?int $userId = null): void
     {
+        if ($cantidad <= 0) return;
+
         $antes = $this->stock_actual;
-        $this->decrement('stock_actual', $cantidad);
+        if ($antes < $cantidad) {
+            throw new \Exception("Stock insuficiente para '{$this->nombre}'. Disponible: {$antes}, solicitado: {$cantidad}.");
+        }
+
+        $nuevoStock = max(0, $antes - $cantidad);
+        $this->update([
+            'stock_actual' => $nuevoStock,
+            'stock_activo' => $nuevoStock > $this->stock_minimo,
+        ]);
 
         StockMovimiento::create([
-            'producto_id' => $this->id,
-            'user_id' => $userId,
-            'pedido_id' => $pedidoId,
-            'tipo' => 'venta',
-            'cantidad' => -$cantidad,
-            'stock_antes' => $antes,
-            'stock_despues' => $this->fresh()->stock_actual,
-            'motivo' => 'Venta por pedido',
+            'producto_id'   => $this->id,
+            'user_id'       => $userId,
+            'pedido_id'     => $pedidoId,
+            'tipo'          => 'venta',
+            'cantidad'      => -$cantidad,
+            'stock_antes'   => $antes,
+            'stock_despues' => $nuevoStock,
+            'motivo'        => 'Venta por pedido',
         ]);
 
         // Desactivar promociones vinculadas si se queda sin stock
-        if ($this->fresh()->stock_actual <= 0) {
-            \App\Models\Promocion::where('producto_id_1', $this->id)
-                ->orWhere('producto_id_2', $this->id)
-                ->orWhere('producto_id_3', $this->id)
-                ->where('activo', true)
-                ->update(['activo' => false]);
-        }
-
-        if ($this->fresh()->stock_actual <= $this->stock_minimo) {
-            $this->update(['stock_activo' => false]);
+        if ($nuevoStock <= 0) {
+            \App\Models\Promocion::where(function ($q) {
+                $q->where('producto_id_1', $this->id)
+                  ->orWhere('producto_id_2', $this->id)
+                  ->orWhere('producto_id_3', $this->id);
+            })->where('activo', true)->update(['activo' => false]);
         }
     }
 }

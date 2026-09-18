@@ -14,8 +14,23 @@ class Comprobante extends Model {
     public function pedido() { return $this->belongsTo(Pedido::class); }
 
     public static function generarNumero(): string {
-        $hoy   = now()->format('Ymd');
-        $count = static::whereDate('created_at', today())->count() + 1;
-        return 'COMP-'.$hoy.'-'.str_pad($count, 4, '0', STR_PAD_LEFT);
+        $hoy = now()->format('Ymd');
+        $ultimos = static::whereDate('created_at', today())
+            ->orderByDesc('id')
+            ->pluck('numero_comprobante');
+
+        $maxNumero = 0;
+        foreach ($ultimos as $num) {
+            $partes = explode('-', (string) $num);
+            $n = isset($partes[2]) ? (int) $partes[2] : 0;
+            if ($n > $maxNumero) $maxNumero = $n;
+        }
+
+        do {
+            $maxNumero++;
+            $numero = 'COMP-' . $hoy . '-' . str_pad($maxNumero, 4, '0', STR_PAD_LEFT);
+        } while (static::where('numero_comprobante', $numero)->exists());
+
+        return $numero;
     }
 }

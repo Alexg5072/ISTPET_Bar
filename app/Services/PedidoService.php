@@ -15,75 +15,105 @@ class PedidoService
 {
     public function crearDesdeSesion(array $carrito, string $metodoPago, int $sedeId, ?int $userId = null): Pedido
     {
-        return DB::transaction(function () use ($carrito, $metodoPago, $sedeId, $userId) {
-            $this->validarDisponibilidad($carrito);
+        return retry(3, function () use ($carrito, $metodoPago, $sedeId, $userId) {
+            return DB::transaction(function () use (&$carrito, $metodoPago, $sedeId, $userId) {
+                // Validar disponibilidad con bloqueo pesimista y sincronizar precios reales
+                $carrito = $this->validarDisponibilidadYSincronizarPrecios($carrito);
 
-            $subtotal = collect($carrito)->sum(fn ($i) => $i['precio'] * $i['cantidad']);
-            $total = $subtotal;
+                $subtotal = collect($carrito)->sum(fn ($i) => round($i['precio'] * $i['cantidad'], 2));
+                $total = $subtotal;
 
-            $estado = match ($metodoPago) {
-                'qr_deuna' => 'pendiente_verificacion',
-                'efectivo' => 'pendiente_pago',
-                default => 'pendiente_pago',
-            };
+                $estado = match ($metodoPago) {
+                    'qr_deuna' => 'pendiente_verificacion',
+                    'efectivo' => 'pendiente_pago',
+                    default => 'pendiente_pago',
+                };
 
-            $pedido = Pedido::create([
-                'codigo' => Pedido::generarCodigo(),
-                'sede_id' => $sedeId,
-                'user_id' => $userId,
-                'metodo_pago' => $metodoPago,
-                'estado' => $estado,
-                'estado_pago' => 'pendiente',
-                'subtotal' => $subtotal,
-                'total' => $total,
-                'area_origen' => 'kiosco',
-            ]);
+                $pedido = Pedido::create([
+                    'codigo' => Pedido::generarCodigo(),
+                    'sede_id' => $sedeId,
+                    'user_id' => $userId,
+                    'metodo_pago' => $metodoPago,
+                    'estado' => $estado,
+                    'estado_pago' => 'pendiente',
+                    'subtotal' => $subtotal,
+                    'total' => $total,
+                    'area_origen' => 'kiosco',
+                ]);
 
-            foreach ($carrito as $item) {
-                $this->crearItem($pedido, $item);
-            }
+                foreach ($carrito as $item) {
+                    $this->crearItem($pedido, $item);
+                }
 
-            $qrCuenta = $metodoPago === 'qr_deuna' ? QrCuenta::activa() : null;
+                $qrCuenta = $metodoPago === 'qr_deuna' ? QrCuenta::activa() : null;
 
-            Pago::create([
-                'pedido_id' => $pedido->id,
-                'qr_cuenta_id' => $qrCuenta?->id,
-                'metodo' => $metodoPago,
-                'monto' => $total,
-                'estado' => 'pendiente',
-            ]);
+                Pago::create([
+                    'pedido_id' => $pedido->id,
+                    'qr_cuenta_id' => $qrCuenta?->id,
+                    'metodo' => $metodoPago,
+                    'monto' => $total,
+                    'estado' => 'pendiente',
+                ]);
 
-            Comprobante::create([
-                'pedido_id' => $pedido->id,
-                'numero_comprobante' => Comprobante::generarNumero(),
-                'contenido_json' => $this->buildSnapshot($pedido, $carrito),
-            ]);
+                Comprobante::create([
+                    'pedido_id' => $pedido->id,
+                    'numero_comprobante' => Comprobante::generarNumero(),
+                    'contenido_json' => $this->buildSnapshot($pedido, $carrito),
+                ]);
 
-            return $pedido->fresh(['items', 'pago', 'comprobante', 'sede']);
-        });
+                return $pedido->fresh(['items', 'pago', 'comprobante', 'sede']);
+            });
+        }, 100);
     }
 
-    private function validarDisponibilidad(array $carrito): void
+    private function validarDisponibilidadYSincronizarPrecios(array $carrito): array
     {
+        $carritoActualizado = [];
+
         foreach ($carrito as $item) {
+            $cantidad = (int) ($item['cantidad'] ?? 1);
+            if ($cantidad < 1) {
+                throw new \Exception("Cantidad inválida para el producto.");
+            }
+
             if ($item['tipo'] === 'combo') {
-                $combo = Combo::with('items.producto')->findOrFail($item['id']);
+                $combo = Combo::with('items.producto')->where('id', $item['id'])->firstOrFail();
 
                 if (! $combo->disponible) {
                     throw new \Exception("El combo '{$combo->nombre}' ya no está disponible.");
                 }
+
+                // Bloquear pesimistamente cada producto que integra el combo
+                foreach ($combo->items as $comboItem) {
+                    $prod = Producto::where('id', $comboItem->producto_id)->lockForUpdate()->first();
+                    $necesario = $comboItem->cantidad * $cantidad;
+                    if (! $prod || ! $prod->disponible || $prod->stock_actual < $necesario) {
+                        throw new \Exception("Stock insuficiente para '{$prod?->nombre}' en el combo '{$combo->nombre}'.");
+                    }
+                }
+
+                $item['precio'] = (float) $combo->precio;
+                $item['nombre'] = $combo->nombre;
             } else {
-                $producto = Producto::findOrFail($item['id']);
+                // Bloqueo pesimista para el producto individual
+                $producto = Producto::where('id', $item['id'])->lockForUpdate()->firstOrFail();
 
                 if (! $producto->disponible) {
                     throw new \Exception("El producto '{$producto->nombre}' ya no está disponible.");
                 }
 
-                if ($producto->stock_actual < $item['cantidad']) {
-                    throw new \Exception("Stock insuficiente para '{$producto->nombre}'. Disponible: {$producto->stock_actual}.");
+                if ($producto->stock_actual < $cantidad) {
+                    throw new \Exception("Stock insuficiente para '{$producto->nombre}'. Disponible: {$producto->stock_actual}, solicitado: {$cantidad}.");
                 }
+
+                $item['precio'] = (float) $producto->precio;
+                $item['nombre'] = $producto->nombre;
             }
+
+            $carritoActualizado[] = $item;
         }
+
+        return $carritoActualizado;
     }
 
     private function crearItem(Pedido $pedido, array $item): void

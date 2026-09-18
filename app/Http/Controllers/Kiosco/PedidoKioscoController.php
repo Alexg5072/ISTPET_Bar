@@ -50,11 +50,11 @@ class PedidoKioscoController extends Controller
 
         $sedeId = session('kiosco_sede_id');
 
-        if (!$sedeId) {
+        if (!$sedeId || !Sede::where('id', $sedeId)->where('activo', true)->exists()) {
             if ($request->expectsJson() || $request->ajax()) {
-                return response()->json(['error' => 'Sede no seleccionada.'], 422);
+                return response()->json(['error' => 'La sede seleccionada ya no está disponible. Por favor, selecciona una sede válida.'], 422);
             }
-            return redirect()->route('kiosco.inicio');
+            return redirect()->route('kiosco.inicio')->with('error', 'Por favor selecciona tu sede para continuar.');
         }
 
         try {

@@ -39,14 +39,14 @@ Route::prefix('kiosco')->name('kiosco.')->group(function () {
     Route::get('/menu',         [MenuController::class, 'menu'])->name('menu');
 
     // Carrito — manejado en sesión
-    Route::post('/carrito/agregar',  [CarritoController::class, 'agregar'])->name('carrito.agregar');
+    Route::post('/carrito/agregar',  [CarritoController::class, 'agregar'])->middleware('throttle:60,1')->name('carrito.agregar');
     Route::post('/carrito/quitar',   [CarritoController::class, 'quitar'])->name('carrito.quitar');
     Route::post('/carrito/limpiar',  [CarritoController::class, 'limpiar'])->name('carrito.limpiar');
     Route::get('/carrito/datos',     [CarritoController::class, 'datos'])->name('carrito.datos');
 
     // Pago y pedido
     Route::get('/pago',              [PedidoKioscoController::class, 'pago'])->name('pago');
-    Route::post('/pedido',           [PedidoKioscoController::class, 'store'])->name('pedido.store');
+    Route::post('/pedido',           [PedidoKioscoController::class, 'store'])->middleware('throttle:20,1')->name('pedido.store');
 
     Route::get('/api/config-publica', function () {
     return response()->json([

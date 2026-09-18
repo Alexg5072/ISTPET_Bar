@@ -18,10 +18,15 @@ class CarritoController extends Controller
             'cantidad' => 'nullable|integer|min:1|max:20',
         ]);
 
-        $cantidad = $request->input('cantidad', 1);
+        $cantidad = (int) $request->input('cantidad', 1);
         $tipo     = $request->input('tipo');
-        $itemId   = $request->input('item_id');
+        $itemId   = (int) $request->input('item_id');
         $carrito  = session(self::SESSION_KEY, []);
+        $key      = "{$tipo}_{$itemId}";
+
+        if (!isset($carrito[$key]) && count($carrito) >= 30) {
+            return response()->json(['error' => 'Has alcanzado el límite máximo de productos distintos en tu carrito (30 items).'], 422);
+        }
 
         if ($tipo === 'combo') {
             $item = Combo::with('items.producto')->findOrFail($itemId);
