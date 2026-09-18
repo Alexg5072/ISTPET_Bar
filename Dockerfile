@@ -40,6 +40,8 @@ RUN apk add --no-cache \
     supervisor \
     curl \
     netcat-openbsd \
+    python3 \
+    py3-pillow \
     libpng \
     libjpeg-turbo \
     libwebp \

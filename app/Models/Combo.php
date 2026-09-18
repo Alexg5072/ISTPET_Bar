@@ -37,8 +37,21 @@ class Combo extends Model
 
     public function getImagenUrlAttribute(): string
     {
-        if ($this->imagen_path && Storage::disk('public')->exists($this->imagen_path)) {
-            return asset('storage/' . $this->imagen_path);
+        if ($this->imagen_path) {
+            if (Storage::disk('public')->exists($this->imagen_path)) {
+                return asset('storage/' . $this->imagen_path);
+            }
+            if (file_exists(public_path($this->imagen_path))) {
+                return asset($this->imagen_path);
+            }
+        }
+
+        if ($this->slug) {
+            foreach (['webp', 'png', 'jpg', 'jpeg'] as $ext) {
+                if (file_exists(public_path("images/combos/{$this->slug}.{$ext}"))) {
+                    return asset("images/combos/{$this->slug}.{$ext}");
+                }
+            }
         }
 
         return asset('images/combo-placeholder.webp');
