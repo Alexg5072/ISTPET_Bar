@@ -41,8 +41,28 @@ class QrCuenta extends Model
 
     public function getQrUrlAttribute(): ?string
     {
-        if ($this->imagen_qr_path && Storage::disk('public')->exists($this->imagen_qr_path)) {
-            return asset('storage/' . $this->imagen_qr_path);
+        if ($this->imagen_qr_path) {
+            if (Storage::disk('public')->exists($this->imagen_qr_path)) {
+                return asset('storage/' . $this->imagen_qr_path);
+            }
+            if (file_exists(public_path($this->imagen_qr_path))) {
+                return asset($this->imagen_qr_path);
+            }
+            if (file_exists(public_path('storage/' . $this->imagen_qr_path))) {
+                return asset('storage/' . $this->imagen_qr_path);
+            }
+        }
+
+        foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+            if (file_exists(public_path("images/qr/DEUNA.{$ext}"))) {
+                return asset("images/qr/DEUNA.{$ext}");
+            }
+            if (file_exists(public_path("storage/qr/DEUNA.{$ext}"))) {
+                return asset("storage/qr/DEUNA.{$ext}");
+            }
+            if (Storage::disk('public')->exists("qr/DEUNA.{$ext}")) {
+                return asset("storage/qr/DEUNA.{$ext}");
+            }
         }
 
         return null;
