@@ -88,9 +88,12 @@
                     </label>
                     <input type="text" name="name" value="{{ old('name') }}"
                            placeholder="Tu nombre y apellido"
+                           pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{3,100}$"
+                           title="Solo letras y espacios (mínimo 3 caracteres)"
                            style="width:100%;padding:0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:0.9rem;outline:none;box-sizing:border-box;transition:border-color 0.2s;"
                            onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                            onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                           onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/.test(event.key)"
                            required>
                     @error('name')<span style="font-size:0.72rem;color:#f87171;margin-top:0.25rem;display:block;">{{ $message }}</span>@enderror
                 </div>
@@ -102,10 +105,12 @@
                         </label>
                         <div style="position:relative;">
                             <input type="text" name="cedula" id="input-cedula" value="{{ old('cedula') }}"
-                                   placeholder="0912345678" maxlength="10"
+                                   placeholder="0912345678" maxlength="10" inputmode="numeric" pattern="[0-9]{10}"
+                                   title="10 dígitos numéricos"
                                    style="width:100%;padding:0.75rem 2.5rem 0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:monospace;transition:border-color 0.2s;"
                                    onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                                    onblur="this.style.borderColor='rgba(255,255,255,0.1)';if(validarCedulaJS(this.value)){buscarNombrePorCedula(this.value);verificarCedulaUnica(this.value);}"
+                                   onkeypress="return /[0-9]/.test(event.key)"
                                    oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"
                                    required>
                             <span id="cedula-icon" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;"></span>
@@ -120,9 +125,11 @@
                         </label>
                         <input type="tel" name="telefono" value="{{ old('telefono') }}"
                                placeholder="0991234567" maxlength="10" id="input-telefono"
+                               inputmode="numeric" pattern="09[0-9]{8}" title="Celular de 10 dígitos que comience con 09"
                                style="width:100%;padding:0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:monospace;transition:border-color 0.2s;"
                                onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                                onblur="this.style.borderColor='rgba(255,255,255,0.1)';validarTelefono(this.value);if(this.value.length===10)verificarTelefonoUnico(this.value)"
+                               onkeypress="return /[0-9]/.test(event.key)"
                                oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"
                                required>
                         <span id="tel-msg" style="font-size:0.72rem;margin-top:0.25rem;display:block;"></span>
@@ -397,7 +404,7 @@ function validarPaso(paso) {
         if (!cedula || cedula.length !== 10) { alert('Ingresa una cédula válida de 10 dígitos'); return false; }
         if (!validarCedulaJS(cedula)) return false;
         if (!tel)    { alert('Ingresa tu teléfono'); return false; }
-        if (tel.length !== 10) { alert('El teléfono debe tener exactamente 10 dígitos'); return false; }
+        if (tel.length !== 10 || !tel.startsWith('09')) { alert('El teléfono debe ser un celular ecuatoriano de 10 dígitos que inicie con 09'); return false; }
         return true;
     }
     if (paso === 2) {
@@ -477,12 +484,12 @@ async function buscarNombrePorCedula(cedula) {
     }
 }
 
-// Validar teléfono — exactamente 10 dígitos
+// Validar teléfono — exactamente 10 dígitos iniciando con 09
 function validarTelefono(val) {
     const msg = document.getElementById('tel-msg');
     if (!msg) return;
-    if (!val || val.length !== 10) {
-        msg.textContent = 'El teléfono debe tener exactamente 10 dígitos';
+    if (!val || val.length !== 10 || !val.startsWith('09')) {
+        msg.textContent = 'Debe tener 10 dígitos y comenzar con 09';
         msg.style.color = '#f87171';
         return false;
     }

@@ -50,7 +50,14 @@ class PedidoController extends Controller
             'ult6meses' => [today()->subMonths(6)->startOfMonth(), today()->endOfMonth(),'Últimos 6 meses'],
             'ult12'     => [today()->subMonths(12)->startOfMonth(),today()->endOfMonth(),'Últimos 12 meses'],
             'todo'      => [\Carbon\Carbon::create(2020,1,1),    today(),              'Todo el tiempo'],
-            'fecha'     => [\Carbon\Carbon::parse($fecha),       \Carbon\Carbon::parse($fecha), 'Fecha: '.$fecha],
+            'fecha'     => (function() use ($fecha) {
+                try {
+                    $d = \Carbon\Carbon::parse($fecha);
+                    return [$d, $d, 'Fecha: ' . $d->format('Y-m-d')];
+                } catch (\Throwable) {
+                    return [today(), today(), 'Hoy'];
+                }
+            })(),
             default     => [today(),                               today(),              'Hoy'],
         };
     }

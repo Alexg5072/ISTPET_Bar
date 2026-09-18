@@ -12,13 +12,22 @@ class CategoriaController extends Controller {
         return view('admin.categorias.index', compact('categorias', 'sedes', 'maxOrden'));
     }
     public function store(Request $request) {
+        $request->merge([
+            'nombre' => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
+        ]);
+
         $data = $request->validate([
-            'nombre'  => 'required|string|max:100|unique:categorias,nombre',
-            'icono'   => 'nullable|string|max:20',
+            'nombre'  => ['required', 'string', 'min:2', 'max:50', 'regex:/^[\pL\pN\s\-_&]+$/u', 'unique:categorias,nombre'],
+            'icono'   => 'nullable|string|max:50',
             'sede_id' => 'nullable|exists:sedes,id',
-            'orden'   => 'nullable|integer',
+            'orden'   => 'nullable|integer|min:0|max:999',
         ], [
-            'nombre.unique' => 'Ya existe una categoría con ese nombre.',
+            'nombre.required' => 'El nombre de la categoría es obligatorio.',
+            'nombre.min'      => 'El nombre debe tener al menos 2 caracteres.',
+            'nombre.regex'    => 'El nombre contiene caracteres no permitidos.',
+            'nombre.unique'   => 'Ya existe una categoría con ese nombre.',
+            'orden.integer'   => 'El orden debe ser un número entero.',
+            'orden.min'       => 'El orden no puede ser negativo.',
         ]);
         $data['slug']  = Str::slug($data['nombre']);
         $data['icono'] = $data['icono'] ?: 'utensils'; // default si viene null
@@ -27,17 +36,26 @@ class CategoriaController extends Controller {
             $data['orden'] = (Categoria::max('orden') ?? 0) + 1;
         }
         Categoria::create($data);
-        return back()->with('success','Categoría creada.');
+        return back()->with('success','Categoría creada con éxito.');
     }
 
     public function update(Request $request, Categoria $categoria) {
+        $request->merge([
+            'nombre' => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
+        ]);
+
         $data = $request->validate([
-            'nombre'  => 'required|string|max:100|unique:categorias,nombre,'.$categoria->id,
-            'icono'   => 'nullable|string|max:20',
+            'nombre'  => ['required', 'string', 'min:2', 'max:50', 'regex:/^[\pL\pN\s\-_&]+$/u', 'unique:categorias,nombre,'.$categoria->id],
+            'icono'   => 'nullable|string|max:50',
             'sede_id' => 'nullable|exists:sedes,id',
-            'orden'   => 'nullable|integer',
+            'orden'   => 'nullable|integer|min:0|max:999',
         ], [
-            'nombre.unique' => 'Ya existe una categoría con ese nombre.',
+            'nombre.required' => 'El nombre de la categoría es obligatorio.',
+            'nombre.min'      => 'El nombre debe tener al menos 2 caracteres.',
+            'nombre.regex'    => 'El nombre contiene caracteres no permitidos.',
+            'nombre.unique'   => 'Ya existe una categoría con ese nombre.',
+            'orden.integer'   => 'El orden debe ser un número entero.',
+            'orden.min'       => 'El orden no puede ser negativo.',
         ]);
 
         $data['icono']  = $data['icono'] ?: ($categoria->icono ?: 'utensils');

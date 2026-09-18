@@ -24,14 +24,21 @@ class StockController extends Controller
         $data = $request->validate([
             'producto_id' => 'required|exists:productos,id',
             'tipo'        => 'required|in:entrada,ajuste',
-            // entrada: mínimo 1 (se suma); ajuste: mínimo 0 (puede dejarse en 0)
-            'cantidad'    => 'required|integer|min:0',
+            'cantidad'    => 'required|integer|min:0|max:10000',
             'motivo'      => 'nullable|string|max:255',
+        ], [
+            'producto_id.required' => 'Debes seleccionar un producto válido.',
+            'tipo.required'        => 'El tipo de movimiento es obligatorio.',
+            'tipo.in'              => 'El tipo de movimiento no es válido.',
+            'cantidad.required'    => 'La cantidad es obligatoria.',
+            'cantidad.integer'     => 'La cantidad debe ser un número entero.',
+            'cantidad.min'         => 'La cantidad no puede ser negativa.',
+            'cantidad.max'         => 'La cantidad máxima permitida por movimiento es de 10,000 unidades.',
         ]);
 
         // Para entrada, la cantidad debe ser al menos 1
         if ($data['tipo'] === 'entrada' && $data['cantidad'] < 1) {
-            return back()->withErrors(['cantidad' => 'Debes agregar al menos 1 unidad.']);
+            return back()->withErrors(['cantidad' => 'Debes agregar al menos 1 unidad en una entrada.']);
         }
 
         $producto   = Producto::findOrFail($data['producto_id']);
@@ -39,7 +46,7 @@ class StockController extends Controller
 
         $nuevo = $data['tipo'] === 'entrada'
             ? $stockAntes + $data['cantidad']   // Suma al existente
-            : $data['cantidad'];                 // Reemplaza con valor exacto
+            : max(0, (int) $data['cantidad']);   // Reemplaza con valor exacto (mínimo 0)
 
         $producto->update([
             'stock_actual' => $nuevo,

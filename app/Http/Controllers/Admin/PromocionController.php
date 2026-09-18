@@ -21,18 +21,36 @@ class PromocionController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'titulo' => preg_replace('/\s+/', ' ', trim((string) $request->titulo)),
+            'precio_destacado' => $request->filled('precio_destacado') ? ltrim(trim((string) $request->precio_destacado), '$') : null,
+        ]);
+
         $data = $request->validate([
-            'titulo'            => 'required|string|max:255',
-            'descripcion'       => 'nullable|string',
-            'precio_destacado'  => 'nullable|string|max:20',
-            'orden'             => 'nullable|integer|min:0',
-            'duracion_segundos' => 'nullable|integer|min:1|max:60',
-            'imagen'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'titulo'            => 'required|string|min:3|max:100',
+            'descripcion'       => 'nullable|string|max:500',
+            'precio_destacado'  => 'nullable|numeric|min:0.01|max:999.99',
+            'orden'             => 'nullable|integer|min:0|max:999',
+            'duracion_segundos' => 'nullable|integer|min:2|max:300',
+            'imagen'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             'sede_id'           => 'nullable|exists:sedes,id',
             'producto_id_1'     => 'nullable|exists:productos,id',
             'producto_id_2'     => 'nullable|exists:productos,id',
             'producto_id_3'     => 'nullable|exists:productos,id',
+        ], [
+            'titulo.required'          => 'El título de la promoción es obligatorio.',
+            'titulo.min'               => 'El título debe tener al menos 3 caracteres.',
+            'duracion_segundos.min'    => 'La duración debe ser de al menos 2 segundos.',
+            'duracion_segundos.max'    => 'La duración no puede superar los 300 segundos (5 minutos).',
+            'precio_destacado.numeric' => 'El precio destacado debe ser un valor numérico.',
+            'precio_destacado.min'     => 'El precio destacado debe ser mayor a 0.',
         ]);
+
+        // Verificar que no se repitan los mismos productos seleccionados
+        $prods = array_filter([$data['producto_id_1'] ?? null, $data['producto_id_2'] ?? null, $data['producto_id_3'] ?? null]);
+        if (count($prods) !== count(array_unique($prods))) {
+            return back()->withErrors(['producto_id_2' => 'No puedes seleccionar el mismo producto más de una vez en la misma promoción.'])->withInput();
+        }
 
         if ($request->hasFile('imagen')) {
             $filename = Str::slug($data['titulo']) . '-' . time() . '.' . $request->imagen->extension();
@@ -42,10 +60,6 @@ class PromocionController extends Controller
 
         $data['activo'] = true;
 
-        if (!empty($data['precio_destacado'])) {
-            $data['precio_destacado'] = ltrim(trim($data['precio_destacado']), '$') ?: null;
-        }
-
         foreach (['producto_id_1','producto_id_2','producto_id_3','sede_id'] as $f) {
             if (isset($data[$f]) && $data[$f] === '') $data[$f] = null;
         }
@@ -53,7 +67,7 @@ class PromocionController extends Controller
         $promo = Promocion::create($data);
         AuditLog::registrar('Promoción creada — ' . $promo->titulo, Promocion::class, $promo->id);
 
-        return back()->with('success', 'Promoción "' . $promo->titulo . '" creada.');
+        return back()->with('success', 'Promoción "' . $promo->titulo . '" creada con éxito.');
     }
 
     public function update(Request $request, Promocion $promocion)
@@ -64,24 +78,36 @@ class PromocionController extends Controller
             'input'  => $request->except(['_token','_method','imagen']),
         ]);
 
+        $request->merge([
+            'titulo' => preg_replace('/\s+/', ' ', trim((string) $request->titulo)),
+            'precio_destacado' => $request->filled('precio_destacado') ? ltrim(trim((string) $request->precio_destacado), '$') : null,
+        ]);
+
         $data = $request->validate([
-            'titulo'            => 'required|string|max:255',
-            'descripcion'       => 'nullable|string',
-            'precio_destacado'  => 'nullable|string|max:20',
-            'orden'             => 'nullable|integer|min:0',
-            'duracion_segundos' => 'nullable|integer|min:1|max:60',
+            'titulo'            => 'required|string|min:3|max:100',
+            'descripcion'       => 'nullable|string|max:500',
+            'precio_destacado'  => 'nullable|numeric|min:0.01|max:999.99',
+            'orden'             => 'nullable|integer|min:0|max:999',
+            'duracion_segundos' => 'nullable|integer|min:2|max:300',
             'activo'            => 'nullable|boolean',
-            'imagen'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'imagen'            => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             'sede_id'           => 'nullable|exists:sedes,id',
             'producto_id_1'     => 'nullable|exists:productos,id',
             'producto_id_2'     => 'nullable|exists:productos,id',
             'producto_id_3'     => 'nullable|exists:productos,id',
+        ], [
+            'titulo.required'          => 'El título de la promoción es obligatorio.',
+            'titulo.min'               => 'El título debe tener al menos 3 caracteres.',
+            'duracion_segundos.min'    => 'La duración debe ser de al menos 2 segundos.',
+            'duracion_segundos.max'    => 'La duración no puede superar los 300 segundos (5 minutos).',
+            'precio_destacado.numeric' => 'El precio destacado debe ser un valor numérico.',
+            'precio_destacado.min'     => 'El precio destacado debe ser mayor a 0.',
         ]);
 
-        $data['activo'] = $promocion->activo;
-
-        if (!empty($data['precio_destacado'])) {
-            $data['precio_destacado'] = ltrim(trim($data['precio_destacado']), '$') ?: null;
+        // Verificar que no se repitan los mismos productos seleccionados
+        $prods = array_filter([$data['producto_id_1'] ?? null, $data['producto_id_2'] ?? null, $data['producto_id_3'] ?? null]);
+        if (count($prods) !== count(array_unique($prods))) {
+            return back()->withErrors(['producto_id_2' => 'No puedes seleccionar el mismo producto más de una vez en la misma promoción.'])->withInput();
         }
 
         foreach (['producto_id_1','producto_id_2','producto_id_3','sede_id'] as $f) {

@@ -18,9 +18,17 @@ class AuthenticatedSessionController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'email' => strtolower(trim((string) $request->email)),
+        ]);
+
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
-            'password' => ['required'],
+            'email'    => ['required', 'string', 'email:rfc,filter'],
+            'password' => ['required', 'string'],
+        ], [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email'    => 'Ingresa un formato de correo válido (ej: usuario@ejemplo.com).',
+            'password.required' => 'La contraseña es obligatoria.',
         ]);
 
         if (!Auth::attempt($credentials, $request->boolean('remember'))) {

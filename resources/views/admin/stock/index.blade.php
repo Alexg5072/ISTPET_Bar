@@ -252,8 +252,9 @@
                               letter-spacing:0.08em;color:rgba(255,255,255,0.50);margin-bottom:0.4rem;"
                        id="label-cantidad">Cantidad a agregar</label>
                 <div style="position:relative;">
-                    <input name="cantidad" id="input-cantidad" type="number" min="0"
+                    <input name="cantidad" id="input-cantidad" type="number" min="0" max="10000" step="1"
                            class="admin-input" placeholder="Ej: 10" required
+                           onkeydown="return !['e','E','+','-','.'].includes(event.key)"
                            oninput="actualizarResultado()"
                            style="padding-right:3.5rem;font-family:var(--font-display);font-weight:800;font-size:1.1rem;">
                     <div style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);

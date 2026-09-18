@@ -19,25 +19,39 @@ class RegisterController extends Controller
 
     public function store(Request $request)
     {
+        // Normalizar entradas
+        $request->merge([
+            'email'    => strtolower(trim((string) $request->email)),
+            'cedula'   => trim((string) $request->cedula),
+            'telefono' => trim((string) $request->telefono),
+            'name'     => preg_replace('/\s+/', ' ', trim((string) $request->name)),
+        ]);
+
         $request->validate([
-            'name'                  => ['required', 'string', 'max:100', 'regex:/^[\pL\s]+$/u'],
+            'name'                  => ['required', 'string', 'min:3', 'max:100', 'regex:/^[\pL\s]+$/u'],
             'cedula'                => ['required', 'string', 'size:10', 'unique:users,cedula', 'regex:/^[0-9]{10}$/'],
-            'email'                 => ['required', 'email', 'max:100', 'unique:users,email'],
-            'telefono'              => ['required', 'string', 'size:10', 'regex:/^[0-9]{10}$/'],
+            'email'                 => ['required', 'string', 'email:rfc,filter', 'max:100', 'unique:users,email'],
+            'telefono'              => ['required', 'string', 'size:10', 'regex:/^09[0-9]{8}$/'],
             'tipo_sede'             => ['required', 'in:instituto,conduccion'],
             'carrera'               => ['required', 'string', 'max:100'],
             'password'              => ['required', 'confirmed', Password::min(8)],
         ], [
             'name.required'         => 'El nombre completo es obligatorio.',
+            'name.min'              => 'El nombre debe tener al menos 3 caracteres.',
+            'name.regex'            => 'El nombre solo puede contener letras y espacios.',
             'cedula.required'       => 'La cédula es obligatoria.',
             'cedula.size'           => 'La cédula debe tener exactamente 10 dígitos.',
             'cedula.unique'         => 'Esta cédula ya está registrada.',
             'cedula.regex'          => 'La cédula solo debe contener números.',
+            'email.required'        => 'El correo electrónico es obligatorio.',
+            'email.email'           => 'Ingresa un correo electrónico válido con formato usuario@dominio.',
             'email.unique'          => 'Este correo ya está registrado.',
-            'telefono.size'         => 'El teléfono debe tener exactamente 10 dígitos.',
-            'telefono.regex'        => 'El teléfono solo debe contener números.',
+            'telefono.required'     => 'El teléfono celular es obligatorio.',
+            'telefono.size'         => 'El teléfono celular debe tener exactamente 10 dígitos.',
+            'telefono.regex'        => 'El teléfono celular debe ser de 10 dígitos y comenzar con 09.',
             'tipo_sede.required'    => 'Debes seleccionar a qué institución perteneces.',
             'carrera.required'      => 'Debes seleccionar tu carrera.',
+            'password.required'     => 'La contraseña es obligatoria.',
             'password.confirmed'    => 'Las contraseñas no coinciden.',
             'password.min'          => 'La contraseña debe tener al menos 8 caracteres.',
         ]);

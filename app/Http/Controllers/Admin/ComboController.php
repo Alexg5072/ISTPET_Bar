@@ -21,19 +21,30 @@ class ComboController extends Controller
         return view('admin.combos.create', compact('productos'));
     }
 
-    public function store(Request $request)
-    {
+        $request->merge([
+            'nombre' => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
+        ]);
+
         $data = $request->validate([
-            'nombre'       => 'required|string|max:255|unique:combos,nombre',
-            'descripcion'  => 'nullable|string',
-            'precio'       => 'required|numeric|min:0',
-            'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'nombre'       => 'required|string|min:2|max:100|unique:combos,nombre',
+            'descripcion'  => 'nullable|string|max:500',
+            'precio'       => 'required|numeric|min:0.05|max:999.99',
+            'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             'productos'    => 'required|array|min:1',
             'productos.*'  => 'exists:productos,id',
-            'cantidades'   => 'required|array',
-            'cantidades.*' => 'integer|min:1',
+            'cantidades'   => 'required|array|min:1',
+            'cantidades.*' => 'integer|min:1|max:100',
         ], [
-            'nombre.unique' => 'Ya existe un combo con ese nombre.',
+            'nombre.required'       => 'El nombre del combo es obligatorio.',
+            'nombre.min'            => 'El nombre del combo debe tener al menos 2 caracteres.',
+            'nombre.unique'         => 'Ya existe un combo con ese nombre.',
+            'precio.required'       => 'El precio del combo es obligatorio.',
+            'precio.min'            => 'El precio del combo debe ser de al menos $0.05.',
+            'precio.max'            => 'El precio del combo no puede superar $999.99.',
+            'productos.required'    => 'Debes incluir al menos un producto en el combo.',
+            'productos.min'         => 'Debes incluir al menos un producto en el combo.',
+            'cantidades.*.min'      => 'La cantidad por producto debe ser de al menos 1 unidad.',
+            'cantidades.*.max'      => 'La cantidad por producto no puede exceder 100 unidades.',
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -84,13 +95,22 @@ class ComboController extends Controller
 
     public function update(Request $request, Combo $combo)
     {
+        $request->merge([
+            'nombre' => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
+        ]);
+
         $data = $request->validate([
-            'nombre'      => 'required|string|max:255|unique:combos,nombre,'.$combo->id,
-            'descripcion' => 'nullable|string',
-            'precio'      => 'required|numeric|min:0',
-            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'nombre'      => 'required|string|min:2|max:100|unique:combos,nombre,'.$combo->id,
+            'descripcion' => 'nullable|string|max:500',
+            'precio'      => 'required|numeric|min:0.05|max:999.99',
+            'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
         ], [
-            'nombre.unique' => 'Ya existe un combo con ese nombre.',
+            'nombre.required' => 'El nombre del combo es obligatorio.',
+            'nombre.min'      => 'El nombre del combo debe tener al menos 2 caracteres.',
+            'nombre.unique'   => 'Ya existe un combo con ese nombre.',
+            'precio.required' => 'El precio del combo es obligatorio.',
+            'precio.min'      => 'El precio del combo debe ser de al menos $0.05.',
+            'precio.max'      => 'El precio del combo no puede superar $999.99.',
         ]);
 
         // Checkbox activo — si no viene en POST es false

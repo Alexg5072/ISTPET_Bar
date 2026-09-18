@@ -49,15 +49,25 @@ class ProductoController extends Controller
             ]);
 
             $data = $request->validate([
-                'nombre'       => 'required|string|max:255|unique:productos,nombre',
+                'nombre'       => 'required|string|min:2|max:100|unique:productos,nombre',
                 'categoria_id' => 'required|exists:categorias,id',
-                'descripcion'  => 'nullable|string',
-                'precio'       => 'required|numeric|min:0',
-                'stock_actual' => 'required|integer|min:0',
-                'stock_minimo' => 'required|integer|min:0',
-                'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'descripcion'  => 'nullable|string|max:500',
+                'precio'       => 'required|numeric|min:0.01|max:999.99',
+                'stock_actual' => 'required|integer|min:0|max:99999',
+                'stock_minimo' => 'required|integer|min:0|max:99999',
+                'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             ], [
-                'nombre.unique' => 'Ya existe un producto con ese nombre.',
+                'nombre.required'       => 'El nombre del producto es obligatorio.',
+                'nombre.unique'         => 'Ya existe un producto con ese nombre.',
+                'nombre.min'            => 'El nombre debe tener al menos 2 caracteres.',
+                'categoria_id.required' => 'Debes seleccionar una categoría.',
+                'precio.required'       => 'El precio es obligatorio.',
+                'precio.min'            => 'El precio debe ser de al menos $0.01.',
+                'precio.max'            => 'El precio no puede exceder $999.99.',
+                'stock_actual.integer'  => 'El stock actual debe ser un número entero.',
+                'stock_actual.min'      => 'El stock actual no puede ser negativo.',
+                'stock_minimo.integer'  => 'El stock mínimo debe ser un número entero.',
+                'stock_minimo.min'      => 'El stock mínimo no puede ser negativo.',
             ]);
 
             Log::info('=== VALIDACION STORE OK ===', $data);
@@ -154,13 +164,19 @@ class ProductoController extends Controller
             ]);
 
             $data = $request->validate([
-                'nombre'       => 'required|string|max:255|unique:productos,nombre,' . $producto->id,
+                'nombre'       => 'required|string|min:2|max:100|unique:productos,nombre,' . $producto->id,
                 'categoria_id' => 'required|exists:categorias,id',
-                'descripcion'  => 'nullable|string',
-                'precio'       => 'required|numeric|min:0',
-                'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'descripcion'  => 'nullable|string|max:500',
+                'precio'       => 'required|numeric|min:0.01|max:999.99',
+                'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             ], [
-                'nombre.unique' => 'Ya existe un producto con ese nombre.',
+                'nombre.required'       => 'El nombre del producto es obligatorio.',
+                'nombre.unique'         => 'Ya existe un producto con ese nombre.',
+                'nombre.min'            => 'El nombre debe tener al menos 2 caracteres.',
+                'categoria_id.required' => 'Debes seleccionar una categoría.',
+                'precio.required'       => 'El precio es obligatorio.',
+                'precio.min'            => 'El precio debe ser de al menos $0.01.',
+                'precio.max'            => 'El precio no puede exceder $999.99.',
             ]);
 
             Log::info('=== UPDATE VALIDACION OK ===', $data);

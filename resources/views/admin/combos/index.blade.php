@@ -160,8 +160,9 @@
                                 <span class="ist-toggle-label" style="font-size:0.6rem;white-space:nowrap;">Auto</span>
                             </label>
                         </div>
-                        <input name="precio" id="combo-precio" type="number" step="0.01" min="0"
+                        <input name="precio" id="combo-precio" type="number" step="0.01" min="0.05" max="999.99"
                                class="admin-input" placeholder="0.00" required readonly
+                               onkeydown="return !['e','E','+','-'].includes(event.key)"
                                oninput="if(!document.getElementById('combo-precio-auto').checked) marcarPrecioManual();">
                         <span id="combo-precio-hint" style="font-size:0.62rem;color:rgba(110,231,183,0.8);font-weight:700;">
                             Precio calculado automáticamente

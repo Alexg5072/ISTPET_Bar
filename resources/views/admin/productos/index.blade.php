@@ -226,21 +226,25 @@
                 {{-- Precio --}}
                 <div class="ist-field-group">
                     <label class="ist-field-label" style="color:rgba(255,255,255,0.50);">Precio ($) *</label>
-                    <input name="precio" id="prod-precio" type="number" step="0.01" min="0"
-                           class="admin-input" placeholder="0.00" required>
+                    <input name="precio" id="prod-precio" type="number" step="0.01" min="0.01" max="999.99"
+                           class="admin-input" placeholder="0.00"
+                           onkeydown="return !['e','E','+','-'].includes(event.key)"
+                           required>
                 </div>
 
                 {{-- Stock (solo al crear) --}}
                 <div id="prod-stock-fields" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
                     <div class="ist-field-group">
                         <label class="ist-field-label" style="color:rgba(255,255,255,0.50);">Stock inicial *</label>
-                        <input name="stock_actual" id="prod-stock" type="number" min="0"
-                               value="0" class="admin-input" placeholder="0">
+                        <input name="stock_actual" id="prod-stock" type="number" min="0" max="99999" step="1"
+                               value="0" class="admin-input" placeholder="0"
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
                     </div>
                     <div class="ist-field-group">
                         <label class="ist-field-label" style="color:rgba(255,255,255,0.50);">Stock mínimo</label>
-                        <input name="stock_minimo" id="prod-stock-min" type="number" min="0"
-                               value="2" class="admin-input" placeholder="2">
+                        <input name="stock_minimo" id="prod-stock-min" type="number" min="0" max="99999" step="1"
+                               value="2" class="admin-input" placeholder="2"
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
                     </div>
                 </div>
             </div>

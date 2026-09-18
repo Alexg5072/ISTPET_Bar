@@ -14,12 +14,21 @@ class QrCuentaController extends Controller
 
     public function create()  { return redirect()->route('admin.qr-cuentas.index'); }
 
-    public function store(Request $request)
-    {
+        $request->merge([
+            'nombre'  => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
+            'titular' => preg_replace('/\s+/', ' ', trim((string) $request->titular)),
+        ]);
+
         $data = $request->validate([
-            'nombre'   => 'required|string|max:255',
-            'titular'  => 'required|string|max:255',
-            'imagen'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'nombre'   => 'required|string|min:3|max:100',
+            'titular'  => 'required|string|min:3|max:100|regex:/^[\pL\s]+$/u',
+            'imagen'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
+        ], [
+            'nombre.required'  => 'El nombre de la cuenta es obligatorio.',
+            'nombre.min'       => 'El nombre debe tener al menos 3 caracteres.',
+            'titular.required' => 'El nombre del titular es obligatorio.',
+            'titular.min'      => 'El nombre del titular debe tener al menos 3 caracteres.',
+            'titular.regex'    => 'El titular solo debe contener letras y espacios.',
         ]);
 
         if ($request->hasFile('imagen')) {

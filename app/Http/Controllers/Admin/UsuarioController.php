@@ -10,15 +10,33 @@ class UsuarioController extends Controller {
     public function index() {
         $usuarios = User::with(['roles','sede'])->latest()->paginate(20);
         $roles    = Role::all();
-        return view('admin.usuarios.index', compact('usuarios','roles'));
+        $sedes    = \App\Models\Sede::activos()->get();
+        return view('admin.usuarios.index', compact('usuarios','roles','sedes'));
     }
     public function store(Request $request) {
+        $request->merge([
+            'email' => strtolower(trim((string) $request->email)),
+            'name'  => preg_replace('/\s+/', ' ', trim((string) $request->name)),
+        ]);
+
         $data = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|string|min:8',
-            'role'     => 'required|exists:roles,name',
-            'sede_id'  => 'nullable|exists:sedes,id',
+            'name'     => ['required', 'string', 'min:3', 'max:100', 'regex:/^[\pL\s]+$/u'],
+            'email'    => ['required', 'string', 'email:rfc,filter', 'max:100', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
+            'role'     => ['required', 'exists:roles,name'],
+            'sede_id'  => ['required_if:role,cajero,visor', 'nullable', 'exists:sedes,id'],
+        ], [
+            'name.required'        => 'El nombre completo es obligatorio.',
+            'name.min'             => 'El nombre debe tener al menos 3 caracteres.',
+            'name.regex'           => 'El nombre solo puede contener letras y espacios.',
+            'email.required'       => 'El correo electrónico es obligatorio.',
+            'email.email'          => 'Ingresa un formato de correo electrónico válido con @ y dominio.',
+            'email.unique'         => 'Este correo electrónico ya está registrado.',
+            'password.required'    => 'La contraseña es obligatoria.',
+            'password.min'         => 'La contraseña debe tener al menos 8 caracteres.',
+            'role.required'        => 'Debes asignar un rol al usuario.',
+            'sede_id.required_if'  => 'Los cajeros y visores deben tener una sede asignada.',
+            'sede_id.exists'       => 'La sede seleccionada no es válida.',
         ]);
         $user = User::create([
             'name'     => $data['name'],
@@ -29,7 +47,7 @@ class UsuarioController extends Controller {
         ]);
         $user->assignRole($data['role']);
         AuditLog::registrar('Usuario creado — '.$user->name, User::class, $user->id);
-        return back()->with('success',"Usuario '{$user->name}' creado.");
+        return back()->with('success',"Usuario '{$user->name}' creado con éxito.");
     }
     public function toggle(User $usuario) {
         if ($usuario->id === Auth::id()) return back()->with('error','No puedes desactivar tu propia cuenta.');

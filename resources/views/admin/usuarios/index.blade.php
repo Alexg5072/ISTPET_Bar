@@ -121,30 +121,41 @@
             @csrf
             <div>
                 <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">Nombre completo</label>
-                <input name="name" class="admin-input" placeholder="Ej: María García" required>
+                <input name="name" class="admin-input" placeholder="Ej: María García"
+                       pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{3,100}$"
+                       title="Solo letras y espacios (mínimo 3 caracteres)"
+                       onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/.test(event.key)"
+                       required>
             </div>
             <div>
                 <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">Correo electrónico</label>
-                <input name="email" type="email" class="admin-input" placeholder="usuario@istpet.edu.ec" required>
+                <input name="email" type="email" class="admin-input" placeholder="usuario@istpet.edu.ec"
+                       pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                       title="Correo electrónico válido con @ y dominio"
+                       required>
             </div>
             <div>
                 <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">Contraseña temporal</label>
-                <input name="password" type="password" class="admin-input" placeholder="Mínimo 8 caracteres" required>
+                <input name="password" type="password" class="admin-input" placeholder="Mínimo 8 caracteres" minlength="8" required>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">Rol</label>
-                    <select name="role" class="admin-select w-full" required>
+                    <select name="role" id="select-role-modal" class="admin-select w-full" required onchange="toggleSedeRequerida(this.value)">
                         @foreach($roles as $rol)
                             <option value="{{ $rol->name }}">{{ $rol->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
-                    <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">Sede</label>
-                    <select name="sede_id" class="admin-select w-full">
-                        <option value="">Ambas</option>
-                        {{-- Se necesita variable $sedes aquí — pasar desde el controller --}}
+                    <label class="text-xs font-black uppercase tracking-wider text-gray-400 block mb-1">
+                        Sede <span id="sede-req-indicator" class="text-rose-400 hidden">*</span>
+                    </label>
+                    <select name="sede_id" id="select-sede-modal" class="admin-select w-full">
+                        <option value="">Ambas / Global</option>
+                        @foreach($sedes as $sede)
+                            <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -155,4 +166,18 @@
         </form>
     </div>
 </div>
+
+<script>
+function toggleSedeRequerida(role) {
+    const ind = document.getElementById('sede-req-indicator');
+    const select = document.getElementById('select-sede-modal');
+    if (role === 'cajero' || role === 'visor') {
+        if (ind) ind.classList.remove('hidden');
+        if (select) select.required = true;
+    } else {
+        if (ind) ind.classList.add('hidden');
+        if (select) select.required = false;
+    }
+}
+</script>
 @endsection
