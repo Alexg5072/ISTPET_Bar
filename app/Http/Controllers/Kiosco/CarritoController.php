@@ -93,18 +93,21 @@ class CarritoController extends Controller
         $request->validate([
             'tipo'    => 'required|in:producto,combo',
             'item_id' => 'required|integer',
-            'delta'   => 'nullable|integer',
+            'delta'   => 'nullable|integer|in:-1,0',
+        ], [
+            'delta.in' => 'El cambio de cantidad debe ser -1 o 0.',
         ]);
 
         $key     = $request->tipo . '_' . $request->item_id;
-        $delta   = $request->input('delta', -1);
+        $delta   = (int) $request->input('delta', -1);
         $carrito = session(self::SESSION_KEY, []);
 
         if (isset($carrito[$key])) {
-            if ($delta === 0 || $carrito[$key]['cantidad'] <= 1) {
+            $nuevaCantidad = $carrito[$key]['cantidad'] + $delta;
+            if ($delta === 0 || $nuevaCantidad <= 0) {
                 unset($carrito[$key]);
             } else {
-                $carrito[$key]['cantidad'] += $delta;
+                $carrito[$key]['cantidad'] = $nuevaCantidad;
             }
         }
 

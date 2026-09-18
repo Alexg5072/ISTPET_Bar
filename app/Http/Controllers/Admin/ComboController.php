@@ -21,6 +21,8 @@ class ComboController extends Controller
         return view('admin.combos.create', compact('productos'));
     }
 
+    public function store(Request $request)
+    {
         $request->merge([
             'nombre' => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
         ]);

@@ -125,6 +125,7 @@
                        pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{3,100}$"
                        title="Solo letras y espacios (mínimo 3 caracteres)"
                        onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/.test(event.key)"
+                       oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '')"
                        required>
             </div>
             <div>

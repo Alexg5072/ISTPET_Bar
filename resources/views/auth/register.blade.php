@@ -262,6 +262,8 @@
                     </label>
                     <input type="email" name="email" value="{{ old('email') }}"
                            placeholder="usuario@ejemplo.com"
+                           pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                           title="Ingresa un correo electrónico válido con formato usuario@dominio.com"
                            style="width:100%;padding:0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:0.9rem;outline:none;box-sizing:border-box;transition:border-color 0.2s;"
                            onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                            onblur="this.style.borderColor='rgba(255,255,255,0.1)'"

@@ -229,6 +229,7 @@
                     <input name="precio" id="prod-precio" type="number" step="0.01" min="0.01" max="999.99"
                            class="admin-input" placeholder="0.00"
                            onkeydown="return !['e','E','+','-'].includes(event.key)"
+                           oninput="if(parseFloat(this.value) < 0) this.value = ''; if(parseFloat(this.value) > 999.99) this.value = '999.99';"
                            required>
                 </div>
 
@@ -238,13 +239,15 @@
                         <label class="ist-field-label" style="color:rgba(255,255,255,0.50);">Stock inicial *</label>
                         <input name="stock_actual" id="prod-stock" type="number" min="0" max="99999" step="1"
                                value="0" class="admin-input" placeholder="0"
-                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 99999) this.value = 99999;">
                     </div>
                     <div class="ist-field-group">
                         <label class="ist-field-label" style="color:rgba(255,255,255,0.50);">Stock mínimo</label>
                         <input name="stock_minimo" id="prod-stock-min" type="number" min="0" max="99999" step="1"
                                value="2" class="admin-input" placeholder="2"
-                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 99999) this.value = 99999;">
                     </div>
                 </div>
             </div>

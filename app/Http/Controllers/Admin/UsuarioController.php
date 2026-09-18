@@ -22,7 +22,7 @@ class UsuarioController extends Controller {
         $data = $request->validate([
             'name'     => ['required', 'string', 'min:3', 'max:100', 'regex:/^[\pL\s]+$/u'],
             'email'    => ['required', 'string', 'email:rfc,filter', 'max:100', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8', 'different:email', 'different:name'],
             'role'     => ['required', 'exists:roles,name'],
             'sede_id'  => ['required_if:role,cajero,visor', 'nullable', 'exists:sedes,id'],
         ], [
@@ -34,6 +34,7 @@ class UsuarioController extends Controller {
             'email.unique'         => 'Este correo electrónico ya está registrado.',
             'password.required'    => 'La contraseña es obligatoria.',
             'password.min'         => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.different'   => 'La contraseña no puede ser idéntica al correo o al nombre.',
             'role.required'        => 'Debes asignar un rol al usuario.',
             'sede_id.required_if'  => 'Los cajeros y visores deben tener una sede asignada.',
             'sede_id.exists'       => 'La sede seleccionada no es válida.',

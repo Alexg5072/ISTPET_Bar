@@ -172,6 +172,8 @@
                         </span>
                         <input type="email" name="email" value="{{ old('email') }}"
                                class="field-input" placeholder="admin@istpet.edu.ec"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido con @ y dominio (ej: usuario@istpet.edu.ec)"
                                required autofocus autocomplete="email">
                         <div class="field-focus-bar"></div>
                     </div>

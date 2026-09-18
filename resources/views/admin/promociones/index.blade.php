@@ -220,7 +220,8 @@
                         </div>
                         <input name="precio_destacado" id="f-precio" type="number" step="0.01" min="0.01" max="999.99"
                                class="admin-input" placeholder="Ej: 2.50" readonly
-                               onkeydown="return !['e','E','+','-'].includes(event.key)">
+                               onkeydown="return !['e','E','+','-'].includes(event.key)"
+                               oninput="if(parseFloat(this.value) < 0) this.value = ''; if(parseFloat(this.value) > 999.99) this.value = '999.99';">
                         <span id="f-precio-hint" style="font-size:0.6rem;color:rgba(110,231,183,0.8);font-weight:700;">
                             Se usará el precio calculado abajo
                         </span>
@@ -229,7 +230,8 @@
                         <label class="field-label" style="color:rgba(255,255,255,0.50);">Duración (seg)</label>
                         <input name="duracion_segundos" id="f-duracion" type="number"
                                min="2" max="300" value="5" class="admin-input"
-                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 300) this.value = 300;">
                     </div>
                 </div>
 
@@ -248,7 +250,8 @@
                     <div class="field-group">
                         <label class="field-label" style="color:rgba(255,255,255,0.50);">Orden</label>
                         <input name="orden" id="f-orden" type="number" min="0" max="999" value="0" class="admin-input"
-                               onkeydown="return !['e','E','+','-','.'].includes(event.key)">
+                               onkeydown="return !['e','E','+','-','.'].includes(event.key)"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 999) this.value = 999;">
                     </div>
                 </div>
 

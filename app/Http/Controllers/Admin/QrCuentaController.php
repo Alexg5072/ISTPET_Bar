@@ -14,6 +14,8 @@ class QrCuentaController extends Controller
 
     public function create()  { return redirect()->route('admin.qr-cuentas.index'); }
 
+    public function store(Request $request)
+    {
         $request->merge([
             'nombre'  => preg_replace('/\s+/', ' ', trim((string) $request->nombre)),
             'titular' => preg_replace('/\s+/', ' ', trim((string) $request->titular)),

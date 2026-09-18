@@ -409,9 +409,10 @@ function agregarItemCombo(productoId = '', cantidad = 1) {
         <select name="productos[]" class="admin-select flex-1" required onchange="refreshAllSelects()">
             ${buildProductoSelect(productoId)}
         </select>
-        <input name="cantidades[]" type="number" min="1" value="${cantidad}"
+        <input name="cantidades[]" type="number" min="1" max="100" step="1" value="${cantidad}"
                class="admin-input" style="width:64px;text-align:center;" placeholder="Cant."
-               oninput="calcularPrecioComboAuto()">
+               onkeydown="return !['e','E','+','-','.'].includes(event.key)"
+               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 100) this.value = 100; calcularPrecioComboAuto()">
         <button type="button" onclick="this.closest('div').remove();refreshAllSelects();"
                 class="btn-danger py-2 px-2 flex-shrink-0" style="font-size:0.75rem;">✕</button>
     `;

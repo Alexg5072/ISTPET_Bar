@@ -53,6 +53,9 @@ class PedidoController extends Controller
             'fecha'     => (function() use ($fecha) {
                 try {
                     $d = \Carbon\Carbon::parse($fecha);
+                    if ($d->year < 2020 || $d->isFuture()) {
+                        return [today(), today(), 'Hoy'];
+                    }
                     return [$d, $d, 'Fecha: ' . $d->format('Y-m-d')];
                 } catch (\Throwable) {
                     return [today(), today(), 'Hoy'];
