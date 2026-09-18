@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Categorías')
-@section('page-icon','📁')
+@section('page-icon')
+<x-admin.icon name="categorias" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Categorías')
 @section('page-subtitle','Organiza el menú en categorías para el kiosco')
 @section('header-actions')
@@ -15,7 +17,7 @@
         @forelse($categorias as $cat)
         <div class="cat-card {{ $cat->activo ? '' : 'cat-card-off' }}">
             <div class="cat-card-top">
-                <div class="cat-icon">{{ $cat->icono ?: '📁' }}</div>
+                <div class="cat-icon flex items-center justify-center text-amber-400"><x-admin.icon name="categorias" class="w-8 h-8" /></div>
                 <div class="cat-badge-estado {{ $cat->activo ? 'cat-on' : 'cat-off' }}">
                     {{ $cat->activo ? '●' : '○' }}
                 </div>
@@ -23,25 +25,25 @@
             <div class="cat-nombre">{{ $cat->nombre }}</div>
             <div class="cat-meta">
                 @if($cat->sede)
-                    {{ $cat->sede->slug === 'instituto' ? '🏛️' : '🚗' }} {{ $cat->sede->slug === 'instituto' ? 'Instituto' : 'Conducción' }}
+                    {{ $cat->sede->slug === 'instituto' ? 'Instituto' : 'Conducción' }}
                 @else
-                    🌐 Ambas sedes
+                    Ambas sedes
                 @endif
                 · Orden {{ $cat->orden }}
             </div>
             <div class="cat-actions">
                 <button onclick="editarCat({{ $cat->id }}, '{{ addslashes($cat->nombre) }}', '{{ $cat->icono }}', {{ $cat->activo ? 1 : 0 }}, {{ $cat->orden }}, '{{ $cat->sede_id }}')"
-                        class="cat-btn cat-btn-edit">✏️ Editar</button>
+                        class="cat-btn cat-btn-edit">Editar</button>
                 <form method="POST" action="{{ route('admin.categorias.destroy', $cat) }}" style="display:inline;">
                     @csrf @method('DELETE')
                     <button type="submit" class="cat-btn cat-btn-del"
-                            onclick="return confirm('¿Eliminar «{{ $cat->nombre }}»?')">🗑</button>
+                            onclick="return confirm('¿Eliminar «{{ $cat->nombre }}»?')"></button>
                 </form>
             </div>
         </div>
         @empty
         <div class="admin-card p-14 col-span-5 text-center">
-            <div style="font-size:4rem;opacity:.1;margin-bottom:1rem;">📁</div>
+            <div class="flex justify-center opacity-10 mb-4 text-amber-400"><x-admin.icon name="categorias" class="w-16 h-16" /></div>
             <div class="font-display font-black text-lg uppercase tracking-wider mb-3" style="color:rgba(255,255,255,0.2);">Sin categorías</div>
             <button onclick="abrirModalCat()" class="btn-gold">+ Crear primera categoría</button>
         </div>
@@ -49,7 +51,7 @@
 
         {{-- Card agregar --}}
         <div onclick="abrirModalCat()" class="cat-add-card">
-            <span style="font-size:2rem;opacity:.2;">➕</span>
+            <span class="opacity-25 flex justify-center mb-1 text-amber-400"><x-admin.icon name="plus" class="w-8 h-8" /></span>
             <span class="cat-add-label">Nueva categoría</span>
         </div>
     </div>
@@ -62,7 +64,7 @@
     <div class="promo-modal" onclick="event.stopPropagation()" style="max-width:420px;">
         <div class="promo-modal-header">
             <div>
-                <div class="promo-modal-title" id="modal-cat-title">➕ Nueva Categoría</div>
+                <div class="promo-modal-title" id="modal-cat-title">Nueva Categoría</div>
                 <div class="promo-modal-sub" style="color:rgba(255,255,255,0.50);">Visible en el kiosco como botón de filtro</div>
             </div>
             <button onclick="cerrarModalCat()" class="promo-modal-close">✕</button>
@@ -81,7 +83,7 @@
                             transition:background 0.15s ease;"
                     onmouseover="this.style.background='rgba(255,255,255,0.06)'"
                     onmouseout="this.style.background='transparent'"
-                    title="Clic para elegir emoji">📁</div>
+                    style="display:none;"></div>
                 <div style="font-size:0.62rem;color:rgba(255,255,255,0.50);margin-top:-0.25rem;margin-bottom:0.5rem;">
                     Toca para cambiar
                 </div>
@@ -107,16 +109,16 @@
                     oninput="validarNombreCat(this.value)">
                 <span id="cat-nombre-error"
                     style="display:none;font-size:0.68rem;color:#f87171;font-weight:700;margin-top:0.2rem;">
-                    ⚠️ Ya existe una categoría con ese nombre
+                    Ya existe una categoría con ese nombre
                 </span>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
                 <div class="field-group">
                     <label class="field-label" style="color:rgba(255,255,255,0.50);">Sede</label>
                     <select name="sede_id" id="cat-sede" class="admin-select w-full">
-                        <option value="">🌐 Ambas</option>
+                        <option value="">Ambas</option>
                         @foreach($sedes as $sede)
-                        <option value="{{ $sede->id }}">{{ $sede->slug === 'instituto' ? '🏛️' : '🚗' }} {{ $sede->nombre }}</option>
+                        <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -132,7 +134,7 @@
                 <span class="remember-label-text">Categoría activa en el kiosco</span>
             </label>
             <div class="flex gap-3 pt-1">
-                <button type="submit" class="btn-gold flex-1 justify-center py-3" id="btn-cat-guardar">✅ Crear categoría</button>
+                <button type="submit" class="btn-gold flex-1 justify-center py-3" id="btn-cat-guardar">Crear categoría</button>
                 <button type="button" onclick="cerrarModalCat()" class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
             </div>
         </form>
@@ -300,8 +302,8 @@
 const maxOrden = {{ $maxOrden }};
 
 function abrirModalCat() {
-    document.getElementById('modal-cat-title').textContent = '➕ Nueva Categoría';
-    document.getElementById('btn-cat-guardar').textContent = '✅ Crear categoría';
+    document.getElementById('modal-cat-title').textContent = 'Nueva Categoría';
+    document.getElementById('btn-cat-guardar').textContent = 'Crear categoría';
     document.getElementById('modal-cat-form').action = '{{ route("admin.categorias.store") }}';
     document.getElementById('modal-cat-method').value = 'POST';
     document.getElementById('cat-nombre').value = '';
@@ -312,13 +314,13 @@ function abrirModalCat() {
     document.getElementById('cat-sede').value   = '';
     document.getElementById('cat-activo').checked = true;
     document.getElementById('cat-activo-track').classList.add('checked');
-    document.getElementById('cat-icono-preview').textContent = '📁';
+    
     document.getElementById('modal-cat').style.display = 'flex';
 }
 
 function editarCat(id, nombre, icono, activo, orden, sedeId) {
-    document.getElementById('modal-cat-title').textContent = '✏️ Editar Categoría';
-    document.getElementById('btn-cat-guardar').textContent = '💾 Guardar cambios';
+    document.getElementById('modal-cat-title').textContent = 'Editar Categoría';
+    document.getElementById('btn-cat-guardar').textContent = 'Guardar cambios';
     document.getElementById('modal-cat-form').action = `/admin/categorias/${id}`;
     document.getElementById('modal-cat-method').value = 'PUT';
     document.getElementById('cat-nombre').value = nombre;
@@ -329,7 +331,7 @@ function editarCat(id, nombre, icono, activo, orden, sedeId) {
     document.getElementById('cat-sede').value   = sedeId || '';
     document.getElementById('cat-activo').checked = activo === 1;
     document.getElementById('cat-activo-track').classList.toggle('checked', activo === 1);
-    document.getElementById('cat-icono-preview').textContent = icono || '📁';
+    
     document.getElementById('modal-cat').style.display = 'flex';
     document.getElementById('emoji-picker').style.display = 'none';
 }
@@ -344,19 +346,7 @@ document.getElementById('modal-cat').addEventListener('click', function(e) {
 });
 
 // ── Emojis disponibles para categorías ──
-const EMOJIS_CAT = [
-    '🍽️','🍔','🍕','🌮','🌯','🥗','🥙','🍜','🍝','🍛','🍲','🥘',
-    '🫕','🍱','🥪','🥨','🧆','🧇','🥞','🧈','🍳','🥚','🧀','🥓',
-    '🥩','🍗','🍖','🌭','🍟','🍣','🍤','🍙','🍚','🍘','🍥','🥟',
-    '🦪','🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬',
-    '🍭','🍮','🍯','☕','🍵','🧃','🥤','🧋','🍺','🍹','🧉','🍷',
-    '🥂','🍸','🍾','🫖','🧊','🫙','🧂','🥫','🫒','🧄','🧅','🥕',
-    '🌽','🥦','🥬','🥒','🫑','🌶️','🫛','🧃','🫗','🍎','🍊','🍋',
-    '🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥝','🍅','🫚','🥑',
-    '🌮','🌯','🥙','🧆','🫔','🍿','🧂','🥜','🫘','🌰','🍞','🥐',
-    '🥖','🫓','🥨','🥯','🧁','🍮','🍯','🥡','🍱','📦','⭐','🎯',
-    '🏆','🎖️','🔥','❄️','💧','🌿','🌱','🌾','🍀','🌸','🌺','🌻',
-];
+const EMOJIS_CAT = [];
 
 function buildEmojiGrid() {
     const grid = document.getElementById('emoji-grid');

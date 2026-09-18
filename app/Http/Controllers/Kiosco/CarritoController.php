@@ -79,7 +79,7 @@ class CarritoController extends Controller
         return response()->json([
             'success' => true,
             'carrito' => $this->resumen($carrito),
-            'message' => "✅ {$data['nombre']} agregado al carrito.",
+            'message' => "{$data['nombre']} agregado al carrito.",
         ]);
     }
 

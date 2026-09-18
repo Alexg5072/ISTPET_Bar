@@ -4,7 +4,7 @@
 @endphp
 <a href="{{ route($route) }}"
    class="nav-item-link {{ $active ? 'active' : '' }}">
-    <span style="font-size:1rem;flex-shrink:0;line-height:1;">{{ $icon }}</span>
+    <x-admin.icon :name="$icon" class="w-4 h-4 text-gray-400 group-hover:text-white" />
     <span style="flex:1;">{{ $label }}</span>
     {{ $slot }}
 </a>

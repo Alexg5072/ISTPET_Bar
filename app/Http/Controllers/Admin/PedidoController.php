@@ -74,7 +74,7 @@ class PedidoController extends Controller
             ['estado' => 'pagado']
         );
 
-        return back()->with('success', "✅ Pago QR del pedido {$pedido->codigo} verificado correctamente.");
+        return back()->with('success', "Pago QR del pedido {$pedido->codigo} verificado correctamente.");
     }
 
     public function cobrar(Pedido $pedido)
@@ -91,7 +91,7 @@ class PedidoController extends Controller
 
         AuditLog::registrar("Cobro en efectivo — {$pedido->codigo}", Pedido::class, $pedido->id);
 
-        return back()->with('success', "💵 Pedido {$pedido->codigo} cobrado correctamente.");
+        return back()->with('success', "Pedido {$pedido->codigo} cobrado correctamente.");
     }
 
     public function entregar(Pedido $pedido)
@@ -106,7 +106,7 @@ class PedidoController extends Controller
 
         AuditLog::registrar("Pedido entregado — {$pedido->codigo}", Pedido::class, $pedido->id);
 
-        return back()->with('success', "📦 Pedido {$pedido->codigo} marcado como entregado.");
+        return back()->with('success', "Pedido {$pedido->codigo} marcado como entregado.");
     }
 
     public function cancelar(Pedido $pedido)
@@ -123,6 +123,6 @@ class PedidoController extends Controller
             ['estado' => 'cancelado']
         );
 
-        return back()->with('success', "❌ Pedido {$pedido->codigo} cancelado.");
+        return back()->with('success', "Pedido {$pedido->codigo} cancelado.");
     }
 }

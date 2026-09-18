@@ -28,10 +28,12 @@
 
         <div class="px-5 pt-6 pb-5" style="border-bottom:1px solid rgba(255,255,255,0.05);">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                      style="background:linear-gradient(135deg,#1b2a6b,#2a3f9f);
                             border:1px solid rgba(201,168,76,0.35);
-                            box-shadow:0 4px 16px rgba(27,42,107,0.5);">🏛️</div>
+                            box-shadow:0 4px 16px rgba(27,42,107,0.5);">
+                    <x-admin.icon name="instituto" class="w-5 h-5 text-amber-400" />
+                </div>
                 <div>
                     <div style="font-family:var(--font-display);font-weight:900;font-size:0.9rem;
                                 color:white;letter-spacing:0.06em;text-transform:uppercase;line-height:1.1;">
@@ -47,36 +49,36 @@
 
         <nav class="flex-1 px-3 py-4 space-y-0.5">
             <p class="sb-section" style="color:rgba(255,255,255,0.50);">Principal</p>
-            <x-admin.nav-item route="admin.dashboard" icon="📊" label="Dashboard">
+            <x-admin.nav-item route="admin.dashboard" icon="dashboard" label="Dashboard">
                 @php $p = \App\Models\Pedido::delDia()->pendientes()->count(); @endphp
                 @if($p > 0)<span class="sb-badge-red">{{ $p }}</span>@endif
             </x-admin.nav-item>
-            <x-admin.nav-item route="admin.pedidos.index" icon="🧾" label="Pedidos" />
+            <x-admin.nav-item route="admin.pedidos.index" icon="pedidos" label="Pedidos" />
             @hasanyrole('superadmin|admin|cajero')
-                <x-admin.nav-item route="admin.stock.index" icon="📦" label="Stock" />
+                <x-admin.nav-item route="admin.stock.index" icon="stock" label="Stock" />
             @endhasanyrole
             @hasanyrole('superadmin|admin')
-                <x-admin.nav-item route="admin.productos.index"   icon="🍽️" label="Productos" />
-                <x-admin.nav-item route="admin.categorias.index"  icon="📁" label="Categorías" />
-                <x-admin.nav-item route="admin.combos.index"      icon="⭐" label="Combos" />
-                <x-admin.nav-item route="admin.reportes.index"    icon="📈" label="Reportes" />
-                <x-admin.nav-item route="admin.caja.index"        icon="💰" label="Caja" />
-                <x-admin.nav-item route="admin.promociones.index" icon="🎯" label="Promociones" />
+                <x-admin.nav-item route="admin.productos.index"   icon="productos" label="Productos" />
+                <x-admin.nav-item route="admin.categorias.index"  icon="categorias" label="Categorías" />
+                <x-admin.nav-item route="admin.combos.index"      icon="combos" label="Combos" />
+                <x-admin.nav-item route="admin.reportes.index"    icon="reportes" label="Reportes" />
+                <x-admin.nav-item route="admin.caja.index"        icon="caja" label="Caja" />
+                <x-admin.nav-item route="admin.promociones.index" icon="promociones" label="Promociones" />
             @endhasanyrole
             @hasanyrole('superadmin|admin')
                 <p class="sb-section" style="margin-top:1.2rem; color:rgba(255,255,255,0.45);">Administración</p>
-                <x-admin.nav-item route="admin.usuarios.index" icon="👥" label="Usuarios" />
+                <x-admin.nav-item route="admin.usuarios.index" icon="usuarios" label="Usuarios" />
             @endhasanyrole
             @role('superadmin')
-                <x-admin.nav-item route="admin.configuracion.index" icon="⚙️" label="Configuración" />
+                <x-admin.nav-item route="admin.configuracion.index" icon="configuracion" label="Configuración" />
             @endrole
             @hasanyrole('superadmin|admin')
                 <div class="mx-2 my-4" style="height:1px;background:rgba(255,255,255,0.04);"></div>
                 <p class="sb-section" style="color:rgba(255,255,255,0.12);">Módulos extra</p>
-                <x-admin.nav-item-extra route="admin.fiado.index"       icon="💳" label="Fiado / Cuentas" />
-                <x-admin.nav-item-extra route="admin.areas-venta.index" icon="🏪" label="Áreas de Venta" />
-                <x-admin.nav-item-extra route="admin.invitados.index"   icon="🤝" label="Invitados" />
-                <x-admin.nav-item-extra route="admin.inventario.index"  icon="🗃️" label="Inventario Av." />
+                <x-admin.nav-item-extra route="admin.fiado.index"       icon="fiado" label="Fiado / Cuentas" />
+                <x-admin.nav-item-extra route="admin.areas-venta.index" icon="areas-venta" label="Áreas de Venta" />
+                <x-admin.nav-item-extra route="admin.invitados.index"   icon="invitados" label="Invitados" />
+                <x-admin.nav-item-extra route="admin.inventario.index"  icon="inventario" label="Inventario Av." />
             @endhasanyrole
         </nav>
 
@@ -96,7 +98,10 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="sb-logout-btn" style="color:rgba(255,255,255,0.50);"><span>🚪</span> Cerrar sesión</button>
+                <button type="submit" class="sb-logout-btn flex items-center gap-2 w-full text-left" style="color:rgba(255,255,255,0.50);">
+                    <x-admin.icon name="logout" class="w-4 h-4 text-gray-400" />
+                    <span>Cerrar sesión</span>
+                </button>
             </form>
         </div>
     </aside>
@@ -129,7 +134,11 @@
             <div class="flex items-center gap-3 min-w-0 flex-1">
                 <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
                     style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
-                    @yield('page-icon','📋')
+                    @hasSection('page-icon')
+                        @yield('page-icon')
+                    @else
+                        <x-admin.icon name="dashboard" class="w-5 h-5 text-amber-400" />
+                    @endif
                 </div>
                 <div class="min-w-0">
                     <div style="font-family:var(--font-display);font-weight:900;font-size:1.25rem;
@@ -148,20 +157,32 @@
                 <div id="header-clock"
                      style="font-family:var(--font-display);font-weight:700;font-size:0.8rem;
                             color:rgba(255,255,255,0.50);padding:0 0.5rem;"></div>
-                <a href="{{ route('kiosco.inicio') }}" target="_blank" class="hdr-btn" style="color:rgba(255,255,255,0.50);">👁 Ver Kiosco</a>
+                <a href="{{ route('kiosco.inicio') }}" target="_blank" class="hdr-btn" style="color:rgba(255,255,255,0.50);display:inline-flex;align-items:center;">
+                    <x-admin.icon name="eye" class="w-4 h-4 mr-1.5 opacity-70" />
+                    Ver Kiosco
+                </a>
             </div>
         </header>
 
         @if(session('success') || session('error') || session('info'))
         <div class="px-7 pt-5" style="position:relative;z-index:1;">
             @if(session('success'))
-            <div class="flash-msg flash-success animate-fade-in"><span>✅</span> {{ session('success') }}</div>
+            <div class="flash-msg flash-success animate-fade-in flex items-center gap-2">
+                <x-admin.icon name="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <span>{{ session('success') }}</span>
+            </div>
             @endif
             @if(session('error'))
-            <div class="flash-msg flash-error animate-fade-in"><span>❌</span> {{ session('error') }}</div>
+            <div class="flash-msg flash-error animate-fade-in flex items-center gap-2">
+                <x-admin.icon name="x-circle" class="w-4 h-4 text-rose-400 flex-shrink-0" />
+                <span>{{ session('error') }}</span>
+            </div>
             @endif
             @if(session('info'))
-            <div class="flash-msg flash-info animate-fade-in"><span>ℹ️</span> {{ session('info') }}</div>
+            <div class="flash-msg flash-info animate-fade-in flex items-center gap-2">
+                <x-admin.icon name="alert" class="w-4 h-4 text-blue-400 flex-shrink-0" />
+                <span>{{ session('info') }}</span>
+            </div>
             @endif
         </div>
         @endif
@@ -185,7 +206,8 @@
                transition:transform 0.2s ease,box-shadow 0.2s ease;"
         onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 8px 32px rgba(27,42,107,0.8),0 0 0 1px rgba(201,168,76,0.35)';"
         onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 28px rgba(27,42,107,0.6),0 0 0 1px rgba(201,168,76,0.15)';">
-    <span id="fab-icon" style="font-size:1.1rem;line-height:1;pointer-events:none;">🏛️</span>
+    <span id="fab-icon-open" class="flex items-center justify-center pointer-events-none"><x-admin.icon name="instituto" class="w-6 h-6 text-amber-300" /></span>
+    <span id="fab-icon-close" style="display:none;" class="items-center justify-center pointer-events-none"><x-admin.icon name="close" class="w-6 h-6 text-white" /></span>
 </button>
 
 <style>
@@ -324,7 +346,6 @@
 })();
 
 const fab = document.getElementById('fab-sidebar');
-const fabIcon = document.getElementById('fab-icon');
 
 function isMobile() {
     return window.innerWidth < 1024;
@@ -334,9 +355,11 @@ function openSidebar() {
     document.body.classList.add('sidebar-open');
     document.body.style.overflow = 'hidden';
 
-    if (fabIcon) {
-        fabIcon.textContent = '✕';
-        fabIcon.style.fontSize = '1rem';
+    const iconOpen = document.getElementById('fab-icon-open');
+    const iconClose = document.getElementById('fab-icon-close');
+    if (iconOpen) iconOpen.style.display = 'none';
+    if (iconClose) {
+        iconClose.style.display = 'flex';
     }
 }
 
@@ -344,10 +367,10 @@ function closeSidebar() {
     document.body.classList.remove('sidebar-open');
     document.body.style.overflow = '';
 
-    if (fabIcon) {
-        fabIcon.textContent = '🏛️';
-        fabIcon.style.fontSize = '1.1rem';
-    }
+    const iconOpen = document.getElementById('fab-icon-open');
+    const iconClose = document.getElementById('fab-icon-close');
+    if (iconOpen) iconOpen.style.display = 'flex';
+    if (iconClose) iconClose.style.display = 'none';
 }
 
 function toggleSidebar() {
@@ -371,19 +394,19 @@ window.addEventListener('resize', function() {
         document.body.classList.remove('sidebar-open');
         document.body.style.overflow = '';
 
-        if (fabIcon) {
-            fabIcon.textContent = '🏛️';
-            fabIcon.style.fontSize = '1.1rem';
-        }
+        const iconOpen = document.getElementById('fab-icon-open');
+        const iconClose = document.getElementById('fab-icon-close');
+        if (iconOpen) iconOpen.style.display = 'flex';
+        if (iconClose) iconClose.style.display = 'none';
     }
 });
 
 // Estado inicial
 document.addEventListener('DOMContentLoaded', function() {
-    if (fabIcon) {
-        fabIcon.textContent = '🏛️';
-        fabIcon.style.fontSize = '1.1rem';
-    }
+    const iconOpen = document.getElementById('fab-icon-open');
+    const iconClose = document.getElementById('fab-icon-close');
+    if (iconOpen) iconOpen.style.display = 'flex';
+    if (iconClose) iconClose.style.display = 'none';
 });
 </script>
 </body>

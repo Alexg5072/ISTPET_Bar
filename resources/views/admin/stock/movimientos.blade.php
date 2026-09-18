@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Movimientos de Stock')
-@section('page-icon','📋')
+@section('page-icon')
+<x-admin.icon name="pedidos" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Movimientos de Stock')
 @section('page-subtitle','Historial completo de entradas, salidas y ajustes')
 @section('header-actions')
@@ -11,7 +13,7 @@
 <div class="pt-2">
     <div class="admin-card">
         <div class="admin-card-header">
-            <div class="admin-card-title">📋 Historial de movimientos</div>
+            <div class="admin-card-title">Historial de movimientos</div>
             <span class="text-xs text-gray-500">{{ $movimientos->total() }} registros</span>
         </div>
         <div class="overflow-x-auto">

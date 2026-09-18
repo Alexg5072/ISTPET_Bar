@@ -1,23 +1,25 @@
 @extends('layouts.app')
 @section('title','Configuración')
-@section('page-icon','⚙️')
+@section('page-icon')
+<x-admin.icon name="configuracion" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Configuración del Sistema')
 @section('page-subtitle','Ajustes generales · Impresora · Pagos · Seguridad · Módulos')
 
 @section('header-actions')
-    <button form="config-form" type="submit" class="btn-gold">💾 Guardar cambios</button>
+    <button form="config-form" type="submit" class="btn-gold">Guardar cambios</button>
 @endsection
 
 @section('content')
 
 @php
 $iconosGrupo = [
-    'kiosco'    => ['ico' => '📺', 'label' => 'Kiosco',    'desc' => 'Comportamiento general de la pantalla táctil'],
-    'pagos'     => ['ico' => '💳', 'label' => 'Pagos',     'desc' => 'Métodos de pago aceptados en el kiosco'],
-    'impresora' => ['ico' => '🖨️', 'label' => 'Impresora', 'desc' => 'Configuración de la impresora térmica de tickets'],
-    'seguridad' => ['ico' => '🔐', 'label' => 'Seguridad', 'desc' => 'Sesiones y protección de acceso al panel admin'],
-    'modulos'   => ['ico' => '🧩', 'label' => 'Módulos',   'desc' => 'Funcionalidades extra — actívalas cuando estén listas'],
-    'general'   => ['ico' => '⚙️', 'label' => 'General',   'desc' => 'Configuración general del sistema'],
+    'kiosco'    => ['ico' => '', 'label' => 'Kiosco',    'desc' => 'Comportamiento general de la pantalla táctil'],
+    'pagos'     => ['ico' => '', 'label' => 'Pagos',     'desc' => 'Métodos de pago aceptados en el kiosco'],
+    'impresora' => ['ico' => '', 'label' => 'Impresora', 'desc' => 'Configuración de la impresora térmica de tickets'],
+    'seguridad' => ['ico' => '', 'label' => 'Seguridad', 'desc' => 'Sesiones y protección de acceso al panel admin'],
+    'modulos'   => ['ico' => '', 'label' => 'Módulos',   'desc' => 'Funcionalidades extra — actívalas cuando estén listas'],
+    'general'   => ['ico' => '', 'label' => 'General',   'desc' => 'Configuración general del sistema'],
 ];
 
 $labels = [
@@ -46,7 +48,7 @@ $labels = [
 ];
 
 // Opciones para selects
-$opcionesConexion = ['usb' => '🔌 USB', 'red' => '🌐 Red (Wi-Fi / Ethernet)', 'bluetooth' => '📶 Bluetooth'];
+$opcionesConexion = ['usb' => 'USB', 'red' => 'Red (Wi-Fi / Ethernet)', 'bluetooth' => 'Bluetooth'];
 $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm — Estándar', '112mm' => '112 mm — Tickets grandes'];
 @endphp
 
@@ -54,7 +56,7 @@ $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm �
     @csrf
 
     @foreach($grupos as $grupo => $configs)
-    @php $meta = $iconosGrupo[$grupo] ?? ['ico'=>'⚙️','label'=>ucfirst($grupo),'desc'=>'']; @endphp
+    @php $meta = $iconosGrupo[$grupo] ?? ['ico' => '','label'=>ucfirst($grupo),'desc'=>'']; @endphp
 
     <div class="admin-card overflow-hidden">
 
@@ -177,7 +179,7 @@ $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm �
             <div id="info-impresora" class="px-6 py-4"
                  style="background:rgba(99,102,241,0.04);border-top:1px solid rgba(99,102,241,0.1);">
                 <div class="flex gap-3 items-start">
-                    <span class="text-xl flex-shrink-0" id="ico-conexion">🔌</span>
+                    <span class="text-xl flex-shrink-0" id="ico-conexion"></span>
                     <div class="text-xs" style="color:rgba(255,255,255,0.50);line-height:1.7;" id="desc-conexion">
                         <strong class="text-white">USB:</strong>
                         Conecta la impresora directamente al equipo por USB. No se requiere IP.
@@ -196,7 +198,7 @@ $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm �
         <a href="{{ route('admin.dashboard') }}"
            class="btn-ghost px-6 py-2.5">Cancelar</a>
         <button type="submit" class="btn-gold px-10 py-2.5">
-            💾 Guardar todos los cambios
+            Guardar todos los cambios
         </button>
     </div>
 
@@ -205,15 +207,15 @@ $opcionesPapel    = ['58mm' => '58 mm — Tickets pequeños', '80mm' => '80 mm �
 <script>
 const DESC_CONEXION = {
     usb: {
-        ico: '🔌',
+        ico: '',
         texto: '<strong class="text-white">USB:</strong> Conecta la impresora directamente al equipo por USB. No se requiere IP. Asegúrate de instalar el driver ESC/POS del fabricante en el servidor.',
     },
     red: {
-        ico: '🌐',
+        ico: '',
         texto: '<strong class="text-white">Red (Wi-Fi / Ethernet):</strong> La impresora debe tener una IP fija en la red local. Configura la IP exactamente como aparece en el panel de la impresora. Puerto por defecto: 9100.',
     },
     bluetooth: {
-        ico: '📶',
+        ico: '',
         texto: '<strong class="text-white">Bluetooth:</strong> Empareja la impresora con el equipo antes de habilitar. El sistema detectará el puerto COM asignado automáticamente. No se requiere IP.',
     },
 };
@@ -247,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Submit ────────────────────────────────────────────────────────
 document.getElementById('config-form').addEventListener('submit', function() {
     document.querySelectorAll('[form="config-form"], #config-form [type="submit"]')
-        .forEach(b => { b.disabled = true; b.textContent = '⏳ Guardando...'; });
+        .forEach(b => { b.disabled = true; b.textContent = 'Guardando...'; });
 });
 
 </script>

@@ -73,7 +73,7 @@ class ConfiguracionController extends Controller
         Configuracion::query()->limit(1)->update(['updated_at' => now()]);
 
         return redirect()->route('admin.configuracion.index')
-        ->with('success', '✅ Configuración guardada correctamente.')
+        ->with('success', 'Configuración guardada correctamente.')
         ->withHeaders([
             'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma'        => 'no-cache',

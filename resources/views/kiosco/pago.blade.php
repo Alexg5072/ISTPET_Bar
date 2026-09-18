@@ -19,9 +19,13 @@
 
         {{-- Logo --}}
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
                  style="background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);">
-                {{ $sede->slug === 'instituto' ? '🏛️' : '🚗' }}
+                @if($sede->slug === 'instituto')
+                    <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333M4.5 21V10.333"/></svg>
+                @else
+                    <svg class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.215-9.112c-.41-.57-.96-.864-1.57-.864H6.37c-.61 0-1.16.294-1.57.864A17.902 17.902 0 001.585 17.626c-.039.62.469 1.124 1.09 1.124H3.75m15 0V14.25m-15 0h15"/></svg>
+                @endif
             </div>
             <div>
                 <div class="font-display font-black text-white text-sm uppercase tracking-wider leading-tight">ISTPET Bar</div>
@@ -34,7 +38,7 @@
              style="background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.35);">
             <div class="w-2 h-2 rounded-full" style="background:#c9a84c;"></div>
             <span class="font-display font-bold text-sm uppercase tracking-wider" style="color:#e2c47a;">
-                {{ $sede->slug === 'instituto' ? '🏛️ Instituto Traversari' : '🚗 Escuela Conducción' }}
+                {{ $sede->nombre }}
             </span>
         </div>
 
@@ -49,7 +53,9 @@
                        border:1px solid rgba(201,168,76,0.75);
                        color:#ffd700;
                        text-shadow:0 0 8px rgba(255,215,0,0.6);">
-            <span id="kiosco-theme-icon" style="font-size:0.95rem;">☀️</span>
+            <span id="kiosco-theme-icon" style="display:flex;align-items:center;">
+                <svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </span>
             <span id="kiosco-theme-label-btn" class="kiosco-sede-badge" style="display:inline;">Claro</span>
         </button>
 
@@ -78,19 +84,15 @@
                 <div class="inline-flex items-center gap-2 mb-3">
                     <div class="paso-circulo w-8 h-8 rounded-full flex items-center justify-center font-display font-black text-sm"
                         style="background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);color:#c9a84c;">1</div>
-                    <span class="paso-label font-display font-bold text-xs uppercase tracking-wider paso-text-muted">Elegir</span>
-                    <div class="paso-linea w-8 h-px paso-line"></div>
-                    <div class="paso-circulo w-8 h-8 rounded-full flex items-center justify-center font-display font-black text-sm"
-                        style="background:linear-gradient(135deg,#a07d2e,#c9a84c);color:#0b1133;box-shadow:0 0 20px rgba(201,168,76,0.4);">2</div>
-                    <span class="paso-label font-display font-bold text-xs uppercase tracking-wider" style="color:#c9a84c;">Pagar</span>
-                    <div class="paso-linea w-8 h-px paso-line"></div>
-                    <div class="paso-circulo w-8 h-8 rounded-full flex items-center justify-center font-display font-black text-sm paso-inactive">3</div>
-                    <span class="paso-label font-display font-bold text-xs uppercase tracking-wider paso-text-inactive">Recibir</span>
+                    <span class="font-display font-bold text-xs uppercase tracking-widest" style="color:rgba(201,168,76,0.7);">Paso 1 de 2</span>
                 </div>
-                <h1 class="font-display font-black uppercase titulo-pago"
-                    style="font-size:clamp(2rem,3.5vw,2.8rem);letter-spacing:0.04em;">
-                    ¿Cómo deseas <span style="color:#c9a84c;">pagar</span>?
+                <h1 class="font-display font-black uppercase tracking-tight titulo-pago"
+                    style="font-size: clamp(1.6rem, 3.5vw, 2.4rem); line-height: 1.1;">
+                    Elige cómo pagar
                 </h1>
+                <p class="texto-desc" style="font-size: 0.88rem; margin-top: 0.35rem;">
+                    Selecciona tu método de pago preferido para confirmar tu pedido
+                </p>
             </div>
 
             {{-- GRID principal --}}
@@ -98,7 +100,9 @@
             <div style="max-width:520px;margin:0 auto;text-align:center;
                         background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);
                         border-radius:1.5rem;padding:3rem 2.5rem;">
-                <div style="font-size:4rem;margin-bottom:1rem;">🚫</div>
+                <div style="width:4.5rem;height:4.5rem;margin:0 auto 1.25rem;border-radius:1rem;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;color:#ef4444;">
+                    <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                </div>
                 <div class="font-display font-black uppercase titulo-pago"
                      style="font-size:1.4rem;letter-spacing:0.04em;margin-bottom:0.75rem;">
                     Sin métodos de pago
@@ -136,8 +140,10 @@
                                 width:2rem;height:2rem;border-radius:50%;background:#c9a84c;color:#0b1133;
                                 font-weight:900;font-size:1rem;align-items:center;justify-content:center;">✓</div>
                     <div style="width:5rem;height:5rem;border-radius:1rem;display:flex;align-items:center;
-                                justify-content:center;font-size:2.5rem;
-                                background:rgba(251,191,36,0.09);border:1px solid rgba(251,191,36,0.18);">💵</div>
+                                justify-content:center;
+                                background:rgba(251,191,36,0.09);border:1px solid rgba(251,191,36,0.18);color:#fbbf24;">
+                        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
+                    </div>
                     <div>
                         <div class="font-display font-black uppercase titulo-pago" style="font-size:1.5rem;letter-spacing:0.03em;margin-bottom:0.35rem;">Efectivo</div>
                         <p class="texto-desc" style="font-size:0.85rem;line-height:1.55;">
@@ -147,7 +153,7 @@
                     <div style="padding:0.4rem 1rem;border-radius:0.75rem;
                                 background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.18);">
                         <span style="font-size:0.7rem;color:#fbbf24;font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;">
-                            💡 Pagas al retirar en caja
+                            Pagas al retirar en caja
                         </span>
                     </div>
                 </div>
@@ -166,8 +172,10 @@
                                 width:2rem;height:2rem;border-radius:50%;background:#c9a84c;color:#0b1133;
                                 font-weight:900;font-size:1rem;align-items:center;justify-content:center;">✓</div>
                     <div style="width:5rem;height:5rem;border-radius:1rem;display:flex;align-items:center;
-                                justify-content:center;font-size:2.5rem;
-                                background:rgba(59,130,246,0.09);border:1px solid rgba(59,130,246,0.18);">📱</div>
+                                justify-content:center;
+                                background:rgba(59,130,246,0.09);border:1px solid rgba(59,130,246,0.18);color:#60a5fa;">
+                        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                    </div>
                     <div>
                         <div class="font-display font-black uppercase titulo-pago" style="font-size:1.5rem;letter-spacing:0.03em;margin-bottom:0.35rem;">QR DeUna</div>
                         <p class="texto-desc" style="font-size:0.85rem;line-height:1.55;">
@@ -177,7 +185,7 @@
                     <div style="padding:0.4rem 1rem;border-radius:0.75rem;
                                 background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.18);">
                         <span style="font-size:0.7rem;color:#93c5fd;font-family:var(--font-display);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;">
-                            📱 Verificación por el bar
+                            Verificación por el bar
                         </span>
                     </div>
                 </div>
@@ -189,7 +197,7 @@
                     {{-- DEFAULT --}}
                     <div id="panel-default" style="padding:1.25rem;">
                         <div class="font-display font-black" style="font-size:0.68rem;text-transform:uppercase;
-                            letter-spacing:0.12em;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;">📋 Tu pedido</div>
+                            letter-spacing:0.12em;color:rgba(255,255,255,0.3);margin-bottom:0.75rem;">Tu pedido</div>
                         <div style="display:flex;flex-direction:column;gap:0.45rem;margin-bottom:0.75rem;">
                             @foreach($carrito as $item)
                             <div style="display:flex;justify-content:space-between;align-items:start;">
@@ -208,7 +216,7 @@
                         </div>
                         <div style="padding:0.875rem;border-radius:0.875rem;margin-bottom:0.875rem;
                                     background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);">
-                            <div class="font-display font-black" style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(201,168,76,0.7);margin-bottom:0.5rem;">👆 Selecciona un método</div>
+                            <div class="font-display font-black" style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(201,168,76,0.7);margin-bottom:0.5rem;">Selecciona un método</div>
                             @foreach(['Elige Efectivo o QR arriba','Sigue las instrucciones del panel','Confirma con el botón dorado'] as $i=>$s)
                             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
                                 <span style="width:1.1rem;height:1.1rem;border-radius:50%;background:rgba(201,168,76,0.2);color:#c9a84c;
@@ -227,11 +235,18 @@
                     {{-- EFECTIVO --}}
                     <div id="panel-efectivo" style="display:none;padding:1.25rem;">
                         <div class="font-display font-black" style="font-size:0.68rem;text-transform:uppercase;
-                            letter-spacing:0.12em;color:rgba(251,191,36,0.7);margin-bottom:0.75rem;">💵 Pago en Efectivo</div>
-                        @foreach([['🧾','Genera tu comprobante','Presiona confirmar para obtener tu número de pedido.'],['🏪','Ve a la caja','Acércate a la ventanilla con tu número de pedido.'],['💵','Cancela el valor','Entrega $'.number_format($total,2).' al personal del bar.'],['🍽️','Recibe tu pedido','El personal preparará tu pedido de inmediato.']] as $s)
+                            letter-spacing:0.12em;color:rgba(251,191,36,0.7);margin-bottom:0.75rem;">Pago en Efectivo</div>
+                        @foreach([
+                            ['receipt','Genera tu comprobante','Presiona confirmar para obtener tu número de pedido.'],
+                            ['caja','Ve a la caja','Acércate a la ventanilla con tu número de pedido.'],
+                            ['cash','Cancela el valor','Entrega $'.number_format($total,2).' al personal del bar.'],
+                            ['utensils','Recibe tu pedido','El personal preparará tu pedido de inmediato.']
+                        ] as $s)
                         <div class="paso-item" style="display:flex;align-items:start;gap:0.6rem;padding:0.55rem;border-radius:0.75rem;margin-bottom:0.4rem;">
                             <div style="width:2rem;height:2rem;border-radius:0.5rem;display:flex;align-items:center;justify-content:center;
-                                        font-size:1rem;flex-shrink:0;background:rgba(251,191,36,0.08);">{{ $s[0] }}</div>
+                                        flex-shrink:0;background:rgba(251,191,36,0.08);color:#fbbf24;">
+                                <x-admin.icon :name="$s[0]" class="w-4 h-4" />
+                            </div>
                             <div>
                                 <div class="font-display font-bold uppercase titulo-pago" style="font-size:0.72rem;">{{ $s[1] }}</div>
                                 <div class="texto-desc" style="font-size:0.68rem;line-height:1.4;">{{ $s[2] }}</div>
@@ -239,7 +254,7 @@
                         </div>
                         @endforeach
                         <div class="panel-divider" style="padding-top:0.65rem;margin:0.75rem 0;
-                                    display:flex;justify-content:space-between;align-items:center;">
+                                     display:flex;justify-content:space-between;align-items:center;">
                             <span class="font-display font-black uppercase titulo-pago" style="font-size:0.85rem;">Total a pagar</span>
                             <span class="font-display font-black" style="font-size:1.75rem;color:#c9a84c;">${{ number_format($total,2) }}</span>
                         </div>
@@ -251,8 +266,9 @@
                                         background:linear-gradient(135deg,#a07d2e,#c9a84c,#e2c47a);
                                         color:#0b1133;font-family:var(--font-display);font-weight:900;
                                         font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;
-                                        box-shadow:0 8px 28px rgba(201,168,76,0.35);">
-                                💵 Confirmar — Ir a pagar en caja
+                                        box-shadow:0 8px 28px rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                                <x-admin.icon name="cash" class="w-5 h-5 flex-shrink-0" />
+                                <span>Confirmar — Ir a pagar en caja</span>
                             </button>
                         </form>
                     </div>
@@ -260,7 +276,7 @@
                     {{-- QR --}}
                     <div id="panel-qr" style="display:none;padding:1.25rem;">
                         <div class="font-display font-black" style="font-size:0.68rem;text-transform:uppercase;
-                            letter-spacing:0.12em;color:rgba(147,197,253,0.7);margin-bottom:0.75rem;">📱 Pago con QR DeUna</div>
+                            letter-spacing:0.12em;color:rgba(147,197,253,0.7);margin-bottom:0.75rem;">Pago con QR DeUna</div>
                         <div class="panel-inner-box" style="border-radius:0.875rem;padding:0.65rem 0.75rem;margin-bottom:0.75rem;">
                             @foreach($carrito as $item)
                             <div style="display:flex;justify-content:space-between;padding:0.2rem 0;">
@@ -282,8 +298,9 @@
                         </div>
                         <div style="padding:0.5rem 0.75rem;border-radius:0.75rem;margin-bottom:0.75rem;
                                     background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.18);">
-                            <p style="font-size:0.80rem;color:rgba(239,68,68,0.75);line-height:1.6;text-align:center;">
-                                ⚠️ El personal verificará tu pago antes de entregar el pedido.
+                            <p style="font-size:0.80rem;color:rgba(239,68,68,0.75);line-height:1.6;text-align:center;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+                                <x-admin.icon name="alert" class="w-4 h-4 text-rose-400 flex-shrink-0" />
+                                <span>El personal verificará tu pago antes de entregar el pedido.</span>
                             </p>
                         </div>
                         <button type="button" onclick="mostrarQR()"
@@ -291,8 +308,9 @@
                                     background:linear-gradient(135deg,#1e3a8a,#3b82f6);
                                     color:white;font-family:var(--font-display);font-weight:900;
                                     font-size:0.9rem;text-transform:uppercase;letter-spacing:0.04em;
-                                    box-shadow:0 8px 28px rgba(59,130,246,0.3);transition:all 0.2s;">
-                            📱 Mostrar código QR para pagar
+                                    box-shadow:0 8px 28px rgba(59,130,246,0.3);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                            <x-admin.icon name="qr" class="w-5 h-5 flex-shrink-0" />
+                            <span>Mostrar código QR para pagar</span>
                         </button>
                         <form action="{{ route('kiosco.pedido.store') }}" method="POST" id="form-qr" style="display:none;">
                             @csrf
@@ -325,7 +343,7 @@
                     box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(201,168,76,0.1);
                     animation:scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;">
             <div class="font-display font-black text-white uppercase" style="font-size:1.4rem;letter-spacing:0.04em;margin-bottom:0.35rem;">
-                📱 Escanea con DeUna
+                Escanea con DeUna
             </div>
             <p style="color:rgba(255,255,255,0.4);font-size:0.82rem;margin-bottom:1.5rem;">
                 Abre tu app DeUna → Escanear QR → Confirma <strong style="color:#c9a84c;">${{ number_format($total,2) }}</strong>
@@ -343,7 +361,7 @@
                             <img src="{{ asset('storage/qr/DEUNA.jpg') }}" alt="QR DeUna"
                                  style="width:100%;height:100%;object-fit:contain;"
                                  draggable="false" oncontextmenu="return false"
-                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;\'><div style=\'font-size:3rem;\'>📱</div><div style=\'font-size:0.7rem;color:#9ca3af;font-weight:700;margin-top:0.5rem;\'>QR no configurado</div></div>'">
+                                 onerror="this.parentElement.innerHTML='<div style=\'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#9ca3af;\'><svg style=\'width:3rem;height:3rem;margin-bottom:0.5rem;opacity:0.4;\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\' stroke-width=\'1.5\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z\'/></svg><div style=\'font-size:0.7rem;font-weight:700;\'>QR no configurado</div></div>'">
                         @endif
                     </div>
                     <div style="position:absolute;top:-4px;left:-4px;width:16px;height:16px;border-top:3px solid #c9a84c;border-left:3px solid #c9a84c;border-radius:4px 0 0 0;"></div>
@@ -365,8 +383,9 @@
                            background:linear-gradient(135deg,#166534,#22c55e);
                            color:white;font-family:var(--font-display);font-weight:900;
                            font-size:0.95rem;text-transform:uppercase;letter-spacing:0.05em;
-                           box-shadow:0 8px 28px rgba(34,197,94,0.35);margin-bottom:0.75rem;">
-                ✅ Ya transferí el monto
+                           box-shadow:0 8px 28px rgba(34,197,94,0.35);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+                <x-admin.icon name="check" class="w-5 h-5 flex-shrink-0" />
+                <span>Ya transferí el monto</span>
             </button>
             <button type="button" onclick="cerrarQR()"
                     style="width:100%;padding:0.75rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.1);
@@ -388,9 +407,11 @@
                     box-shadow:0 32px 80px rgba(0,0,0,0.7),0 0 0 1px rgba(201,168,76,0.1);
                     animation:scaleIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;">
             <div id="popup-icon" style="width:6rem;height:6rem;border-radius:50%;margin:0 auto 1.5rem;
-                        display:flex;align-items:center;justify-content:center;font-size:3rem;
+                        display:flex;align-items:center;justify-content:center;
                         background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));
-                        border:2px solid rgba(201,168,76,0.4);box-shadow:0 0 40px rgba(201,168,76,0.2);">🎟️</div>
+                        border:2px solid rgba(201,168,76,0.4);box-shadow:0 0 40px rgba(201,168,76,0.2);color:#c9a84c;">
+                <x-admin.icon name="receipt" class="w-12 h-12" />
+            </div>
             <div class="font-display font-black text-white uppercase" id="popup-titulo"
                  style="font-size:1.8rem;letter-spacing:0.04em;margin-bottom:0.5rem;">
                 ¡Pedido registrado!
@@ -519,16 +540,16 @@ function mostrarPopupTicket(method, codigo) {
     const contador  = document.getElementById('popup-contador');
     codigoEl.textContent = codigo;
     if (method === 'qr') {
-        icono.textContent     = '📱';
+        icono.innerHTML       = '<svg class="w-12 h-12 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>';
         titulo.textContent    = '¡Pago enviado!';
         subtitulo.textContent = 'El personal verificará tu transferencia DeUna. Espera con tu número de pedido.';
-        extra.innerHTML       = `<div style="padding:0.75rem;border-radius:0.875rem;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);"><p style="font-size:0.8rem;color:rgba(147,197,253,0.85);line-height:1.5;">📋 Muestra este número al personal del bar para verificar tu pago.</p></div>`;
+        extra.innerHTML       = `<div style="padding:0.75rem;border-radius:0.875rem;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);"><p style="font-size:0.8rem;color:rgba(147,197,253,0.85);line-height:1.5;">Muestra este número al personal del bar para verificar tu pago.</p></div>`;
         extra.style.display   = 'block';
     } else {
-        icono.textContent     = '🧾';
+        icono.innerHTML       = '<svg class="w-12 h-12 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z" /></svg>';
         titulo.textContent    = '¡Pedido registrado!';
         subtitulo.textContent = 'Dirígete a la caja con tu número de pedido. ¡El personal te atenderá!';
-        extra.innerHTML       = `<div style="padding:0.75rem;border-radius:0.875rem;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);"><p style="font-size:0.8rem;color:rgba(251,191,36,0.85);line-height:1.5;">💵 Recuerda llevar el monto exacto al cancelar en caja.</p></div>`;
+        extra.innerHTML       = `<div style="padding:0.75rem;border-radius:0.875rem;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);"><p style="font-size:0.8rem;color:rgba(251,191,36,0.85);line-height:1.5;">Recuerda llevar el monto exacto al cancelar en caja.</p></div>`;
         extra.style.display   = 'block';
     }
     popup.style.display = 'flex';
@@ -553,7 +574,7 @@ function applyKioscoThemeUI(t) {
     var bg    = document.getElementById('pago-bg');
 
     if (t === 'dark') {
-        if (icon)  icon.textContent  = '☀️';
+        if (icon)  icon.innerHTML   = '<svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
         if (label) label.textContent = 'Claro';
         if (btn) {
             btn.style.color      = '#ffd700';
@@ -567,7 +588,7 @@ function applyKioscoThemeUI(t) {
         }
         document.documentElement.setAttribute('data-theme', 'dark');
     } else {
-        if (icon)  icon.textContent  = '🌙';
+        if (icon)  icon.innerHTML   = '<svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
         if (label) label.textContent = 'Oscuro';
         if (btn) {
             btn.style.color      = '#cbd630';

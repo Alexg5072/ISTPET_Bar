@@ -41,8 +41,9 @@
         {{-- Errores --}}
         @if($errors->any())
         <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:0.875rem;padding:0.875rem 1rem;margin-bottom:1.5rem;">
-            <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:#fca5a5;margin-bottom:0.4rem;">
-                ⚠️ Corrige los siguientes errores
+            <div style="font-family:'Inter Tight',sans-serif;font-weight:800;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:#fca5a5;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem;">
+                <x-admin.icon name="alert" class="w-4 h-4 text-rose-400 flex-shrink-0" />
+                <span>Corrige los siguientes errores</span>
             </div>
             @foreach($errors->all() as $error)
             <div style="font-size:0.8rem;color:rgba(252,165,165,0.8);padding:0.15rem 0;">• {{ $error }}</div>
@@ -51,8 +52,9 @@
         @endif
 
         @if(session('success'))
-        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:0.875rem;padding:0.875rem 1rem;margin-bottom:1.5rem;color:#6ee7b7;font-size:0.85rem;">
-            ✅ {{ session('success') }}
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:0.875rem;padding:0.875rem 1rem;margin-bottom:1.5rem;color:#6ee7b7;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;">
+            <x-admin.icon name="check-circle" class="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span>{{ session('success') }}</span>
         </div>
         @endif
 
@@ -61,7 +63,7 @@
 
             {{-- Pasos visuales --}}
             <div style="display:flex;align-items:center;gap:0;margin-bottom:2rem;" id="steps-bar">
-                @foreach([['1','Datos','👤'],['2','Institución','🏛️'],['3','Acceso','🔐']] as $i => $s)
+                @foreach([['1','Datos'],['2','Institución'],['3','Acceso']] as $i => $s)
                 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;" id="step-indicator-{{ $s[0] }}">
                     <div style="width:2rem;height:2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;
                                 font-family:'Inter Tight',sans-serif;font-weight:900;font-size:0.75rem;
@@ -73,28 +75,27 @@
                           id="step-label-{{ $s[0] }}">{{ $s[1] }}</span>
                 </div>
                 @if($i < 2)
-                <div style="flex:1;height:1px;background:rgba(255,255,255,0.08);margin-bottom:1.5rem;" id="step-line-{{ $i+1 }}"></div>
+                <div style="flex:1;height:1px;background:rgba(255,255,255,0.1);margin-bottom:1rem;" id="step-line-{{ $i+1 }}"></div>
                 @endif
                 @endforeach
             </div>
 
             {{-- PASO 1: Datos personales --}}
             <div id="paso-1">
-                <div style="margin-bottom:1.25rem;">
+                <div style="margin-bottom:1rem;">
                     <label style="display:block;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.4);margin-bottom:0.5rem;">
                         Nombre completo *
                     </label>
                     <input type="text" name="name" value="{{ old('name') }}"
-                           placeholder="Ej: María José López Torres"
+                           placeholder="Tu nombre y apellido"
                            style="width:100%;padding:0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:0.9rem;outline:none;box-sizing:border-box;transition:border-color 0.2s;"
                            onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                            onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
-                           oninput="this.value=this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g,'')"
                            required>
                     @error('name')<span style="font-size:0.72rem;color:#f87171;margin-top:0.25rem;display:block;">{{ $message }}</span>@enderror
                 </div>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;">
                     <div>
                         <label style="display:block;font-family:'Inter Tight',sans-serif;font-weight:700;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.4);margin-bottom:0.5rem;">
                             Cédula *
@@ -107,7 +108,7 @@
                                    onblur="this.style.borderColor='rgba(255,255,255,0.1)';if(validarCedulaJS(this.value)){buscarNombrePorCedula(this.value);verificarCedulaUnica(this.value);}"
                                    oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"
                                    required>
-                            <span id="cedula-icon" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);font-size:1rem;"></span>
+                            <span id="cedula-icon" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;"></span>
                         </div>
                         <span id="cedula-msg" style="font-size:0.72rem;margin-top:0.25rem;display:block;"></span>
                         @error('cedula')<span style="font-size:0.72rem;color:#f87171;margin-top:0.25rem;display:block;">{{ $message }}</span>@enderror
@@ -151,7 +152,9 @@
                         <label style="cursor:pointer;" id="card-instituto">
                             <input type="radio" name="tipo_sede" value="instituto" class="hidden" {{ old('tipo_sede') === 'instituto' ? 'checked' : '' }} onchange="onSedeChange('instituto')">
                             <div style="padding:1rem;border-radius:0.875rem;border:2px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);text-align:center;transition:all 0.2s;" id="sede-card-instituto">
-                                <div style="font-size:1.75rem;margin-bottom:0.4rem;">🏛️</div>
+                                <div style="margin-bottom:0.4rem;display:flex;justify-content:center;color:#c9a84c;">
+                                    <x-admin.icon name="instituto" class="w-8 h-8" />
+                                </div>
                                 <div style="font-family:'Inter Tight',sans-serif;font-weight:900;font-size:0.75rem;color:white;text-transform:uppercase;letter-spacing:0.06em;">Instituto</div>
                                 <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:0.2rem;">Tecnológico</div>
                             </div>
@@ -159,7 +162,9 @@
                         <label style="cursor:pointer;" id="card-conduccion">
                             <input type="radio" name="tipo_sede" value="conduccion" class="hidden" {{ old('tipo_sede') === 'conduccion' ? 'checked' : '' }} onchange="onSedeChange('conduccion')">
                             <div style="padding:1rem;border-radius:0.875rem;border:2px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);text-align:center;transition:all 0.2s;" id="sede-card-conduccion">
-                                <div style="font-size:1.75rem;margin-bottom:0.4rem;">🚗</div>
+                                <div style="margin-bottom:0.4rem;display:flex;justify-content:center;color:#60a5fa;">
+                                    <x-admin.icon name="car" class="w-8 h-8" />
+                                </div>
                                 <div style="font-family:'Inter Tight',sans-serif;font-weight:900;font-size:0.75rem;color:white;text-transform:uppercase;letter-spacing:0.06em;">Conducción</div>
                                 <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:0.2rem;">Escuela</div>
                             </div>
@@ -178,26 +183,26 @@
                             onfocus="this.style.borderColor='rgba(201,168,76,0.5)'"
                             onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
                         <option value="">— Selecciona tu carrera —</option>
-                        <optgroup label="📍 Presencial">
+                        <optgroup label="Presencial">
                             <option value="Desarrollo de Software - Presencial" {{ old('carrera') === 'Desarrollo de Software - Presencial' ? 'selected' : '' }}>Desarrollo de Software</option>
                             <option value="Diseño Gráfico - Presencial" {{ old('carrera') === 'Diseño Gráfico - Presencial' ? 'selected' : '' }}>Diseño Gráfico</option>
                             <option value="Entrenamiento Deportivo - Presencial" {{ old('carrera') === 'Entrenamiento Deportivo - Presencial' ? 'selected' : '' }}>Entrenamiento Deportivo</option>
                             <option value="Educación Inicial - Presencial" {{ old('carrera') === 'Educación Inicial - Presencial' ? 'selected' : '' }}>Educación Inicial</option>
                             <option value="Mecánica Automotriz - Presencial" {{ old('carrera') === 'Mecánica Automotriz - Presencial' ? 'selected' : '' }}>Mecánica Automotriz</option>
                         </optgroup>
-                        <optgroup label="🌓 Semipresencial">
+                        <optgroup label="Semipresencial">
                             <option value="Educación Básica - Semipresencial" {{ old('carrera') === 'Educación Básica - Semipresencial' ? 'selected' : '' }}>Educación Básica</option>
                             <option value="Electrónica - Semipresencial" {{ old('carrera') === 'Electrónica - Semipresencial' ? 'selected' : '' }}>Electrónica</option>
                             <option value="Gastronomía - Semipresencial" {{ old('carrera') === 'Gastronomía - Semipresencial' ? 'selected' : '' }}>Gastronomía</option>
                             <option value="Redes y Telecomunicaciones - Semipresencial" {{ old('carrera') === 'Redes y Telecomunicaciones - Semipresencial' ? 'selected' : '' }}>Redes & Telecomunicaciones</option>
                         </optgroup>
-                        <optgroup label="💻 En Línea">
+                        <optgroup label="En Línea">
                             <option value="Desarrollo de Software - En Línea" {{ old('carrera') === 'Desarrollo de Software - En Línea' ? 'selected' : '' }}>Desarrollo de Software</option>
                             <option value="Contabilidad y Asesoría Tributaria - En Línea" {{ old('carrera') === 'Contabilidad y Asesoría Tributaria - En Línea' ? 'selected' : '' }}>Contabilidad y Asesoría Tributaria</option>
                             <option value="Educación Inclusiva - En Línea" {{ old('carrera') === 'Educación Inclusiva - En Línea' ? 'selected' : '' }}>Educación Inclusiva</option>
                             <option value="Marketing y Comercio Electrónico - En Línea" {{ old('carrera') === 'Marketing y Comercio Electrónico - En Línea' ? 'selected' : '' }}>Marketing & Comercio Electrónico</option>
                         </optgroup>
-                        <optgroup label="🔄 Híbrida">
+                        <optgroup label="Híbrida">
                             <option value="Talento Humano - Híbrida" {{ old('carrera') === 'Talento Humano - Híbrida' ? 'selected' : '' }}>Talento Humano</option>
                         </optgroup>
                     </select>
@@ -298,10 +303,11 @@
                                    background:linear-gradient(135deg,#a07d2e,#c9a84c,#e2c47a);
                                    color:#0b1133;font-family:'Inter Tight',sans-serif;font-weight:900;
                                    font-size:0.875rem;text-transform:uppercase;letter-spacing:0.06em;
-                                   box-shadow:0 6px 24px rgba(201,168,76,0.3);transition:all 0.2s;"
+                                   box-shadow:0 6px 24px rgba(201,168,76,0.3);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.4rem;"
                             onmouseover="this.style.transform='translateY(-2px)'"
                             onmouseout="this.style.transform=''">
-                        ✅ Crear cuenta
+                        <x-admin.icon name="check" class="w-4 h-4 text-gray-950" />
+                        <span>Crear cuenta</span>
                     </button>
                 </div>
             </div>
@@ -436,7 +442,7 @@ async function buscarNombrePorCedula(cedula) {
 
     const icon = document.getElementById('cedula-icon');
     const msg  = document.getElementById('cedula-msg');
-    if (icon) icon.textContent = '⏳';
+    if (icon) icon.innerHTML = '<svg class="w-4 h-4 text-amber-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
     if (msg)  { msg.textContent = 'Buscando...'; msg.style.color = 'rgba(255,255,255,0.4)'; }
 
     try {
@@ -455,17 +461,17 @@ async function buscarNombrePorCedula(cedula) {
             if (campoNombre && nombre && campoNombre.value.trim() === '') {
                 // Convertir a Title Case
                 campoNombre.value = nombre.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                if (msg) { msg.textContent = 'Cédula válida · Nombre autocompletado ✓'; msg.style.color = '#6ee7b7'; }
+                if (msg) { msg.textContent = 'Cédula válida · Nombre autocompletado'; msg.style.color = '#6ee7b7'; }
             } else {
-                if (msg) { msg.textContent = 'Cédula válida ✓'; msg.style.color = '#6ee7b7'; }
+                if (msg) { msg.textContent = 'Cédula válida'; msg.style.color = '#6ee7b7'; }
             }
         } else {
-            if (msg) { msg.textContent = 'Cédula válida ✓'; msg.style.color = '#6ee7b7'; }
+            if (msg) { msg.textContent = 'Cédula válida'; msg.style.color = '#6ee7b7'; }
         }
     } catch(e) {
         // Si la API falla, no pasa nada — validación local ya se hizo
         if (msg && msg.textContent === 'Buscando...') {
-            msg.textContent = 'Cédula válida ✓';
+            msg.textContent = 'Cédula válida';
             msg.style.color = '#6ee7b7';
         }
     }
@@ -480,7 +486,7 @@ function validarTelefono(val) {
         msg.style.color = '#f87171';
         return false;
     }
-    msg.textContent = 'Teléfono válido ✓';
+    msg.textContent = 'Teléfono válido';
     msg.style.color = '#6ee7b7';
     return true;
 }
@@ -494,7 +500,7 @@ function validarCedulaJS(cedula) {
     const prov = parseInt(cedula.substring(0,2));
     if (prov < 1 || prov > 24) {
         if (msg)  { msg.textContent = 'Provincia inválida'; msg.style.color = '#f87171'; }
-        if (icon) icon.textContent = '❌';
+        if (icon) icon.innerHTML = '<svg class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
         return false;
     }
     let suma = 0;
@@ -507,11 +513,11 @@ function validarCedulaJS(cedula) {
     const calc = residuo === 0 ? 0 : 10 - residuo;
     if (calc !== digitos[9]) {
         if (msg)  { msg.textContent = 'Cédula inválida'; msg.style.color = '#f87171'; }
-        if (icon) icon.textContent = '❌';
+        if (icon) icon.innerHTML = '<svg class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
         return false;
     }
-    if (msg)  { msg.textContent = 'Cédula válida ✓'; msg.style.color = '#6ee7b7'; }
-    if (icon) icon.textContent = '✅';
+    if (msg)  { msg.textContent = 'Cédula válida'; msg.style.color = '#6ee7b7'; }
+    if (icon) icon.innerHTML = '<svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
     return true;
 }
 
@@ -540,8 +546,8 @@ async function verificarCedulaUnica(cedula) {
         });
         const data = await res.json();
         if (data.existe) {
-            if (msg)  { msg.textContent = '⛔ Esta cédula ya tiene una cuenta registrada'; msg.style.color = '#f87171'; }
-            if (icon) icon.textContent = '❌';
+            if (msg)  { msg.textContent = 'Esta cédula ya tiene una cuenta registrada'; msg.style.color = '#f87171'; }
+            if (icon) icon.innerHTML = '<svg class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>';
             if (btn)  { btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; btn.title = 'Cédula ya registrada'; }
         } else {
             if (btn)  { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; btn.title = ''; }
@@ -561,7 +567,7 @@ async function verificarTelefonoUnico(telefono) {
         });
         const data = await res.json();
         if (data.existe) {
-            if (msg) { msg.textContent = '⛔ Este teléfono ya tiene una cuenta registrada'; msg.style.color = '#f87171'; }
+            if (msg) { msg.textContent = 'Este teléfono ya tiene una cuenta registrada'; msg.style.color = '#f87171'; }
             if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; btn.title = 'Teléfono ya registrado'; }
         } else {
             if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; btn.title = ''; }

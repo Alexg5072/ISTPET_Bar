@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Caja')
-@section('page-icon','💰')
+@section('page-icon')
+<x-admin.icon name="caja" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Caja del Día')
 @section('page-subtitle', 'Resumen · ' . ($periodoLabel ?? 'Hoy'))
 
@@ -17,7 +19,7 @@
         <div class="px-6 py-5 flex items-center justify-between"
              style="background:linear-gradient(135deg, {{ $item['sede']->color_primario }}dd, {{ $item['sede']->color_primario }});">
             <div class="flex items-center gap-3">
-                <span class="text-3xl">{{ $item['sede']->slug === 'instituto' ? '🏛️' : '🚗' }}</span>
+                <span class="text-3xl">@if($item['sede']->slug === 'instituto')<x-admin.icon name="instituto" class="w-7 h-7 text-amber-400" />@else<x-admin.icon name="car" class="w-7 h-7 text-blue-400" />@endif</span>
                 <div>
                     <div class="font-display font-black text-lg text-white uppercase tracking-wide">
                         Caja {{ $item['sede']->slug === 'instituto' ? 'Instituto' : 'Conducción' }}
@@ -36,15 +38,15 @@
         {{-- Desglose --}}
         <div class="grid grid-cols-3 divide-x divide-white/[0.06]">
             <div class="p-5 text-center">
-                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">💵 Efectivo</div>
+                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">Efectivo</div>
                 <div class="font-display font-black text-2xl text-white">${{ number_format($item['efectivo'], 2) }}</div>
             </div>
             <div class="p-5 text-center">
-                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">📱 QR DeUna</div>
+                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">QR DeUna</div>
                 <div class="font-display font-black text-2xl text-white">${{ number_format($item['qr'], 2) }}</div>
             </div>
             <div class="p-5 text-center">
-                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">🧾 Pedidos</div>
+                <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-2" style="color:rgba(255,255,255,0.50);">Pedidos</div>
                 <div class="font-display font-black text-2xl text-white">{{ $item['pedidos'] }}</div>
             </div>
         </div>
@@ -69,7 +71,7 @@
         <div class="px-6 pb-5 pt-3">
             <a href="{{ route('admin.caja.cierre', $item['sede']) }}?periodo={{ $periodo }}&fecha={{ $fecha }}"
                class="btn-gold w-full justify-center py-3">
-                🖨️ Imprimir cierre de caja {{ $item['sede']->slug === 'instituto' ? 'Instituto' : 'Conducción' }}
+                Imprimir cierre de caja {{ $item['sede']->slug === 'instituto' ? 'Instituto' : 'Conducción' }}
             </a>
         </div>
     </div>

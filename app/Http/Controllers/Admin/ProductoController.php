@@ -57,7 +57,7 @@ class ProductoController extends Controller
                 'stock_minimo' => 'required|integer|min:0',
                 'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ], [
-                'nombre.unique' => '⚠️ Ya existe un producto con ese nombre.',
+                'nombre.unique' => 'Ya existe un producto con ese nombre.',
             ]);
 
             Log::info('=== VALIDACION STORE OK ===', $data);
@@ -160,7 +160,7 @@ class ProductoController extends Controller
                 'precio'       => 'required|numeric|min:0',
                 'imagen'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ], [
-                'nombre.unique' => '⚠️ Ya existe un producto con ese nombre.',
+                'nombre.unique' => 'Ya existe un producto con ese nombre.',
             ]);
 
             Log::info('=== UPDATE VALIDACION OK ===', $data);
@@ -228,7 +228,7 @@ class ProductoController extends Controller
         AuditLog::registrar('Producto eliminado', Producto::class, $producto->id);
 
         return redirect()->route('admin.productos.index')
-            ->with('success', "🗑 Producto '{$nombre}' eliminado.");
+            ->with('success', "Producto '{$nombre}' eliminado.");
     }
 
     public function toggleStock(Producto $producto)
@@ -238,7 +238,7 @@ class ProductoController extends Controller
         $estado = $producto->stock_activo ? 'activado' : 'desactivado';
         AuditLog::registrar("Stock {$estado} — {$producto->nombre}", Producto::class, $producto->id);
 
-        return back()->with('success', "✅ Stock de '{$producto->nombre}' {$estado}.");
+        return back()->with('success', "Stock de '{$producto->nombre}' {$estado}.");
     }
 
     private function guardarImagen(UploadedFile $file, string $slug): string

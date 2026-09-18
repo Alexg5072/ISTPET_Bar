@@ -14,14 +14,14 @@ class CategoriaController extends Controller {
     public function store(Request $request) {
         $data = $request->validate([
             'nombre'  => 'required|string|max:100|unique:categorias,nombre',
-            'icono'   => 'nullable|string|max:10',
+            'icono'   => 'nullable|string|max:20',
             'sede_id' => 'nullable|exists:sedes,id',
             'orden'   => 'nullable|integer',
         ], [
-            'nombre.unique' => '⚠️ Ya existe una categoría con ese nombre.',
+            'nombre.unique' => 'Ya existe una categoría con ese nombre.',
         ]);
         $data['slug']  = Str::slug($data['nombre']);
-        $data['icono'] = $data['icono'] ?: '📁'; // default si viene null
+        $data['icono'] = $data['icono'] ?: 'utensils'; // default si viene null
         // Orden automático: siguiente al último
         if (empty($data['orden']) || $data['orden'] == 0) {
             $data['orden'] = (Categoria::max('orden') ?? 0) + 1;
@@ -33,14 +33,14 @@ class CategoriaController extends Controller {
     public function update(Request $request, Categoria $categoria) {
         $data = $request->validate([
             'nombre'  => 'required|string|max:100|unique:categorias,nombre,'.$categoria->id,
-            'icono'   => 'nullable|string|max:10',
+            'icono'   => 'nullable|string|max:20',
             'sede_id' => 'nullable|exists:sedes,id',
             'orden'   => 'nullable|integer',
         ], [
-            'nombre.unique' => '⚠️ Ya existe una categoría con ese nombre.',
+            'nombre.unique' => 'Ya existe una categoría con ese nombre.',
         ]);
 
-        $data['icono']  = $data['icono'] ?: ($categoria->icono ?: '📁');
+        $data['icono']  = $data['icono'] ?: ($categoria->icono ?: 'utensils');
         // ← Manejar activo FUERA del validate, directamente
         $data['activo'] = $request->has('activo');
 
@@ -50,7 +50,7 @@ class CategoriaController extends Controller {
 
     public function destroy(Categoria $categoria) {
         $categoria->delete();
-        return back()->with('success','🗑 Categoría eliminada.');
+        return back()->with('success','Categoría eliminada.');
     }
 
     public function create() { return view('admin.categorias.index'); }

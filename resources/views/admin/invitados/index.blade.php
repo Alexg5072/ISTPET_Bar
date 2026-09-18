@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Invitados')
-@section('page-icon','🧑‍🤝‍🧑')
+@section('page-icon')
+<x-admin.icon name="invitados" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Invitados / Externos')
 @section('page-subtitle','Módulo en preparación')
 @section('content')

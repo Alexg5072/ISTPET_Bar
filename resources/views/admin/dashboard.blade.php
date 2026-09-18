@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
-@section('page-icon', '📊')
+@section('page-icon')
+<x-admin.icon name="dashboard" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title', 'Dashboard')
 @section('page-subtitle', 'Resumen · ' . $periodoLabel . ' · ' . now()->translatedFormat('d \d\e F, g:i a'))
 
@@ -18,7 +20,7 @@
         <div class="kpi-card animate-fade-in">
             <div class="kpi-top">
                 <span class="kpi-label">Ventas · {{ $periodoLabel }}</span>
-                <div class="kpi-icon" style="background:rgba(201,168,76,0.12);color:#c9a84c;">💰</div>
+                <div class="kpi-icon flex items-center justify-center" style="background:rgba(201,168,76,0.12);color:#c9a84c;"><x-admin.icon name="caja" class="w-6 h-6" /></div>
             </div>
             <div class="kpi-value" style="color:#c9a84c;">${{ number_format($ventasHoy, 2) }}</div>
             <div class="kpi-sub">{{ $pedidosHoy }} pedidos</div>
@@ -28,10 +30,10 @@
         <div class="kpi-card animate-fade-in" style="animation-delay:.07s">
             <div class="kpi-top">
                 <span class="kpi-label">Pendientes hoy</span>
-                <div class="kpi-icon" style="background:rgba(239,68,68,0.12);color:#f87171;">⚠️</div>
+                <div class="kpi-icon flex items-center justify-center" style="background:rgba(239,68,68,0.12);color:#f87171;"><x-admin.icon name="alert" class="w-6 h-6" /></div>
             </div>
             <div class="kpi-value" style="color:{{ $pendientes > 0 ? '#f87171' : '#6ee7b7' }};">{{ $pendientes }}</div>
-            <div class="kpi-sub">{{ $pendientes > 0 ? 'Requieren atención' : 'Todo al día ✅' }}</div>
+            <div class="kpi-sub">{{ $pendientes > 0 ? 'Requieren atención' : 'Todo al día' }}</div>
             @if($pendientes > 0)
             <a href="{{ route('admin.pedidos.index') }}" class="kpi-action-btn">Ver pedidos →</a>
             @endif
@@ -41,7 +43,7 @@
         <div class="kpi-card animate-fade-in" style="animation-delay:{{ $loop->index * 0.07 + 0.14 }}s">
             <div class="kpi-top">
                 <span class="kpi-label">{{ $slug === 'instituto' ? 'Instituto' : 'Conducción' }}</span>
-                <div class="kpi-icon" style="background:rgba(99,102,241,0.12);color:#a5b4fc;">{{ $slug === 'instituto' ? '🏛️' : '🚗' }}</div>
+                <div class="kpi-icon flex items-center justify-center" style="background:rgba(99,102,241,0.12);color:#a5b4fc;">@if($slug === 'instituto')<x-admin.icon name="instituto" class="w-6 h-6" />@else<x-admin.icon name="car" class="w-6 h-6" />@endif</div>
             </div>
             <div class="kpi-value" style="color:#6ee7b7;">${{ number_format($info['ventas'], 2) }}</div>
             <div class="kpi-sub">{{ $info['pedidos'] }} pedidos</div>
@@ -55,14 +57,14 @@
 
         <div class="admin-card animate-fade-in" style="animation-delay:.25s">
             <div class="admin-card-header">
-                <div class="admin-card-title">⚠️ Requieren atención</div>
+                <div class="admin-card-title">Requieren atención</div>
             </div>
             <div class="p-3 space-y-2">
                 @if($pedidosPendientesCobro->isNotEmpty())
                 <div class="alert-row alert-yellow">
                     <div class="alert-dot" style="background:#facc15;"></div>
                     <div class="flex-1 min-w-0">
-                        <div class="alert-title">💰 Pendientes de cobro</div>
+                        <div class="alert-title">Pendientes de cobro</div>
                         <div class="alert-desc">{{ $pedidosPendientesCobro->pluck('codigo')->join(', ') }}</div>
                     </div>
                     <span class="alert-count" style="color:#facc15;flex-shrink:0;">{{ $pedidosPendientesCobro->count() }}</span>
@@ -72,7 +74,7 @@
                 <div class="alert-row alert-blue">
                     <div class="alert-dot" style="background:#60a5fa;"></div>
                     <div class="flex-1 min-w-0">
-                        <div class="alert-title">📱 Verificación QR pendiente</div>
+                        <div class="alert-title">Verificación QR pendiente</div>
                         <div class="alert-desc">{{ $pedidosPendientesQr->pluck('codigo')->join(', ') }}</div>
                     </div>
                     <span class="alert-count" style="color:#60a5fa;flex-shrink:0;">{{ $pedidosPendientesQr->count() }}</span>
@@ -82,7 +84,7 @@
                 <div class="alert-row alert-red">
                     <div class="alert-dot" style="background:#f87171;"></div>
                     <div class="flex-1 min-w-0">
-                        <div class="alert-title">⛔ Productos agotados</div>
+                        <div class="alert-title">Productos agotados</div>
                         <div class="alert-desc">{{ $productosAgotados->pluck('nombre')->join(', ') }}</div>
                     </div>
                     <span class="alert-count" style="color:#f87171;flex-shrink:0;">{{ $productosAgotados->count() }}</span>
@@ -90,7 +92,7 @@
                 @endif
                 @if($pedidosPendientesCobro->isEmpty() && $pedidosPendientesQr->isEmpty() && $productosAgotados->isEmpty())
                 <div class="text-center py-6" style="color:rgba(255,255,255,0.42);font-size:0.85rem;">
-                    ✅ Todo en orden. Sin alertas activas.
+                    Todo en orden. Sin alertas activas.
                 </div>
                 @endif
             </div>
@@ -98,7 +100,7 @@
 
         <div class="admin-card animate-fade-in" style="animation-delay:.3s">
             <div class="admin-card-header">
-                <div class="admin-card-title">⚡ Actividad reciente</div>
+                <div class="admin-card-title">Actividad reciente</div>
             </div>
             <div class="divide-y" style="border-color:rgba(255,255,255,0.04);">
                 @forelse($actividad as $log)
@@ -120,7 +122,7 @@
     {{-- ── ÚLTIMOS PEDIDOS ── --}}
     <div class="admin-card animate-fade-in" style="animation-delay:.38s">
         <div class="admin-card-header">
-            <div class="admin-card-title">🧾 Últimos pedidos — {{ $periodoLabel }}</div>
+            <div class="admin-card-title">Últimos pedidos — {{ $periodoLabel }}</div>
             <a href="{{ route('admin.pedidos.index') }}" class="btn-ghost text-xs py-1.5 px-3">Ver todos →</a>
         </div>
         <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
@@ -146,9 +148,9 @@
                     <tr>
                         <td class="col-id">{{ $pedido->codigo }}</td>
                         <td><span class="badge {{ $pedido->sede->slug==='instituto'?'badge-blue':'badge-gold' }}">
-                            {{ $pedido->sede->slug==='instituto'?'🏛️ IST':'🚗 Cond.' }}
+                            {{ $pedido->sede->slug==='instituto'?'IST':'Cond.' }}
                         </span></td>
-                        <td style="font-size:0.78rem;">{{ $pedido->metodo_pago==='qr_deuna'?'📱 QR':'💵 Ef.' }}</td>
+                        <td style="font-size:0.78rem;">{{ $pedido->metodo_pago==='qr_deuna'?'QR':'Efectivo' }}</td>
                         <td class="col-price">{{ $pedido->total_formateado }}</td>
                         <td><span class="badge {{ $bc }}">{{ $pedido->estado_badge['label'] }}</span></td>
                         <td style="font-size:0.72rem;color:rgba(255,255,255,0.50);">{{ $pedido->created_at->format('d/m H:i') }}</td>

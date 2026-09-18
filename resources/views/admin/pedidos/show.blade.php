@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Pedido ' . $pedido->codigo)
-@section('page-icon','🧾')
+@section('page-icon')
+<x-admin.icon name="pedidos" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title', $pedido->codigo)
 @section('page-subtitle', 'Detalle completo del pedido')
 
@@ -27,7 +29,7 @@
                 </div>
                 <div>
                     <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-1">Método</div>
-                    <div class="text-sm text-white">{{ $pedido->metodo_pago === 'qr_deuna' ? '📱 QR DeUna' : '💵 Efectivo' }}</div>
+                    <div class="text-sm text-white">{{ $pedido->metodo_pago === 'qr_deuna' ? 'QR DeUna' : 'Efectivo' }}</div>
                 </div>
                 <div>
                     <div class="text-[0.65rem] font-black uppercase tracking-wider text-gray-500 mb-1">Estado</div>
@@ -41,7 +43,7 @@
         <div class="admin-card p-6"
              style="background:linear-gradient(135deg,rgba(99,130,246,0.08),rgba(99,130,246,0.02));border-color:rgba(99,130,246,0.18);">
             <div class="flex items-center gap-2 mb-4">
-                <span class="text-lg">👤</span>
+                <x-admin.icon name="user" class="w-5 h-5 text-amber-400" />
                 <span class="font-display font-black text-sm uppercase tracking-wider text-gray-300">Cliente identificado</span>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -76,7 +78,7 @@
         @else
         <div class="admin-card p-4 flex items-center gap-3"
              style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.06);">
-            <span class="text-lg opacity-40">🕶️</span>
+            <x-admin.icon name="user" class="w-5 h-5 opacity-40" />
             <div class="text-xs text-gray-500">Este pedido se hizo sin iniciar sesión — no hay datos de cliente para mostrar.</div>
         </div>
         @endif
@@ -84,7 +86,7 @@
         {{-- Ítems del pedido --}}
         <div class="admin-card">
             <div class="admin-card-header">
-                <div class="admin-card-title">📋 Productos pedidos</div>
+                <div class="admin-card-title">Productos pedidos</div>
             </div>
             <table class="admin-table">
                 <thead>
@@ -126,7 +128,7 @@
                 @csrf @method('PATCH')
                 <button type="submit" class="btn-success w-full justify-center py-3"
                         onclick="return confirm('¿Verificaste el pago en la app DeUna?')">
-                    ✅ Verificar pago QR
+                    Verificar pago QR
                 </button>
             </form>
             @endif
@@ -136,7 +138,7 @@
                 @csrf @method('PATCH')
                 <button type="submit" class="btn-success w-full justify-center py-3"
                         onclick="return confirm('¿Cobraste {{ $pedido->total_formateado }} en efectivo?')">
-                    💵 Cobrar en efectivo
+                    Cobrar en efectivo
                 </button>
             </form>
             @endif
@@ -145,7 +147,7 @@
             <form method="POST" action="{{ route('admin.pedidos.entregar', $pedido) }}">
                 @csrf @method('PATCH')
                 <button type="submit" class="btn-blue w-full justify-center py-3">
-                    📦 Marcar como entregado
+                    Marcar como entregado
                 </button>
             </form>
             @endif
@@ -155,14 +157,14 @@
                 @csrf @method('PATCH')
                 <button type="submit" class="btn-danger w-full justify-center py-3"
                         onclick="return confirm('¿Cancelar el pedido {{ $pedido->codigo }}? Esta acción queda en auditoría.')">
-                    ❌ Cancelar pedido
+                    Cancelar pedido
                 </button>
             </form>
             @endif
 
             @if($pedido->estado === 'entregado')
             <div class="text-center py-4 text-emerald-400 text-sm font-semibold">
-                ✅ Pedido completado y entregado<br>
+                Pedido completado y entregado<br>
                 <span class="text-xs text-gray-500">{{ $pedido->entregado_at?->format('H:i d/m/Y') }}</span>
             </div>
             @endif

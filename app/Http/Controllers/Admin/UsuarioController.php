@@ -29,21 +29,21 @@ class UsuarioController extends Controller {
         ]);
         $user->assignRole($data['role']);
         AuditLog::registrar('Usuario creado — '.$user->name, User::class, $user->id);
-        return back()->with('success',"✅ Usuario '{$user->name}' creado.");
+        return back()->with('success',"Usuario '{$user->name}' creado.");
     }
     public function toggle(User $usuario) {
         if ($usuario->id === Auth::id()) return back()->with('error','No puedes desactivar tu propia cuenta.');
         $usuario->update(['activo' => !$usuario->activo]);
         $estado = $usuario->activo ? 'activado' : 'desactivado';
         AuditLog::registrar("Usuario {$estado} — {$usuario->name}", User::class, $usuario->id);
-        return back()->with('success',"✅ Usuario {$estado}.");
+        return back()->with('success',"Usuario {$estado}.");
     }
     public function destroy(User $usuario) {
         if ($usuario->id === Auth::id()) return back()->with('error','No puedes eliminar tu propia cuenta.');
         if ($usuario->hasRole('superadmin')) return back()->with('error','No puedes eliminar un superadmin.');
         AuditLog::registrar('Usuario eliminado — '.$usuario->name, User::class, $usuario->id);
         $usuario->delete();
-        return back()->with('success','🗑 Usuario eliminado.');
+        return back()->with('success','Usuario eliminado.');
     }
     public function create() { return redirect()->route('admin.usuarios.index'); }
     public function show(User $u) { return redirect()->route('admin.usuarios.index'); }

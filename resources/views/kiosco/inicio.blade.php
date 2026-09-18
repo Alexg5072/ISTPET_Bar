@@ -81,7 +81,6 @@
 
                 {{-- Badge sede --}}
                 <div class="card-badge">
-                    <span>{{ $sede->slug === 'instituto' ? '🏛️' : '🚗' }}</span>
                     <span>{{ strtoupper($sede->slug === 'instituto' ? 'Instituto' : 'Conducción') }}</span>
                 </div>
 
@@ -91,7 +90,13 @@
                 {{-- Ícono grande --}}
                 <div class="card-icon-wrap">
                     <div class="card-icon-ring"></div>
-                    <div class="card-icon">{{ $sede->slug === 'instituto' ? '🎓' : '🚗' }}</div>
+                    <div class="card-icon flex items-center justify-center">
+                        @if($sede->slug === 'instituto')
+                            <svg class="w-12 h-12 text-amber-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333M4.5 21V10.333"/></svg>
+                        @else
+                            <svg class="w-12 h-12 text-blue-400 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.948c0-.621-.504-1.125-1.125-1.125H5.625c-.621 0-1.125.504-1.125 1.125v12.25"/></svg>
+                        @endif
+                    </div>
                 </div>
 
                 {{-- Texto --}}
@@ -134,17 +139,21 @@
 
     {{-- Botón admin oculto — solo visible si NO es usuario del kiosco --}}
     @if(!auth()->check() || !auth()->user()->hasRole('usuario'))
-    <a href="{{ route('admin.dashboard') }}" class="admin-btn">🔐 Iniciar Sesión</a>
+    <a href="{{ route('admin.dashboard') }}" class="admin-btn flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        <span>Iniciar Sesión</span>
+    </a>
     @endif
 
     {{-- Botón registro / sesión --}}
     @auth
         @if(auth()->user()->hasRole('usuario'))
-        <button type="button" onclick="abrirMisPedidos()" class="mis-pedidos-btn">
-            📋 Mis pedidos
+        <button type="button" onclick="abrirMisPedidos()" class="mis-pedidos-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Mis pedidos</span>
         </button>
-        <div class="user-session-btn">
-            <span style="font-size:0.85rem;">👤</span>
+        <div class="user-session-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span>{{ explode(' ', auth()->user()->name)[0] }}</span>
             <form method="POST" action="{{ route('logout') }}" style="margin:0;display:inline;">
                 @csrf
@@ -153,7 +162,10 @@
         </div>
         @endif
     @else
-        <a href="{{ route('register') }}" class="register-btn">👤 Registrarse</a>
+        <a href="{{ route('register') }}" class="register-btn flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            <span>Registrarse</span>
+        </a>
     @endauth
 
 </div>
@@ -166,7 +178,7 @@
         <div class="mp-sticky-top">
             <div class="mp-modal-header">
                 <div>
-                    <div class="mp-modal-title">📋 Mis Pedidos</div>
+                    <div class="mp-modal-title">Mis Pedidos</div>
                     <div class="mp-modal-sub">Historial de compras de {{ explode(' ', auth()->user()->name)[0] }}</div>
                 </div>
                 <button onclick="cerrarMisPedidos()" class="mp-modal-close">✕</button>
@@ -177,8 +189,8 @@
                     <label class="mp-filtro-label">Método de pago</label>
                     <select id="mp-filtro-metodo" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
                         <option value="">Todos</option>
-                        <option value="efectivo">💵 Efectivo</option>
-                        <option value="qr_deuna">📱 QR DeUna</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="qr_deuna">QR DeUna</option>
                     </select>
                 </div>
                 <div class="mp-filtro-group">
@@ -189,7 +201,7 @@
                     <label class="mp-filtro-label">Hasta</label>
                     <input type="date" id="mp-filtro-hasta" class="mp-filtro-select" onchange="aplicarFiltrosMisPedidos()">
                 </div>
-                <button type="button" class="mp-filtro-clear" onclick="limpiarFiltrosMisPedidos()" title="Quitar filtros">✕ Limpiar</button>
+                <button type="button" class="mp-filtro-clear" onclick="limpiarFiltrosMisPedidos()" title="Quitar filtros">Limpiar</button>
             </div>
         </div>
 
@@ -1026,16 +1038,16 @@ sessionStorage.removeItem('istpet-kiosco-cat-activa');
 <script>
 const MIS_PEDIDOS_ROUTE = '{{ route("kiosco.mis-pedidos") }}';
 const BADGE_COLOR_MAP = { yellow:'mp-badge-yellow', blue:'mp-badge-blue', green:'mp-badge-green', gray:'mp-badge-gray', red:'mp-badge-red' };
-const METODO_LABEL_MAP = { efectivo: '💵 Efectivo', qr_deuna: '📱 QR DeUna' };
+const METODO_LABEL_MAP = { efectivo: 'Efectivo', qr_deuna: 'QR DeUna' };
 
 let _misPedidosData = [];
 let _pollingInterval = null;
 
 // Mensajes de notificación por cambio de estado
 const ESTADO_NOTIF = {
-    pagado:    { msg: '💵 Tu pedido fue cobrado. ¡Espera el llamado para recogerlo!', color: '#10b981' },
-    entregado: { msg: '📦 ¡Tu pedido está listo! Pasa a recogerlo.',                 color: '#6366f1' },
-    cancelado: { msg: '❌ Tu pedido fue cancelado. Consulta en el mostrador.',        color: '#ef4444' },
+    pagado:    { msg: 'Tu pedido fue cobrado. Espera el llamado para recogerlo.', color: '#10b981' },
+    entregado: { msg: 'Tu pedido está listo. Pasa a recogerlo.',                 color: '#6366f1' },
+    cancelado: { msg: 'Tu pedido fue cancelado. Consulta en el mostrador.',        color: '#ef4444' },
 };
 
 function abrirMisPedidos() {
@@ -1064,7 +1076,7 @@ function detenerPolling() {
 
 async function cargarMisPedidos() {
     const body = document.getElementById('mp-modal-body');
-    body.innerHTML = `<div class="mp-empty"><div class="mp-empty-icon" style="font-size:1.8rem;animation:spin 1s linear infinite;">⏳</div></div>`;
+    body.innerHTML = `<div class="mp-empty"><div class="mp-empty-icon" style="font-size:1.8rem;animation:spin 1s linear infinite;"><svg class="w-8 h-8 mx-auto text-gray-500 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div></div>`;
     try {
         const res  = await fetch(MIS_PEDIDOS_ROUTE, { headers: { 'Accept': 'application/json' } });
         const data = await res.json();
@@ -1073,7 +1085,7 @@ async function cargarMisPedidos() {
     } catch (e) {
         body.innerHTML = `
             <div class="mp-empty">
-                <div class="mp-empty-icon">⚠️</div>
+                <div class="mp-empty-icon flex justify-center"><svg class="w-10 h-10 text-amber-500/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg></div>
                 <div class="mp-empty-title">No se pudo cargar</div>
                 <div class="mp-empty-sub">Intenta abrir el historial nuevamente.</div>
             </div>`;
@@ -1155,12 +1167,12 @@ function pintarListaMisPedidos(lista, esFiltro = false) {
     if (!lista || lista.length === 0) {
         body.innerHTML = esFiltro ? `
             <div class="mp-empty">
-                <div class="mp-empty-icon">🔍</div>
+                <div class="mp-empty-icon flex justify-center"><svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg></div>
                 <div class="mp-empty-title">Sin resultados</div>
                 <div class="mp-empty-sub">No hay pedidos que coincidan con esos filtros.</div>
             </div>` : `
             <div class="mp-empty">
-                <div class="mp-empty-icon">🧾</div>
+                <div class="mp-empty-icon flex justify-center"><svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z"/></svg></div>
                 <div class="mp-empty-title">Aún no tienes pedidos</div>
                 <div class="mp-empty-sub">Cuando hagas tu primera compra aparecerá aquí.</div>
             </div>`;

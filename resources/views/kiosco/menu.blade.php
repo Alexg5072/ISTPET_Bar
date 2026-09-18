@@ -133,9 +133,13 @@
 
         {{-- Logo --}}
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                  style="background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);">
-                {{ $sede->slug === 'instituto' ? '🏛️' : '🚗' }}
+                @if($sede->slug === 'instituto')
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333M4.5 21V10.333"/></svg>
+                @else
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.948c0-.621-.504-1.125-1.125-1.125H5.625c-.621 0-1.125.504-1.125 1.125v12.25"/></svg>
+                @endif
             </div>
             <div>
                 <div class="font-display font-black text-white text-sm uppercase tracking-wider leading-tight">ISTPET Bar</div>
@@ -148,7 +152,7 @@
              style="background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.35);">
             <div class="w-2 h-2 rounded-full" style="background:#c9a84c;"></div>
             <span class="font-display font-bold text-sm uppercase tracking-wider" style="color:#e2c47a;">
-                {{ $sede->slug === 'instituto' ? '🏛️ Instituto Traversari' : '🚗 Escuela Conducción' }}
+                {{ $sede->slug === 'instituto' ? 'Instituto Traversari' : 'Escuela Conducción' }}
             </span>
         </div>
 
@@ -163,7 +167,7 @@
                        border:1px solid rgba(201,168,76,0.75);
                        color:#ffd700;
                        text-shadow:0 0 8px rgba(255,215,0,0.6);">
-            <span id="kiosco-theme-icon" style="font-size:0.95rem;">☀️</span>
+            <svg id="kiosco-theme-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span id="kiosco-theme-label-btn" class="kiosco-sede-badge" style="display:inline;">Claro</span>
         </button>
 
@@ -172,7 +176,7 @@
             @if(auth()->user()->hasRole('usuario'))
             <div style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0.85rem;border-radius:999px;
                         background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);">
-                <span style="font-size:0.75rem;color:rgba(255,255,255,0.4);">👤</span>
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 <span style="font-family:var(--font-display);font-weight:700;font-size:0.75rem;color:#c9a84c;text-transform:uppercase;letter-spacing:0.06em;">
                     {{ explode(' ', auth()->user()->name)[0] }}
                 </span>
@@ -215,7 +219,7 @@
             <div class="mb-5">
                 <h2 class="font-display font-black text-2xl uppercase tracking-wide mb-0.5"
                     style="color: var(--kiosco-title, #ffffff);">
-                    ¿Qué vas a pedir hoy? 🍽️
+                    ¿Qué vas a pedir hoy?
                 </h2>
                 <p style="color: var(--kiosco-sub, rgba(255,255,255,0.5)); font-size: 0.875rem;">
                     Selecciona una categoría y agrega productos al carrito
@@ -226,20 +230,20 @@
                 <button onclick="cargarProductos('todos', this)"
                         class="flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-3 rounded-2xl font-display font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-95"
                         style="min-width: 90px; background: {{ $sede->color_primario }}; color: #c9a84c;
-                               border: 2px solid #c9a84c; box-shadow: 0 4px 16px rgba(27,42,107,0.3);"
+                                border: 2px solid #c9a84c; box-shadow: 0 4px 16px rgba(27,42,107,0.3);"
                         data-cat="todos">
-                    <span class="text-2xl">🍽️</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v11.25c0 1.242-1.008 2.25-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM13.5 10.5a2.25 2.25 0 012.25-2.25h2.25a2.25 2.25 0 012.25 2.25v6.75c0 1.242-1.008 2.25-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25v-6.75z"/></svg>
                     <span>Todos</span>
                 </button>
 
                 <button onclick="cargarProductos('combos', this)"
                         class="flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-3 rounded-2xl font-display font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-95"
                         style="min-width: 90px; background: var(--kiosco-cat-bg,#1a1f32); color: var(--kiosco-cat-color,rgba(255,255,255,0.75));
-                               border: 2px solid var(--kiosco-cat-border,rgba(255,255,255,0.1)); box-shadow: 0 2px 10px rgba(0,0,0,0.25);"
+                                border: 2px solid var(--kiosco-cat-border,rgba(255,255,255,0.1)); box-shadow: 0 2px 10px rgba(0,0,0,0.25);"
                         data-cat="combos"
                         onmouseover="if(!this.classList.contains('cat-active'))this.style.boxShadow='0 4px 20px rgba(0,0,0,0.35)'"
                         onmouseout="if(!this.classList.contains('cat-active'))this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
-                    <span class="text-2xl">⭐</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
                     <span>Combos</span>
                 </button>
 
@@ -247,11 +251,10 @@
                 <button onclick="cargarProductos('{{ $cat->id }}', this)"
                         class="flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-3 rounded-2xl font-display font-black text-xs uppercase tracking-wider transition-all duration-200 active:scale-95"
                         style="min-width: 90px; background: var(--kiosco-cat-bg,#1a1f32); color: var(--kiosco-cat-color,rgba(255,255,255,0.75));
-                               border: 2px solid var(--kiosco-cat-border,rgba(255,255,255,0.1)); box-shadow: 0 2px 10px rgba(0,0,0,0.25);"
+                                border: 2px solid var(--kiosco-cat-border,rgba(255,255,255,0.1)); box-shadow: 0 2px 10px rgba(0,0,0,0.25);"
                         data-cat="{{ $cat->id }}"
                         onmouseover="if(!this.classList.contains('cat-active'))this.style.boxShadow='0 4px 20px rgba(0,0,0,0.35)'"
                         onmouseout="if(!this.classList.contains('cat-active'))this.style.boxShadow='0 4px 16px rgba(0,0,0,0.2)'">
-                    <span class="text-2xl">{{ $cat->icono }}</span>
                     <span>{{ $cat->nombre }}</span>
                 </button>
                 @endforeach
@@ -259,7 +262,7 @@
 
             <h3 class="font-display font-black text-lg uppercase tracking-wide mb-4"
                 style="color: var(--kiosco-title, #ffffff);" id="section-title">
-                🍽️ Todos los productos
+                Todos los productos
             </h3>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4" id="products-grid">
@@ -284,7 +287,7 @@
         <div class="flex items-center justify-between px-5 py-4 flex-shrink-0"
              style="border-bottom: 1px solid rgba(255,255,255,0.1);">
             <div class="flex items-center gap-2.5">
-                <span class="text-xl">🛒</span>
+                <svg class="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 <span class="font-display font-black text-white text-base uppercase tracking-wider">Tu pedido</span>
                 <span id="cart-badge"
                       class="flex items-center justify-center w-6 h-6 rounded-full font-black text-xs transition-transform duration-200"
@@ -292,16 +295,21 @@
                       x-text="$store.carrito.count">0</span>
             </div>
             <button type="button" onclick="confirmarLimpiar()"
-                    class="text-lg transition-colors duration-150"
-                    style="color: rgba(255,255,255,0.2);"
-                    onmouseover="this.style.color='rgba(239,68,68,0.7)'"
-                    onmouseout="this.style.color='rgba(255,255,255,0.2)'">🗑</button>
+                    class="transition-colors duration-150 p-1 rounded-lg"
+                    style="color: rgba(255,255,255,0.25);"
+                    onmouseover="this.style.color='rgba(239,68,68,0.8)'"
+                    onmouseout="this.style.color='rgba(255,255,255,0.25)'"
+                    title="Vaciar carrito">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
         </div>
 
         <div class="flex-1 overflow-y-auto px-4 py-2">
             <div x-show="$store.carrito.vacio"
                  class="flex flex-col items-center justify-center h-full gap-3 py-10">
-                <div class="text-5xl opacity-15">🛒</div>
+                <div class="opacity-15 flex items-center justify-center text-white">
+                    <svg class="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
                 <div class="font-display font-bold text-xs uppercase tracking-wider text-center"
                      style="color: rgba(255,255,255,0.3);">
                     Tu carrito está vacío
@@ -312,8 +320,10 @@
                     <template x-for="item in $store.carrito.items" :key="item.tipo + '_' + item.id">
                         <div class="flex items-center gap-3 py-3"
                              style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                                 style="background: rgba(255,255,255,0.08);">🍽️</div>
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                                 style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4);">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            </div>
                             <div class="flex-1 min-w-0">
                                 <div class="font-display font-bold text-sm text-white uppercase truncate leading-tight"
                                      x-text="item.nombre"></div>
@@ -374,7 +384,9 @@
         style="background: linear-gradient(135deg, {{ $sede->color_primario }}, {{ $sede->color_primario }}dd);">
     <div style="display:flex;align-items:center;gap:0.6rem;">
         <div style="position:relative;">
-            <span style="font-size:1.5rem;">🛒</span>
+            <span class="flex items-center justify-center text-white">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </span>
             <span x-text="$store.carrito.count"
                   x-show="$store.carrito.count > 0"
                   style="position:absolute;top:-6px;right:-8px;
@@ -424,7 +436,9 @@
     <div style="display:flex;align-items:center;justify-content:space-between;
                 padding:0.6rem 1.25rem 0.75rem;border-bottom:1px solid rgba(255,255,255,0.1);">
         <div style="display:flex;align-items:center;gap:0.5rem;">
-            <span style="font-size:1.1rem;">🛒</span>
+            <span class="flex items-center text-amber-400">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </span>
             <span style="font-family:var(--font-display);font-weight:900;color:white;font-size:0.95rem;
                          text-transform:uppercase;letter-spacing:0.06em;">Tu pedido</span>
             <span style="background:#c9a84c;color:#0b1133;font-weight:900;font-size:0.7rem;
@@ -505,7 +519,7 @@ function applyKioscoThemeUI(t) {
     var label = document.getElementById('kiosco-theme-label-btn');
     var btn   = document.getElementById('kiosco-theme-btn');
     if (t === 'dark') {
-        if (icon)  icon.textContent  = '☀️';
+        if (icon)  icon.innerHTML   = '<svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
         if (label) label.textContent = 'Claro';
         if (btn) {
             btn.style.background   = 'rgba(201,168,76,0.32)';
@@ -514,7 +528,7 @@ function applyKioscoThemeUI(t) {
             btn.style.textShadow   = '0 0 8px rgba(255,215,0,0.6)';
         }
     } else {
-        if (icon)  icon.textContent  = '🌙';
+        if (icon)  icon.innerHTML   = '<svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>';
         if (label) label.textContent = 'Oscuro';
         if (btn) {
             btn.style.background   = 'rgba(201,168,76,0.32)';
@@ -638,7 +652,9 @@ async function cargarProductos(catId, btn) {
         renderProductos(data.productos ?? []);
     } catch(e) {
         grid.innerHTML = `<div class="col-span-full text-center py-12" style="color:#9ca3af;">
-            <div style="font-size:2.5rem;margin-bottom:0.5rem;">😔</div>
+            <div style="margin-bottom:0.5rem;display:flex;justify-content:center;">
+                <svg class="w-10 h-10 text-rose-400 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+            </div>
             <div style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:0.85rem;">
                 Error al cargar productos
             </div>
@@ -651,7 +667,9 @@ function renderProductos(productos) {
 
     if (!productos.length) {
         grid.innerHTML = `<div class="col-span-full text-center py-12">
-            <div style="font-size:2.5rem;margin-bottom:0.75rem;opacity:0.3;">🍽️</div>
+            <div style="margin-bottom:0.75rem;opacity:0.3;display:flex;justify-content:center;">
+                <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            </div>
             <div style="font-family:var(--font-display);font-weight:700;text-transform:uppercase;font-size:0.85rem;color:#9ca3af;">
                 Sin productos en esta categoría
             </div>
@@ -681,10 +699,13 @@ function renderProductos(productos) {
                 onmouseup="this.style.transform='translateY(-5px) scale(1.01)'"` : ''}>
 
             ${p.es_combo ? `
-                <div style="position:absolute;top:0;left:0;padding:0.2rem 0.7rem;border-radius:0 0 0.6rem 0;z-index:10;
+                <div style="position:absolute;top:0;left:0;padding:0.25rem 0.7rem;border-radius:0 0 0.6rem 0;z-index:10;
                              background:linear-gradient(135deg,#8a6a20,#c9a84c);color:#0b1133;
                              font-family:var(--font-display);font-weight:900;font-size:0.6rem;
-                             text-transform:uppercase;letter-spacing:0.08em;">⭐ Combo</div>` : ''}
+                             text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:0.3rem;">
+                    <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    Combo
+                </div>` : ''}
 
             ${!p.disponible ? `
                 <div style="position:absolute;top:0.5rem;right:0.5rem;padding:0.2rem 0.5rem;border-radius:0.4rem;z-index:10;
@@ -697,7 +718,9 @@ function renderProductos(productos) {
                      style="width:100%;height:100%;object-fit:cover;"
                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                 <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;
-                             font-size:3rem;background:var(--kiosco-img-bg,#0d1228);">🍽️</div>
+                             background:var(--kiosco-img-bg,#0d1228);color:rgba(255,255,255,0.25);">
+                    <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                </div>
             </div>
 
             <div style="padding:0.85rem;">
@@ -735,7 +758,7 @@ function handleProductClick(el) {
     const card = el.closest('[data-tipo]') || el;
     if (!card.dataset.tipo) return;
     if (card.dataset.disponible === 'false' || card.dataset.disponible === 'undefined') {
-        window.showToast?.(`⛔ ${card.dataset.nombre} está agotado`, 'error');
+        window.showToast?.(`${card.dataset.nombre} está agotado`, 'error');
         return;
     }
     const stock = card.dataset.stock ? parseInt(card.dataset.stock) : 999;
@@ -761,7 +784,9 @@ function confirmarLimpiar() {
                     border-radius:1.5rem;padding:2.25rem 2rem;max-width:360px;width:92%;
                     text-align:center;box-shadow:0 28px 70px rgba(0,0,0,0.55);
                     animation:scaleIn 0.25s ease both;">
-            <div style="font-size:3.5rem;margin-bottom:1rem;line-height:1;">🗑️</div>
+            <div style="margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;width:4.5rem;height:4.5rem;border-radius:1rem;background:rgba(239,68,68,0.1);color:#ef4444;">
+                <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
             <div style="font-family:var(--font-display);font-weight:900;font-size:1.25rem;
                         color:white;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">
                 ¿Vaciar carrito?

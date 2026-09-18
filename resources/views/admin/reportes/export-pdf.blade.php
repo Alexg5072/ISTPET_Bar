@@ -147,8 +147,8 @@ tr:hover td { background: #f5f7ff; }
 
 {{-- Barra solo en pantalla --}}
 <div class="print-bar">
-    <span class="print-bar-title">📄 Reporte ISTPET Bar — {{ $periodoLabel }}</span>
-    <button class="print-btn" onclick="window.print()">🖨️ Descargar / Guardar PDF</button>
+    <span class="print-bar-title">Reporte ISTPET Bar — {{ $periodoLabel }}</span>
+    <button class="print-btn" onclick="window.print()">Descargar / Guardar PDF</button>
 </div>
 
 <div class="page">
@@ -173,13 +173,13 @@ tr:hover td { background: #f5f7ff; }
     <div class="content">
 
         {{-- Ventas por sede --}}
-        <div class="sec-title">📊 Ventas por Sede</div>
+        <div class="sec-title">Ventas por Sede</div>
         <div class="sedes-grid">
             @foreach($datos as $d)
             <div class="sede-card">
                 <div class="sede-card-hdr">
                     <div class="sede-card-nombre">
-                        {{ $d['sede']->slug === 'instituto' ? '🏛️' : '🚗' }} {{ $d['sede']->nombre }}
+                        {{ $d['sede']->nombre }}
                     </div>
                     <div class="sede-card-total">${{ number_format($d['total'], 2) }}</div>
                 </div>
@@ -258,7 +258,7 @@ tr:hover td { background: #f5f7ff; }
 
         {{-- Productos más vendidos --}}
         @if($masVendidos->isNotEmpty())
-        <div class="sec-title">🏆 Top {{ $masVendidos->count() }} Productos Más Vendidos</div>
+        <div class="sec-title">Top {{ $masVendidos->count() }} Productos Más Vendidos</div>
 
         {{-- Gráfico de barras horizontal SVG --}}
         @php
@@ -306,7 +306,7 @@ tr:hover td { background: #f5f7ff; }
             <tbody>
                 @foreach($masVendidos as $i => $p)
                 <tr>
-                    <td class="medal td-center">{{ $i < 3 ? ['🥇','🥈','🥉'][$i] : ($i+1) }}</td>
+                    <td class="medal td-center" style="font-weight:900;">#{{ $i + 1 }}</td>
                     <td class="prod-name">{{ $p->nombre_snapshot }}</td>
                     <td class="td-right td-center">{{ $p->total_unidades }}</td>
                     <td class="td-right gold-val">${{ number_format($p->total_ingresos, 2) }}</td>

@@ -1,7 +1,9 @@
 {{-- admin/usuarios/index.blade.php --}}
 @extends('layouts.app')
 @section('title','Usuarios')
-@section('page-icon','👥')
+@section('page-icon')
+<x-admin.icon name="usuarios" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Usuarios y Roles')
 @section('page-subtitle','Gestiona quién accede al sistema y qué puede hacer')
 @section('header-actions')
@@ -16,16 +18,16 @@
     <div class="grid gap-4" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
         @php
         $roleInfo = [
-            'superadmin' => ['icon'=>'👑','color'=>'gold-400','label'=>'Superadmin','desc'=>'Acceso total'],
-            'admin'      => ['icon'=>'🧑‍💼','color'=>'blue-400','label'=>'Admin','desc'=>'Gestión operativa'],
-            'cajero'     => ['icon'=>'🏪','color'=>'emerald-400','label'=>'Cajero','desc'=>'Pedidos y caja'],
-            'visor'      => ['icon'=>'👁️','color'=>'gray-400','label'=>'Visor','desc'=>'Solo lectura'],
-            'usuario'    => ['icon'=>'🎓','color'=>'purple-400','label'=>'Usuario','desc'=>'Cliente kiosco'],
+            'superadmin' => ['icon'=>'','color'=>'gold-400','label'=>'Superadmin','desc'=>'Acceso total'],
+            'admin'      => ['icon'=>'','color'=>'blue-400','label'=>'Admin','desc'=>'Gestión operativa'],
+            'cajero'     => ['icon'=>'','color'=>'emerald-400','label'=>'Cajero','desc'=>'Pedidos y caja'],
+            'visor'      => ['icon'=>'','color'=>'gray-400','label'=>'Visor','desc'=>'Solo lectura'],
+            'usuario'    => ['icon'=>'','color'=>'purple-400','label'=>'Usuario','desc'=>'Cliente kiosco'],
         ];
         @endphp
         @foreach($roles as $rol)
         <div class="admin-card p-4">
-            <div class="text-2xl mb-2">{{ $roleInfo[$rol->name]['icon'] ?? '👤' }}</div>
+            <div class="mb-2 flex justify-center text-amber-400"><x-admin.icon name="user" class="w-6 h-6" /></div>
             <div class="font-display font-black text-sm uppercase text-white">{{ $roleInfo[$rol->name]['label'] ?? $rol->name }}</div>
             <div class="text-xs text-gray-500" style="color:rgba(255,255,255,0.50);">
                 {{ $roleInfo[$rol->name]['desc'] ?? '' }}
@@ -40,7 +42,7 @@
     {{-- Tabla usuarios --}}
     <div class="admin-card">
         <div class="admin-card-header">
-            <div class="admin-card-title">👤 Usuarios registrados</div>
+            <div class="admin-card-title">Usuarios registrados</div>
             <span class="text-xs text-gray-500" style="color:rgba(255,255,255,0.50);">
                 {{ $usuarios->total() }} usuarios
             </span>
@@ -75,7 +77,7 @@
                         </td>
                         <td>
                             <span class="badge {{ $usuario->activo ? 'badge-success' : 'badge-danger' }}">
-                                {{ $usuario->activo ? '✅ Activo' : '❌ Inactivo' }}
+                                {{ $usuario->activo ? 'Activo' : 'Inactivo' }}
                             </span>
                         </td>
                         <td>
@@ -84,14 +86,14 @@
                                 <form method="POST" action="{{ route('admin.usuarios.toggle', $usuario) }}">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-ghost text-xs py-1 px-2">
-                                        {{ $usuario->activo ? '🚫' : '✅' }}
+                                        {{ $usuario->activo ? 'Desactivar' : 'Activar' }}
                                     </button>
                                 </form>
                                 @if(!$usuario->hasRole('superadmin'))
                                 <form method="POST" action="{{ route('admin.usuarios.destroy', $usuario) }}">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn-danger"
-                                            onclick="return confirm('¿Eliminar a {{ $usuario->name }}?')">🗑</button>
+                                            onclick="return confirm('¿Eliminar a {{ $usuario->name }}?')"><x-admin.icon name="trash" class="w-3.5 h-3.5" /></button>
                                 </form>
                                 @endif
                                 @endif
@@ -112,7 +114,7 @@
 <div id="modal-usuario" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-admin-card border border-white/10 rounded-2xl p-6 w-full max-w-md animate-scale-in">
         <div class="flex justify-between items-center mb-5">
-            <h3 class="font-display font-black text-lg uppercase tracking-wider">👤 Nuevo Usuario</h3>
+            <h3 class="font-display font-black text-lg uppercase tracking-wider">Nuevo Usuario</h3>
             <button onclick="document.getElementById('modal-usuario').classList.add('hidden')" class="text-gray-500 hover:text-white text-xl">✕</button>
         </div>
         <form action="{{ route('admin.usuarios.store') }}" method="POST" class="space-y-4">
@@ -147,7 +149,7 @@
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
-                <button type="submit" class="btn-gold flex-1 justify-center py-3">✅ Crear usuario</button>
+                <button type="submit" class="btn-gold flex-1 justify-center py-3">Crear usuario</button>
                 <button type="button" onclick="document.getElementById('modal-usuario').classList.add('hidden')" class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
             </div>
         </form>

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Pedidos')
-@section('page-icon','🧾')
+@section('page-icon')
+<x-admin.icon name="pedidos" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Gestión de Pedidos')
 @section('page-subtitle','Verifica pagos QR · Cobra en efectivo · Marca entregas')
 
@@ -32,19 +34,19 @@
             <label class="text-[0.65rem] font-black uppercase tracking-wider block mb-1" style="color:rgba(255,255,255,0.50);">Estado</label>
             <select name="estado" class="admin-select w-full">
                 <option value="">Todos los estados</option>
-                <option value="pendiente_pago"         {{ request('estado') === 'pendiente_pago' ? 'selected' : '' }}>💰 Pend. Pago</option>
-                <option value="pendiente_verificacion" {{ request('estado') === 'pendiente_verificacion' ? 'selected' : '' }}>📱 Pend. QR</option>
-                <option value="pagado"                 {{ request('estado') === 'pagado' ? 'selected' : '' }}>✅ Pagado</option>
-                <option value="entregado"              {{ request('estado') === 'entregado' ? 'selected' : '' }}>📦 Entregado</option>
-                <option value="cancelado"              {{ request('estado') === 'cancelado' ? 'selected' : '' }}>❌ Cancelado</option>
+                <option value="pendiente_pago"         {{ request('estado') === 'pendiente_pago' ? 'selected' : '' }}>Pend. Pago</option>
+                <option value="pendiente_verificacion" {{ request('estado') === 'pendiente_verificacion' ? 'selected' : '' }}>Pend. QR</option>
+                <option value="pagado"                 {{ request('estado') === 'pagado' ? 'selected' : '' }}>Pagado</option>
+                <option value="entregado"              {{ request('estado') === 'entregado' ? 'selected' : '' }}>Entregado</option>
+                <option value="cancelado"              {{ request('estado') === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
             </select>
         </div>
         <div class="flex-1 min-w-[160px]">
             <label class="text-[0.65rem] font-black uppercase tracking-wider block mb-1" style="color:rgba(255,255,255,0.50);">Método</label>
             <select name="metodo" class="admin-select w-full">
                 <option value="">Todos</option>
-                <option value="efectivo"  {{ request('metodo') === 'efectivo' ? 'selected' : '' }}>💵 Efectivo</option>
-                <option value="qr_deuna"  {{ request('metodo') === 'qr_deuna' ? 'selected' : '' }}>📱 QR DeUna</option>
+                <option value="efectivo"  {{ request('metodo') === 'efectivo' ? 'selected' : '' }}>Efectivo</option>
+                <option value="qr_deuna"  {{ request('metodo') === 'qr_deuna' ? 'selected' : '' }}>QR DeUna</option>
             </select>
         </div>
         <button type="submit" class="btn-primary py-2">Filtrar</button>
@@ -54,20 +56,20 @@
     {{-- Guía rápida --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="p-4 bg-yellow-400/5 border border-yellow-400/15 rounded-xl">
-            <div class="font-display font-black text-sm text-yellow-400 mb-2">💵 Flujo Efectivo</div>
+            <div class="font-display font-black text-sm text-yellow-400 mb-2">Flujo Efectivo</div>
             <ol class="text-xs space-y-1 list-decimal list-inside" style="color:rgba(255,255,255,0.55);">
                 <li>Cliente presenta comprobante en caja</li>
                 <li>Cobras el monto indicado</li>
-                <li>Presionas <strong class="text-white">💵 Cobrar</strong></li>
-                <li>Presionas <strong class="text-white">📦 Entregar</strong> al dar el pedido</li>
+                <li>Presionas <strong class="text-white">Cobrar</strong></li>
+                <li>Presionas <strong class="text-white">Entregar</strong> al dar el pedido</li>
             </ol>
         </div>
         <div class="p-4 bg-blue-400/5 border border-blue-400/15 rounded-xl">
-            <div class="font-display font-black text-sm text-blue-400 mb-2">📱 Flujo QR DeUna</div>
+            <div class="font-display font-black text-sm text-blue-400 mb-2">Flujo QR DeUna</div>
             <ol class="text-xs space-y-1 list-decimal list-inside" style="color:rgba(255,255,255,0.55);">
                 <li>Verificas en tu app DeUna que llegó el pago</li>
-                <li>Presionas <strong class="text-white">✅ Verificar QR</strong></li>
-                <li>Presionas <strong class="text-white">📦 Entregar</strong> al dar el pedido</li>
+                <li>Presionas <strong class="text-white">Verificar QR</strong></li>
+                <li>Presionas <strong class="text-white">Entregar</strong> al dar el pedido</li>
             </ol>
         </div>
     </div>
@@ -75,7 +77,7 @@
     {{-- Tabla --}}
     <div class="admin-card">
         <div class="admin-card-header">
-            <div class="admin-card-title">🧾 Pedidos — {{ $periodoLabel }}</div>
+            <div class="admin-card-title">Pedidos — {{ $periodoLabel }}</div>
             <span class="text-xs" style="color:rgba(255,255,255,0.50);">{{ $pedidos->total() }} pedidos</span>
         </div>
         <div class="overflow-x-auto">
@@ -98,18 +100,18 @@
                         <td class="col-id">{{ $pedido->codigo }}</td>
                         <td>
                             <span class="badge {{ $pedido->sede->slug === 'instituto' ? 'badge-blue' : 'badge-gold' }}">
-                                {{ $pedido->sede->slug === 'instituto' ? '🏛️ IST' : '🚗 Cond.' }}
+                                {{ $pedido->sede->slug === 'instituto' ? 'IST' : 'Cond.' }}
                             </span>
                         </td>
                         <td class="text-xs">
                             @if($pedido->user)
-                                <span style="color:rgba(165,180,252,0.9);font-weight:600;">👤 {{ $pedido->user->primer_nombre }}</span>
+                                <span style="color:rgba(165,180,252,0.9);font-weight:600;">{{ $pedido->user->primer_nombre }}</span>
                             @else
-                                <span style="color:rgba(255,255,255,0.25);">🕶️ Anónimo</span>
+                                <span style="color:rgba(255,255,255,0.25);">Anónimo</span>
                             @endif
                         </td>
                         <td class="text-xs" style="color:rgba(255,255,255,0.50);">{{ $pedido->created_at->format('d/m H:i') }}</td>
-                        <td class="text-xs" style="color:rgba(255,255,255,0.75);">{{ $pedido->metodo_pago === 'qr_deuna' ? '📱 QR DeUna' : '💵 Efectivo' }}</td>
+                        <td class="text-xs" style="color:rgba(255,255,255,0.75);">{{ $pedido->metodo_pago === 'qr_deuna' ? 'QR DeUna' : 'Efectivo' }}</td>
                         <td class="col-price">{{ $pedido->total_formateado }}</td>
                         <td>
                             <span class="badge badge-{{ $pedido->estado_badge['color'] }}">
@@ -123,7 +125,7 @@
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-success"
                                             onclick="return confirm('¿Verificaste el pago QR en DeUna?')">
-                                        ✅ Verificar QR
+                                        Verificar QR
                                     </button>
                                 </form>
                                 @endif
@@ -133,7 +135,7 @@
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-success"
                                             onclick="return confirm('¿Cobraste ${{ $pedido->total }} en efectivo?')">
-                                        💵 Cobrar
+                                        Cobrar
                                     </button>
                                 </form>
                                 @endif
@@ -141,7 +143,7 @@
                                 @if($pedido->puedeEntregarse())
                                 <form method="POST" action="{{ route('admin.pedidos.entregar', $pedido) }}">
                                     @csrf @method('PATCH')
-                                    <button type="submit" class="btn-blue">📦 Entregar</button>
+                                    <button type="submit" class="btn-blue">Entregar</button>
                                 </form>
                                 @endif
 
@@ -152,7 +154,7 @@
                                     @csrf @method('PATCH')
                                     <button type="submit" class="btn-danger"
                                             onclick="return confirm('¿Cancelar el pedido {{ $pedido->codigo }}?')">
-                                        ❌
+                                        <x-admin.icon name="close" class="w-4 h-4 text-rose-400" />
                                     </button>
                                 </form>
                                 @endif

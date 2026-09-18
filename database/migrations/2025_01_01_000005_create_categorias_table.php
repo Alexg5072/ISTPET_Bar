@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('area_venta_id')->nullable()->constrained('areas_venta')->nullOnDelete();
             $table->string('nombre');
             $table->string('slug')->unique();
-            $table->string('icono', 10)->default('🍽️');    // emoji
+            $table->string('icono', 20)->default('utensils');
             $table->string('imagen_path')->nullable();
             $table->unsignedTinyInteger('orden')->default(0);
             $table->boolean('activo')->default(true);

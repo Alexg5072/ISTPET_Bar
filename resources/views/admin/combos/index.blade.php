@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Combos')
-@section('page-icon','⭐')
+@section('page-icon')
+<x-admin.icon name="combos" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Gestión de Combos')
 @section('page-subtitle','Combos del menú · Visibles en el kiosco bajo la categoría "Combos"')
 @section('header-actions')
@@ -13,7 +15,7 @@
     {{-- Info --}}
     <div class="admin-card p-4 flex gap-3 items-center"
          style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03));border-color:rgba(201,168,76,0.18);">
-        <span class="text-2xl flex-shrink-0">⭐</span>
+        <span class="flex items-center justify-center text-amber-400"><x-admin.icon name="star" class="w-6 h-6" /></span>
         <div class="flex-1">
             <div class="text-sm font-bold text-white mb-0.5">Combos del menú</div>
             <div class="text-xs" style="color:rgba(255,255,255,0.50);">
@@ -35,10 +37,10 @@
                 <div class="combo-img-overlay"></div>
                 <div class="combo-price">${{ number_format($combo->precio, 2) }}</div>
                 <div class="combo-state-badge {{ $combo->activo ? 'combo-state-on' : 'combo-state-off' }}">
-                    {{ $combo->activo ? '🟢 Activo' : '⏸ Inactivo' }}
+                    {{ $combo->activo ? 'Activo' : 'Inactivo' }}
                 </div>
                 @if($combo->sede)
-                <div class="combo-sede-badge">{{ $combo->sede->slug === 'instituto' ? '🏛️' : '🚗' }}</div>
+                <div class="combo-sede-badge">{{ $combo->sede->slug === 'instituto' ? 'Instituto' : 'Conducción' }}</div>
                 @endif
             </div>
             <div class="combo-body">
@@ -58,7 +60,7 @@
                     @endforeach
                 </div>
                 @if(!$combo->disponible && $combo->activo)
-                <div class="combo-alert">⚠️ No disponible — algún producto está agotado</div>
+                <div class="combo-alert">No disponible — algún producto está agotado</div>
                 @endif
             </div>
             <div class="combo-actions">
@@ -71,17 +73,17 @@
                         {{ $combo->activo ? 'true' : 'false' }},
                         {{ $combo->items->map(fn($i)=>['id'=>$i->producto_id,'qty'=>$i->cantidad])->toJson() }},
                         '{{ $combo->imagen_url }}'
-                    )">✏️ Editar</button>
+                    )">Editar</button>
                 <form method="POST" action="{{ route('admin.combos.destroy', $combo) }}">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-danger py-2 px-3 text-xs"
-                            onclick="return confirm('¿Eliminar «{{ $combo->nombre }}»?')">🗑</button>
+                            onclick="return confirm('¿Eliminar «{{ $combo->nombre }}»?')"></button>
                 </form>
             </div>
         </div>
         @empty
         <div class="admin-card p-16 col-span-3 text-center">
-            <div style="font-size:4rem;opacity:.1;margin-bottom:1rem;">⭐</div>
+            <div class="flex justify-center opacity-10 mb-4 text-amber-400"><x-admin.icon name="combos" class="w-16 h-16" /></div>
             <div class="font-display font-black text-lg uppercase tracking-wider mb-2" style="color:rgba(255,255,255,0.2);">Sin combos</div>
             <div class="text-sm mb-6" style="color:rgba(255,255,255,0.18);">Crea tu primer combo para que aparezca en el kiosco.</div>
             <button onclick="abrirNuevoCombo()" class="btn-gold">+ Crear primer combo</button>
@@ -99,7 +101,7 @@
         {{-- Header sticky --}}
         <div class="ist-modal-header">
             <div>
-                <div class="ist-modal-title" id="combo-modal-title">➕ Nuevo Combo</div>
+                <div class="ist-modal-title" id="combo-modal-title">Nuevo Combo</div>
                 <div class="ist-modal-sub">Define los productos que conforman el combo</div>
             </div>
             <button onclick="cerrarModalCombo()" class="ist-modal-close">✕</button>
@@ -113,7 +115,7 @@
             <div class="img-upload-wrap" onclick="document.getElementById('combo-imagen').click()">
                 <img id="combo-img-preview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
                 <div id="combo-img-placeholder">
-                    <span style="font-size:2rem;opacity:.3;">🖼️</span>
+                    <span style="font-size:2rem;opacity:.3;"></span>
                     <span style="font-size:0.72rem;color:rgba(255,255,255,0.50);margin-top:0.4rem;text-align:center;">
                         Clic para subir imagen del combo<br>
                         <span style="font-size:0.65rem;opacity:.7; color:rgba(255,255,255,0.50);">JPG, PNG, WEBP</span>
@@ -131,7 +133,7 @@
                            placeholder="Ej: Combo Clásico" required
                            oninput="validarNombreComboModal(this.value)">
                     <span id="combo-nombre-error" class="ist-field-error" style="display:none;">
-                        ⚠️ Ya existe un combo con ese nombre
+                        Ya existe un combo con ese nombre
                     </span>
                 </div>
 
@@ -162,7 +164,7 @@
                                class="admin-input" placeholder="0.00" required readonly
                                oninput="if(!document.getElementById('combo-precio-auto').checked) marcarPrecioManual();">
                         <span id="combo-precio-hint" style="font-size:0.62rem;color:rgba(110,231,183,0.8);font-weight:700;">
-                            ⚡ Precio calculado automáticamente
+                            Precio calculado automáticamente
                         </span>
                     </div>
                     <div class="ist-field-group" style="padding-bottom:0.2rem;">
@@ -195,7 +197,7 @@
 
             <div class="flex gap-3 pt-1">
                 <button type="submit" class="btn-gold flex-1 justify-center py-3" id="btn-combo-guardar">
-                    ✅ Crear combo
+                    Crear combo
                 </button>
                 <button type="button" onclick="cerrarModalCombo()"
                         class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
@@ -338,12 +340,12 @@ function toggleComboPrecioAuto(activo) {
     if (activo) {
         input.readOnly = true;
         hint.style.display = '';
-        hint.textContent = '⚡ Precio calculado automáticamente';
+        hint.textContent = 'Precio calculado automáticamente';
         hint.style.color = 'rgba(110,231,183,0.8)';
         calcularPrecioComboAuto();
     } else {
         input.readOnly = false;
-        hint.textContent = '✏️ Ingresa el precio del combo';
+        hint.textContent = 'Ingresa el precio del combo';
         hint.style.color = 'rgba(255,255,255,0.35)';
         input.focus();
     }
@@ -428,8 +430,8 @@ function _resetComboModal() {
 
 function abrirNuevoCombo() {
     _comboEditId = null; _comboNombreOriginal = null;
-    document.getElementById('combo-modal-title').textContent = '➕ Nuevo Combo';
-    document.getElementById('btn-combo-guardar').textContent = '✅ Crear combo';
+    document.getElementById('combo-modal-title').textContent = 'Nuevo Combo';
+    document.getElementById('btn-combo-guardar').textContent = 'Crear combo';
     document.getElementById('form-combo').action = STORE_COMBO_ROUTE;
     document.getElementById('combo-method').value = 'POST';
     document.getElementById('combo-nombre').value = '';
@@ -448,8 +450,8 @@ function abrirNuevoCombo() {
 
 function abrirEditarCombo(id, nombre, descripcion, precio, activo, items, imagenUrl) {
     _comboEditId = id; _comboNombreOriginal = nombre.toLowerCase().trim();
-    document.getElementById('combo-modal-title').textContent = '✏️ Editar Combo';
-    document.getElementById('btn-combo-guardar').textContent = '💾 Guardar cambios';
+    document.getElementById('combo-modal-title').textContent = 'Editar Combo';
+    document.getElementById('btn-combo-guardar').textContent = 'Guardar cambios';
     document.getElementById('form-combo').action = `/admin/combos/${id}`;
     document.getElementById('combo-method').value = 'PUT';
     document.getElementById('combo-nombre').value = nombre;

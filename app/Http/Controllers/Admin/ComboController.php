@@ -33,7 +33,7 @@ class ComboController extends Controller
             'cantidades'   => 'required|array',
             'cantidades.*' => 'integer|min:1',
         ], [
-            'nombre.unique' => '⚠️ Ya existe un combo con ese nombre.',
+            'nombre.unique' => 'Ya existe un combo con ese nombre.',
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -71,7 +71,7 @@ class ComboController extends Controller
         AuditLog::registrar('Combo creado — '.$combo->nombre, Combo::class, $combo->id);
 
         return redirect()->route('admin.combos.index')
-            ->with('success', "✅ Combo '{$combo->nombre}' creado.");
+            ->with('success', "Combo '{$combo->nombre}' creado.");
     }
 
     public function edit(Combo $combo)
@@ -90,7 +90,7 @@ class ComboController extends Controller
             'precio'      => 'required|numeric|min:0',
             'imagen'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ], [
-            'nombre.unique' => '⚠️ Ya existe un combo con ese nombre.',
+            'nombre.unique' => 'Ya existe un combo con ese nombre.',
         ]);
 
         // Checkbox activo — si no viene en POST es false
@@ -120,7 +120,7 @@ class ComboController extends Controller
         AuditLog::registrar('Combo actualizado — '.$combo->nombre, Combo::class, $combo->id);
 
         return redirect()->route('admin.combos.index')
-            ->with('success', "✅ Combo '{$combo->nombre}' actualizado.");
+            ->with('success', "Combo '{$combo->nombre}' actualizado.");
     }
 
     public function destroy(Combo $combo)
@@ -131,7 +131,7 @@ class ComboController extends Controller
         AuditLog::registrar('Combo eliminado — '.$nombre, Combo::class, $combo->id);
 
         return redirect()->route('admin.combos.index')
-            ->with('success', "🗑 Combo '{$nombre}' eliminado.");
+            ->with('success', "Combo '{$nombre}' eliminado.");
     }
 
     public function show(Combo $combo) { return redirect()->route('admin.combos.index'); }

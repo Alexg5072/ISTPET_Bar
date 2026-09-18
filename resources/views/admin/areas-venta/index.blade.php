@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Áreas de Venta')
-@section('page-icon','🏪')
+@section('page-icon')
+<x-admin.icon name="areas-venta" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Áreas de Venta')
 @section('page-subtitle','Bar · Cocina · Pastelería — Módulo en preparación')
 @section('content')

@@ -1,10 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Cierre de Caja — ' . $sede->nombre)
-@section('page-icon','🖨️')
+@section('page-icon')
+<x-admin.icon name="receipt" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Cierre de Caja')
 @section('page-subtitle', $sede->nombre . ' · ' . $periodoLabel)
 @section('header-actions')
-    <button onclick="window.print()" class="btn-gold">🖨️ Imprimir</button>
+    <button onclick="window.print()" class="btn-gold">Imprimir</button>
     <a href="{{ route('admin.caja.index') }}" class="btn-ghost">← Volver</a>
 @endsection
 
@@ -12,9 +14,9 @@
 <div class="max-w-2xl pt-2 space-y-4 no-print mx-auto">
     <div class="admin-card p-4 flex gap-3 items-center"
          style="background:rgba(201,168,76,0.05);border-color:rgba(201,168,76,0.15);">
-        <span class="text-xl">💡</span>
+        <x-admin.icon name="alert" class="w-5 h-5 text-amber-400" />
         <span class="text-sm" style="color:rgba(255,255,255,0.50);">
-            Usa el botón <strong class="text-white">🖨️ Imprimir</strong> del header para obtener la factura de cierre.
+            Usa el botón <strong class="text-white">Imprimir</strong> del header para obtener la factura de cierre.
             Se imprimirá solo el ticket, sin la interfaz del sistema.
         </span>
     </div>
@@ -49,11 +51,11 @@
         </div>
         <div class="ticket-divider-thin"></div>
         <div class="ticket-row">
-            <span>💵 Efectivo cobrado</span>
+            <span>Efectivo cobrado</span>
             <span class="ticket-val">${{ number_format($efectivo, 2) }}</span>
         </div>
         <div class="ticket-row">
-            <span>📱 QR DeUna cobrado</span>
+            <span>QR DeUna cobrado</span>
             <span class="ticket-val">${{ number_format($qr, 2) }}</span>
         </div>
         @if($total > 0)

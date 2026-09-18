@@ -1,10 +1,12 @@
 @extends('layouts.app')
 @section('title','Stock')
-@section('page-icon','📦')
+@section('page-icon')
+<x-admin.icon name="stock" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Control de Stock')
 @section('page-subtitle','Activa · Desactiva · Ajusta cantidades en tiempo real')
 @section('header-actions')
-    <a href="{{ route('admin.stock.movimientos') }}" class="btn-ghost">📋 Movimientos</a>
+    <a href="{{ route('admin.stock.movimientos') }}" class="btn-ghost">Movimientos</a>
 @endsection
 
 @section('content')
@@ -18,28 +20,28 @@
     {{-- KPIs --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="admin-card p-4 flex items-center gap-3">
-            <div class="stock-kpi-icon" style="background:rgba(201,168,76,0.1);">📦</div>
+            <div class="stock-kpi-icon flex items-center justify-center" style="background:rgba(201,168,76,0.1);color:#c9a84c;"><x-admin.icon name="stock" class="w-5 h-5" /></div>
             <div>
                 <div class="stock-kpi-val">{{ $productos->count() }}</div>
                 <div class="stock-kpi-label">Productos</div>
             </div>
         </div>
         <div class="admin-card p-4 flex items-center gap-3">
-            <div class="stock-kpi-icon" style="background:rgba(16,185,129,0.1);">✅</div>
+            <div class="stock-kpi-icon flex items-center justify-center" style="background:rgba(16,185,129,0.1);color:#10b981;"><x-admin.icon name="check-circle" class="w-5 h-5" /></div>
             <div>
                 <div class="stock-kpi-val" style="color:#6ee7b7;">{{ $productos->where('stock_activo',true)->count() }}</div>
                 <div class="stock-kpi-label">Activos</div>
             </div>
         </div>
         <div class="admin-card p-4 flex items-center gap-3">
-            <div class="stock-kpi-icon" style="background:rgba(250,204,21,0.1);">⚠️</div>
+            <div class="stock-kpi-icon flex items-center justify-center" style="background:rgba(250,204,21,0.1);color:#facc15;"><x-admin.icon name="alert" class="w-5 h-5" /></div>
             <div>
                 <div class="stock-kpi-val" style="color:{{ $bajos->count() > 0 ? '#facc15' : 'rgba(255,255,255,0.35)' }};">{{ $bajos->count() }}</div>
                 <div class="stock-kpi-label">Stock bajo</div>
             </div>
         </div>
         <div class="admin-card p-4 flex items-center gap-3">
-            <div class="stock-kpi-icon" style="background:rgba(239,68,68,0.1);">⛔</div>
+            <div class="stock-kpi-icon flex items-center justify-center" style="background:rgba(239,68,68,0.1);color:#ef4444;"><x-admin.icon name="ban" class="w-5 h-5" /></div>
             <div>
                 <div class="stock-kpi-val" style="color:{{ $agotados->count() > 0 ? '#f87171' : 'rgba(255,255,255,0.35)' }};">{{ $agotados->count() }}</div>
                 <div class="stock-kpi-label">Agotados</div>
@@ -51,7 +53,7 @@
     @if($agotados->isNotEmpty())
     <div class="admin-card p-4 flex gap-3 items-start"
          style="background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2);">
-        <span class="text-xl flex-shrink-0">⛔</span>
+        <x-admin.icon name="ban" class="w-5 h-5 text-rose-400 flex-shrink-0" />
         <div>
             <div class="text-sm font-bold mb-0.5" style="color:#fca5a5;">{{ $agotados->count() }} producto(s) agotado(s)</div>
             <div class="text-xs" style="color:rgba(239,68,68,0.7);">
@@ -64,7 +66,7 @@
     {{-- Tabla de stock --}}
     <div class="admin-card">
         <div class="admin-card-header">
-            <div class="admin-card-title">📦 Inventario de productos</div>
+            <div class="admin-card-title">Inventario de productos</div>
         </div>
         <div class="overflow-x-auto">
             <table class="admin-table">
@@ -135,7 +137,7 @@
                         <td>
                             <button onclick="abrirAjuste({{ $producto->id }}, '{{ addslashes($producto->nombre) }}', {{ $producto->stock_actual }})"
                                     class="btn-blue text-xs py-1.5 px-3">
-                                ✏️ Ajustar
+                                Ajustar
                             </button>
                         </td>
                     </tr>
@@ -163,7 +165,7 @@
             <div style="display:flex;align-items:center;gap:0.75rem;">
                 <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(201,168,76,0.12);
                             border:1px solid rgba(201,168,76,0.25);display:flex;align-items:center;
-                            justify-content:center;font-size:1.2rem;">📦</div>
+                            justify-content:center;"><x-admin.icon name="stock" class="w-6 h-6 text-amber-400" /></div>
                 <div>
                     <div style="font-family:var(--font-display);font-weight:900;font-size:1.1rem;color:white;line-height:1.2;"
                          id="modal-stock-title">Ajustar Stock</div>
@@ -216,7 +218,7 @@
                                font-family:var(--font-display);font-weight:800;font-size:0.72rem;
                                text-transform:uppercase;letter-spacing:0.06em;transition:all 0.2s;
                                background:linear-gradient(135deg,#a07d2e,#c9a84c);color:#0b1133;">
-                    ➕ Agregar
+                    Agregar
                 </button>
                 <button type="button" id="tab-establecer"
                         onclick="setModo('establecer')"
@@ -224,7 +226,7 @@
                                font-family:var(--font-display);font-weight:800;font-size:0.72rem;
                                text-transform:uppercase;letter-spacing:0.06em;transition:all 0.2s;
                                background:transparent;color:rgba(255,255,255,0.4);">
-                    🔧 Establecer
+                    Establecer
                 </button>
             </div>
 
@@ -233,14 +235,14 @@
                  style="padding:0.5rem 0.75rem;border-radius:0.6rem;margin-bottom:1rem;
                         background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.18);">
                 <span style="font-size:0.72rem;color:rgba(201,168,76,0.85);">
-                    💡 Ingresa cuántas unidades quieres <strong>agregar</strong> al stock actual.
+                    Ingresa cuántas unidades quieres <strong>agregar</strong> al stock actual.
                 </span>
             </div>
             <div id="hint-establecer"
                  style="display:none;padding:0.5rem 0.75rem;border-radius:0.6rem;margin-bottom:1rem;
                         background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.18);">
                 <span style="font-size:0.72rem;color:rgba(147,197,253,0.85);">
-                    🔧 Ingresa la <strong>cantidad exacta</strong> que debe quedar en inventario.
+                    Ingresa la <strong>cantidad exacta</strong> que debe quedar en inventario.
                 </span>
             </div>
 
@@ -268,7 +270,7 @@
             </div>
 
             <div style="display:flex;gap:0.75rem;">
-                <button type="submit" class="btn-gold flex-1 justify-center py-3">✅ Guardar ajuste</button>
+                <button type="submit" class="btn-gold flex-1 justify-center py-3">Guardar ajuste</button>
                 <button type="button" onclick="cerrarStock()" class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
             </div>
         </form>

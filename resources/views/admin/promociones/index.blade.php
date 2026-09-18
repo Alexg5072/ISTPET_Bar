@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('title','Promociones')
-@section('page-icon','🎯')
 @section('page-title','Promociones del Kiosco')
 @section('page-subtitle','Slides que aparecen en modo reposo · Se rotan automáticamente')
 
 @section('header-actions')
-    <button onclick="abrirModal()" class="btn-gold">+ Nueva promoción</button>
+    <button onclick="abrirModal()" class="btn-gold flex items-center gap-1.5">
+        <x-admin.icon name="plus" class="w-4 h-4" />
+        <span>Nueva promoción</span>
+    </button>
 @endsection
 
 @section('content')
@@ -14,7 +16,7 @@
     {{-- Info banner --}}
     <div class="admin-card p-4 flex gap-3 items-center"
          style="background:linear-gradient(135deg,rgba(27,42,107,0.4),rgba(27,42,107,0.15));border-color:rgba(99,130,246,0.2);">
-        <span class="text-2xl flex-shrink-0">📺</span>
+        <x-admin.icon name="eye" class="w-6 h-6 text-blue-400 flex-shrink-0" />
         <div class="flex-1">
             <div class="text-sm font-bold text-white mb-0.5">Modo reposo activo</div>
             <div class="text-xs text-blue-300/70">
@@ -30,14 +32,19 @@
     {{-- Grid --}}
     @if($promociones->isEmpty())
     <div class="admin-card p-16 text-center">
-        <div class="text-6xl mb-4" style="opacity:.15">🎯</div>
+        <div class="w-16 h-16 mx-auto mb-4 text-white/20 flex items-center justify-center">
+            <x-admin.icon name="star" class="w-12 h-12" />
+        </div>
         <div class="font-black text-lg uppercase tracking-wider mb-2" style="font-family:var(--font-display);color:rgba(255,255,255,0.2);">
             Sin promociones
         </div>
         <p class="text-sm mb-6" style="color:rgba(255,255,255,0.18);">
             Crea tu primera promoción para que aparezca en el kiosco.
         </p>
-        <button onclick="abrirModal()" class="btn-gold">+ Crear primera promoción</button>
+        <button onclick="abrirModal()" class="btn-gold flex items-center gap-1.5 mx-auto">
+            <x-admin.icon name="plus" class="w-4 h-4" />
+            <span>Crear primera promoción</span>
+        </button>
     </div>
 
     @else
@@ -56,7 +63,7 @@
                     <div class="promo-img-overlay"></div>
                 @else
                     <div class="promo-no-img">
-                        <span style="font-size:2.5rem;opacity:.25;">🎯</span>
+                        <x-admin.icon name="star" class="w-10 h-10 opacity-25 text-white" />
                         <span style="font-size:0.65rem;color:rgba(255,255,255,0.50);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Sin imagen</span>
                     </div>
                 @endif
@@ -68,7 +75,7 @@
 
                 {{-- Estado --}}
                 <div class="promo-estado-badge {{ $promo->activo ? 'promo-estado-on' : 'promo-estado-off' }}">
-                    {{ $promo->activo ? '🟢' : '⏸️' }}
+                    <span class="w-2 h-2 rounded-full {{ $promo->activo ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' : 'bg-amber-400' }}"></span>
                 </div>
 
                 {{-- Precio si tiene --}}
@@ -86,11 +93,12 @@
                 </div>
                 @endif
                 @if($promo->sede)
-                <div class="promo-sede">
-                    {{ $promo->sede->slug === 'instituto' ? '🏛️' : '🚗' }} {{ $promo->sede->nombre }}
+                <div class="promo-sede flex items-center gap-1">
+                    <x-admin.icon :name="$promo->sede->slug === 'instituto' ? 'instituto' : 'car'" class="w-3 h-3 opacity-70" />
+                    <span>{{ $promo->sede->nombre }}</span>
                 </div>
                 @else
-                <div class="promo-sede" style="color:rgba(255,255,255,0.50);">🌐 Todas las sedes</div>
+                <div class="promo-sede" style="color:rgba(255,255,255,0.50);">Todas las sedes</div>
                 @endif
             </div>
 
@@ -101,7 +109,7 @@
                     @csrf @method('PATCH')
                     <button type="submit"
                             class="promo-btn {{ $promo->activo ? 'promo-btn-pause' : 'promo-btn-play' }} w-full">
-                        {{ $promo->activo ? '⏸ Pausar' : '▶️ Activar' }}
+                        {{ $promo->activo ? 'Pausar' : 'Activar' }}
                     </button>
                 </form>
 
@@ -120,21 +128,27 @@
                         data-p2="{{ $promo->producto_id_2 }}"
                         data-p3="{{ $promo->producto_id_3 }}"
                         onclick="abrirEditarBtn(this)"
-                        class="promo-btn promo-btn-edit">✏️</button>
+                        title="Editar"
+                        class="promo-btn promo-btn-edit">
+                    <x-admin.icon name="edit" class="w-3.5 h-3.5" />
+                </button>
 
                 {{-- Eliminar --}}
                 <button type="button" class="promo-btn promo-btn-delete"
                         data-id="{{ $promo->id }}"
                         data-url="{{ route('admin.promociones.destroy', $promo) }}"
                         data-titulo="{{ e($promo->titulo) }}"
-                        onclick="eliminarPromoBtn(this)">🗑</button>
+                        title="Eliminar"
+                        onclick="eliminarPromoBtn(this)">
+                    <x-admin.icon name="trash" class="w-3.5 h-3.5" />
+                </button>
             </div>
         </div>
         @endforeach
 
         {{-- Card agregar --}}
         <div onclick="abrirModal()" class="promo-add-card">
-            <span style="font-size:2.5rem;opacity:.2;">➕</span>
+            <x-admin.icon name="plus" class="w-8 h-8 opacity-25" />
             <span class="promo-add-label" style="color:rgba(255,255,255,0.50);">Nueva promoción</span>
         </div>
     </div>
@@ -148,7 +162,7 @@
 
         <div class="promo-modal-header">
             <div>
-                <div class="promo-modal-title" id="modal-title">➕ Nueva Promoción</div>
+                <div class="promo-modal-title" id="modal-title">Nueva Promoción</div>
                 <div class="promo-modal-sub">Configura el slide que verán en el kiosco</div>
             </div>
             <button onclick="cerrarModal()" class="promo-modal-close">✕</button>
@@ -162,7 +176,7 @@
             <div class="img-preview-wrap" onclick="document.getElementById('input-imagen').click()">
                 <img id="img-preview" src="" alt="" style="display:none;">
                 <div id="img-placeholder">
-                    <span style="font-size:2rem;opacity:.3;">🖼️</span>
+                    <x-admin.icon name="eye" class="w-8 h-8 opacity-30 text-white" />
                     <span style="font-size:0.72rem;color:rgba(255,255,255,0.50);margin-top:0.4rem;">
                         Clic para subir imagen<br>
                         <span style="font-size:0.65rem;opacity:.7; color:rgba(255,255,255,0.50);">JPG, PNG, WEBP · Recomendado 1920×1080</span>
@@ -176,11 +190,11 @@
                 <div class="field-group">
                     <label class="field-label" style="color:rgba(255,255,255,0.50);">Título *</label>
                     <input name="titulo" id="f-titulo" class="admin-input"
-                        placeholder="Ej: ¡Combo Clásico $2.50!" required
+                        placeholder="Ej: Combo Clásico $2.50" required
                         oninput="validarTituloPromo(this.value)">
                     <span id="promo-titulo-error"
                         style="display:none;font-size:0.68rem;color:#f87171;font-weight:700;margin-top:0.2rem;">
-                        ⚠️ Ya existe una promoción con ese título
+                        Ya existe una promoción con ese título
                     </span>
                 </div>
 
@@ -207,7 +221,7 @@
                         <input name="precio_destacado" id="f-precio" class="admin-input"
                                placeholder="Ej: 2.50" readonly>
                         <span id="f-precio-hint" style="font-size:0.6rem;color:rgba(110,231,183,0.8);font-weight:700;">
-                            ⚡ Se usará el precio calculado abajo
+                            Se usará el precio calculado abajo
                         </span>
                     </div>
                     <div class="field-group">
@@ -221,10 +235,10 @@
                     <div class="field-group">
                         <label class="field-label" style="color:rgba(255,255,255,0.50);">Sede</label>
                         <select name="sede_id" id="f-sede" class="admin-select w-full">
-                            <option value="">🌐 Todas las sedes</option>
+                            <option value="">Todas las sedes</option>
                             @foreach($sedes as $sede)
                             <option value="{{ $sede->id }}">
-                                {{ $sede->slug === 'instituto' ? '🏛️' : '🚗' }} {{ $sede->nombre }}
+                                {{ $sede->nombre }}
                             </option>
                             @endforeach
                         </select>
@@ -236,7 +250,7 @@
                 </div>
 
                 <div class="field-group">
-                    <label class="field-label" style="color:rgba(255,255,255,0.50);">🛒 Productos vinculados <span style="color:rgba(255,255,255,0.50);font-weight:600;text-transform:none;letter-spacing:0;">(máx. 3 — aparece botón "Pedir ahora" con precio total)</span></label>
+                    <label class="field-label" style="color:rgba(255,255,255,0.50);">Productos vinculados <span style="color:rgba(255,255,255,0.50);font-weight:600;text-transform:none;letter-spacing:0;">(máx. 3 — aparece botón "Pedir ahora" con precio total)</span></label>
                     <div style="display:flex;flex-direction:column;gap:0.5rem;">
                         @foreach([1,2,3] as $n)
                         <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -246,7 +260,7 @@
                                 @foreach($productos as $prod)
                                 <option value="{{ $prod->id }}" data-precio="{{ $prod->precio }}">
                                     {{ $prod->nombre }} — ${{ number_format($prod->precio,2) }}
-                                    {{ $prod->stock_activo && $prod->stock_actual <= 0 ? '⚠️ Sin stock' : '' }}
+                                    {{ $prod->stock_activo && $prod->stock_actual <= 0 ? '(Sin stock)' : '' }}
                                 </option>
                                 @endforeach
                             </select>
@@ -262,7 +276,7 @@
 
             <div class="flex gap-3 pt-1">
                 <button type="submit" class="btn-gold flex-1 justify-center py-3" id="btn-guardar">
-                    ✅ Crear promoción
+                    Crear promoción
                 </button>
                 <button type="button" onclick="cerrarModal()"
                         class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
@@ -427,8 +441,8 @@ function setImgPreview(src) {
 
 function abrirModal() {
     _promoTituloOriginal = null;
-    document.getElementById('modal-title').textContent = '➕ Nueva Promoción';
-    document.getElementById('btn-guardar').textContent = '✅ Crear promoción';
+    document.getElementById('modal-title').textContent = 'Nueva Promoción';
+    document.getElementById('btn-guardar').textContent = 'Crear promoción';
     document.getElementById('form-promo').action = STORE_ROUTE;
     document.getElementById('method-field').innerHTML = '';
     document.getElementById('promo-titulo-error').style.display = 'none';
@@ -452,8 +466,8 @@ function abrirModal() {
 
 function abrirEditarBtn(btn) {
     const id = btn.dataset.id;
-    document.getElementById('modal-title').textContent = '✏️ Editar Promoción';
-    document.getElementById('btn-guardar').textContent = '💾 Guardar cambios';
+    document.getElementById('modal-title').textContent = 'Editar Promoción';
+    document.getElementById('btn-guardar').textContent = 'Guardar cambios';
     document.getElementById('form-promo').action = btn.dataset.url;
     document.getElementById('method-field').innerHTML = '<input type="hidden" name="_method" value="PUT">';
     document.getElementById('f-titulo').value       = btn.dataset.titulo       || '';
@@ -523,12 +537,12 @@ function togglePromoPrecioAuto(activo) {
     track.classList.toggle('on', activo);
     if (activo) {
         input.readOnly = true;
-        hint.textContent = '⚡ Se usará el precio calculado abajo';
+        hint.textContent = 'Se usará el precio calculado abajo';
         hint.style.color = 'rgba(110,231,183,0.8)';
         calcularTotal();
     } else {
         input.readOnly = false;
-        hint.textContent = '✏️ Ingresa el precio que tú quieras';
+        hint.textContent = 'Ingresa el precio que desees';
         hint.style.color = 'rgba(255,255,255,0.35)';
         input.focus();
     }
@@ -573,7 +587,7 @@ function eliminarPromoBtn(btn) {
 
     const token = document.querySelector('meta[name="csrf-token"]').content;
     btn.disabled = true;
-    btn.textContent = '⏳';
+    btn.innerHTML = '...';
 
     fetch(url, {
         method: 'POST',
@@ -599,7 +613,7 @@ function eliminarPromoBtn(btn) {
         } else {
             alert('Error al eliminar. Código: ' + r.status);
             btn.disabled = false;
-            btn.textContent = '🗑';
+            btn.innerHTML = '✕';
         }
     })
     .catch(() => { location.reload(); });

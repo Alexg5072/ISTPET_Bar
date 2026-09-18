@@ -10,14 +10,18 @@ window.showToast = function(message, type = 'success', duration = 3000) {
         document.body.appendChild(container);
     }
     const colors = { success: '#22c55e', error: '#ef4444', info: '#3b82f6' };
-    const icons  = { success: '✅', error: '⛔', info: 'ℹ️' };
+    const icons  = {
+        success: `<svg style="width:1.2rem;height:1.2rem;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
+        error:   `<svg style="width:1.2rem;height:1.2rem;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+        info:    `<svg style="width:1.2rem;height:1.2rem;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`
+    };
     const toast  = document.createElement('div');
     toast.style.cssText = `display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1.1rem;
         border-radius:0.875rem;background:#1e2130;border:1px solid ${colors[type] ?? colors.info}33;
         color:white;font-family:var(--font-display,sans-serif);font-weight:700;font-size:0.85rem;
         box-shadow:0 8px 28px rgba(0,0,0,0.4);min-width:220px;max-width:340px;
         animation:toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;`;
-    toast.innerHTML = `<span style="font-size:1.1rem;">${icons[type] ?? icons.info}</span><span>${message}</span>`;
+    toast.innerHTML = `${icons[type] ?? icons.info}<span>${message}</span>`;
     container.appendChild(toast);
     setTimeout(() => {
         toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
@@ -50,7 +54,7 @@ Alpine.store('carrito', {
             const cantidadActual = existente ? existente.cantidad : 0;
             const maxStock = stockMax ?? existente?.stock_max;
             if (maxStock !== undefined && cantidadActual >= maxStock) {
-                window.showToast?.(`⛔ No hay más stock de "${nombre}"`, 'error');
+                window.showToast?.(`No hay más stock de "${nombre}"`, 'error');
                 this.cargando = false;
                 return;
             }
@@ -81,7 +85,7 @@ Alpine.store('carrito', {
             const nombre = item ? item.nombre : '';
             // Bloquear si alcanzó el stock máximo
             if (item && item.stock_max !== undefined && item.cantidad >= item.stock_max) {
-                window.showToast?.('⛔ Ya tienes el máximo disponible de "' + item.nombre + '"', 'error');
+                window.showToast?.('Ya tienes el máximo disponible de "' + item.nombre + '"', 'error');
                 return;
             }
             await this.agregar(tipo, itemId, nombre);
@@ -232,8 +236,12 @@ class ModoReposo {
                     display:flex;flex-direction:column;align-items:center;gap:1.1rem;">
 
                     ${slide.imagen_url ? '' : `
-                    <div style="font-size:3.5rem;filter:drop-shadow(0 6px 20px rgba(0,0,0,0.5));
-                        animation:promoBob 3s ease-in-out infinite;">🍽️</div>`}
+                    <div style="filter:drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+                        animation:promoBob 3s ease-in-out infinite;">
+                        <svg style="width:4rem;height:4rem;color:#c9a84c;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div>`}
 
                     <!-- Badge PROMO -->
                     <div style="display:inline-flex;align-items:center;gap:0.5rem;
@@ -283,8 +291,8 @@ class ModoReposo {
                             const ids   = prods.map(p => p.id).join(',');
                             const noms  = prods.map(p => p.nombre).join(', ');
                             const btnLabel = prods.length > 1
-                                ? `🛒 Pedir combo · $${total.toFixed(2)}`
-                                : `🛒 Pedir ${prods[0]?.nombre || ''} · $${total.toFixed(2)}`;
+                                ? `Pedir combo · $${total.toFixed(2)}`
+                                : `Pedir ${prods[0]?.nombre || ''} · $${total.toFixed(2)}`;
 
                             return prods.length > 0 ? `
                             <div style="display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;">
@@ -314,7 +322,7 @@ class ModoReposo {
                             background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);
                             font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.75); text-shadow:0 1px 6px rgba(0,0,0,0.95), 0 2px 12px rgba(0,0,0,0.8);
                             text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;">
-                            👆 Toca afuera para cerrar
+                            Toca afuera para cerrar
                         </div>
                     </div>
                 </div>
@@ -484,13 +492,13 @@ window.promoAgregarMultiple = async function(btn) {
     if (!ids.length) return;
 
     btn.disabled = true;
-    btn.innerHTML = '⏳ Agregando...';
+    btn.innerHTML = 'Agregando...';
 
     for (let i = 0; i < ids.length; i++) {
         await Alpine.store('carrito').agregar('producto', ids[i].trim(), (noms[i] || '').trim());
     }
 
-    btn.innerHTML = '✅ ¡Listo! ' + ids.length + (ids.length > 1 ? ' productos' : ' producto') + ' agregado' + (ids.length > 1 ? 's' : '');
+    btn.innerHTML = '¡Listo! ' + ids.length + (ids.length > 1 ? ' productos' : ' producto') + ' agregado' + (ids.length > 1 ? 's' : '');
     btn.style.background = 'linear-gradient(135deg,#064e3b,#10b981)';
 
     setTimeout(() => {

@@ -1,7 +1,9 @@
 {{-- resources/views/admin/fiado/index.blade.php --}}
 @extends('layouts.app')
 @section('title','Fiado')
-@section('page-icon','💳')
+@section('page-icon')
+<x-admin.icon name="fiado" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Fiado / Cuentas por Cobrar')
 @section('page-subtitle','Módulo en preparación — disponible en próxima fase')
 @section('content')

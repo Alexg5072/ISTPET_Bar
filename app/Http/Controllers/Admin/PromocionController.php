@@ -53,7 +53,7 @@ class PromocionController extends Controller
         $promo = Promocion::create($data);
         AuditLog::registrar('Promoción creada — ' . $promo->titulo, Promocion::class, $promo->id);
 
-        return back()->with('success', '✅ Promoción "' . $promo->titulo . '" creada.');
+        return back()->with('success', 'Promoción "' . $promo->titulo . '" creada.');
     }
 
     public function update(Request $request, Promocion $promocion)
@@ -109,14 +109,14 @@ class PromocionController extends Controller
             'titulo_nuevo'  => $promocion->titulo,
         ]);
 
-        return back()->with('success', '✅ Promoción actualizada.');
+        return back()->with('success', 'Promoción actualizada.');
     }
 
     public function toggleActivo(Promocion $promocion)
     {
         $promocion->update(['activo' => !$promocion->activo]);
         $estado = $promocion->activo ? 'activada' : 'pausada';
-        return back()->with('success', "✅ Promoción {$estado}.");
+        return back()->with('success', "Promoción {$estado}.");
     }
 
     public function destroy(Promocion $promocion)
@@ -140,7 +140,7 @@ class PromocionController extends Controller
             'id_eliminado'  => $promocion->id,
         ]);
 
-        return back()->with('success', '🗑 "' . $titulo . '" eliminada.');
+        return back()->with('success', '"' . $titulo . '" eliminada.');
     }
 
     public function create()  { return redirect()->route('admin.promociones.index'); }

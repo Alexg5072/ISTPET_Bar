@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title','Productos')
-@section('page-icon','🍽️')
+@section('page-icon')
+<x-admin.icon name="productos" class="w-5 h-5 text-amber-400" />
+@endsection
 @section('page-title','Productos')
 @section('page-subtitle','Gestiona precios · Activa o desactiva en tiempo real')
 @section('header-actions')
@@ -31,8 +33,8 @@
             <label class="field-label" style="display:block;margin-bottom:0.3rem;">Estado</label>
             <select name="stock" class="admin-select w-full">
                 <option value="">Todos</option>
-                <option value="true"  {{ request('stock') === 'true'  ? 'selected' : '' }}>✅ Disponibles</option>
-                <option value="false" {{ request('stock') === 'false' ? 'selected' : '' }}>⛔ Agotados</option>
+                <option value="true"  {{ request('stock') === 'true'  ? 'selected' : '' }}>Disponibles</option>
+                <option value="false" {{ request('stock') === 'false' ? 'selected' : '' }}>Agotados</option>
             </select>
         </div>
         <button type="submit" class="btn-primary py-2">Filtrar</button>
@@ -47,21 +49,21 @@
     @endphp
     <div class="grid grid-cols-3 gap-4">
         <div class="admin-card p-4 flex items-center gap-3">
-            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">🍽️</div>
+            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:#c9a84c;"><x-admin.icon name="productos" class="w-5 h-5" /></div>
             <div>
                 <div style="font-family:var(--font-display);font-weight:900;font-size:1.5rem;color:white;line-height:1;">{{ $total }}</div>
                 <div style="font-size:0.65rem;color:rgba(255,255,255,0.50);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">Total productos</div>
             </div>
         </div>
         <div class="admin-card p-4 flex items-center gap-3">
-            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">✅</div>
+            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:#10b981;"><x-admin.icon name="check-circle" class="w-5 h-5" /></div>
             <div>
                 <div style="font-family:var(--font-display);font-weight:900;font-size:1.5rem;color:#6ee7b7;line-height:1;">{{ $activos }}</div>
                 <div style="font-size:0.65rem;color:rgba(255,255,255,0.50);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">Activos</div>
             </div>
         </div>
         <div class="admin-card p-4 flex items-center gap-3">
-            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">⛔</div>
+            <div style="width:2.5rem;height:2.5rem;border-radius:0.6rem;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:#ef4444;"><x-admin.icon name="ban" class="w-5 h-5" /></div>
             <div>
                 <div style="font-family:var(--font-display);font-weight:900;font-size:1.5rem;color:{{ $agotados > 0 ? '#f87171' : 'rgba(255,255,255,0.4)' }};line-height:1;">{{ $agotados }}</div>
                 <div style="font-size:0.65rem;color:rgba(255,255,255,0.50);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">Sin stock</div>
@@ -72,7 +74,7 @@
     {{-- Tabla --}}
     <div class="admin-card">
         <div class="admin-card-header">
-            <div class="admin-card-title">🍽️ Catálogo — {{ $productos->total() }} productos</div>
+            <div class="admin-card-title">Catálogo — {{ $productos->total() }} productos</div>
         </div>
         <div class="overflow-x-auto">
             <table class="admin-table">
@@ -112,7 +114,7 @@
                                 @if($producto->stock_actual <= $producto->stock_minimo && $producto->stock_actual > 0)
                                     <span class="stock-warn">▲ bajo</span>
                                 @elseif($producto->stock_actual <= 0)
-                                    <span class="stock-warn">⛔ agot.</span>
+                                    <span class="stock-warn">agotado</span>
                                 @endif
                             </div>
                         </td>
@@ -137,11 +139,11 @@
                                         '{{ addslashes($producto->descripcion ?? '') }}',
                                         '{{ $producto->precio }}',
                                         '{{ $producto->imagen_url }}'
-                                    )">✏️</button>
+                                    )"><x-admin.icon name="edit" class="w-3.5 h-3.5" /></button>
                                 <form method="POST" action="{{ route('admin.productos.destroy', $producto) }}">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn-danger"
-                                            onclick="return confirm('¿Eliminar «{{ $producto->nombre }}»?')">🗑</button>
+                                            onclick="return confirm('¿Eliminar «{{ $producto->nombre }}»?')"><x-admin.icon name="trash" class="w-3.5 h-3.5" /></button>
                                 </form>
                             </div>
                         </td>
@@ -166,7 +168,7 @@
         {{-- Header --}}
         <div class="ist-modal-header">
             <div>
-                <div class="ist-modal-title" id="prod-modal-title">➕ Nuevo Producto</div>
+                <div class="ist-modal-title" id="prod-modal-title">Nuevo Producto</div>
                 <div class="ist-modal-sub">Completa los datos del producto</div>
             </div>
             <button onclick="cerrarModalProducto()" class="ist-modal-close">✕</button>
@@ -180,7 +182,7 @@
             <div class="img-upload-wrap" onclick="document.getElementById('prod-imagen').click()">
                 <img id="prod-img-preview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">
                 <div id="prod-img-placeholder">
-                    <span style="font-size:2rem;opacity:.3;">🖼️</span>
+                    <span style="font-size:2rem;opacity:.3;"></span>
                     <span style="font-size:0.72rem;color:rgba(255,255,255,0.50);margin-top:0.4rem;text-align:center;">
                         Clic para subir imagen<br>
                         <span style="font-size:0.65rem;opacity:.7; color:rgba(255,255,255,0.50);">JPG, PNG, WEBP · Máx. 2MB</span>
@@ -198,7 +200,7 @@
                            placeholder="Ej: Almuerzo del Día" required
                            oninput="validarNombreProductoModal(this.value)">
                     <span id="prod-nombre-error" class="ist-field-error" style="display:none;">
-                        ⚠️ Ya existe un producto con ese nombre
+                        Ya existe un producto con ese nombre
                     </span>
                 </div>
 
@@ -245,7 +247,7 @@
 
             <div class="flex gap-3 pt-1">
                 <button type="submit" class="btn-gold flex-1 justify-center py-3" id="btn-prod-guardar">
-                    ✅ Crear producto
+                    Crear producto
                 </button>
                 <button type="button" onclick="cerrarModalProducto()"
                         class="btn-ghost flex-1 justify-center py-3">Cancelar</button>
@@ -404,8 +406,8 @@ function _resetProdModal() {
 
 function abrirNuevoProducto() {
     _prodEditId = null; _prodNombreOriginal = null;
-    document.getElementById('prod-modal-title').textContent = '➕ Nuevo Producto';
-    document.getElementById('btn-prod-guardar').textContent = '✅ Crear producto';
+    document.getElementById('prod-modal-title').textContent = 'Nuevo Producto';
+    document.getElementById('btn-prod-guardar').textContent = 'Crear producto';
     document.getElementById('form-producto').action = STORE_PROD_ROUTE;
     document.getElementById('prod-method').value = 'POST';
     document.getElementById('prod-nombre').value = '';
@@ -422,8 +424,8 @@ function abrirNuevoProducto() {
 
 function abrirEditarProducto(id, nombre, categoriaId, descripcion, precio, imagenUrl) {
     _prodEditId = id; _prodNombreOriginal = nombre.toLowerCase().trim();
-    document.getElementById('prod-modal-title').textContent = '✏️ Editar Producto';
-    document.getElementById('btn-prod-guardar').textContent = '💾 Guardar cambios';
+    document.getElementById('prod-modal-title').textContent = 'Editar Producto';
+    document.getElementById('btn-prod-guardar').textContent = 'Guardar cambios';
     document.getElementById('form-producto').action = `/admin/productos/${id}`;
     document.getElementById('prod-method').value = 'PUT';
     document.getElementById('prod-nombre').value = nombre;

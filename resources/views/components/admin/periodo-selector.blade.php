@@ -40,8 +40,9 @@
                    onchange="setPeriodoFecha(this.value)">
             <button type="button" onclick="setPeriodoFecha(document.getElementById('fecha-pick').value)"
                     class="ps-btn {{ $periodo === 'fecha' ? 'ps-btn-active' : '' }}"
-                    style="color:rgba(255,255,255,0.50);">
-                📅 Fecha exacta
+                    style="color:rgba(255,255,255,0.50);display:inline-flex;align-items:center;gap:0.35rem;">
+                <x-admin.icon name="calendar" class="w-3.5 h-3.5" />
+                Fecha exacta
             </button>
         </div>
     </div>

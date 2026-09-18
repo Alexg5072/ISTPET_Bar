@@ -1,13 +1,14 @@
 @extends('layouts.app')
 @section('title','Reportes')
-@section('page-icon','📈')
 @section('page-title','Reportes y Estadísticas')
 @section('page-subtitle','Ventas por sede · Productos más vendidos')
 
 @section('header-actions')
     <div style="position:relative;display:inline-block;" x-data="{open:false}">
         <button @click="open=!open" class="btn-ghost" style="display:flex;align-items:center;gap:0.4rem;">
-            📥 Exportar <span style="font-size:0.6rem;opacity:.5;">▼</span>
+            <x-admin.icon name="reportes" class="w-4 h-4" />
+            <span>Exportar</span>
+            <span style="font-size:0.6rem;opacity:.5;">▼</span>
         </button>
         <div x-show="open" @click.outside="open=false"
              style="position:absolute;right:0;top:calc(100% + 6px);z-index:50;
@@ -20,7 +21,7 @@
                       text-decoration:none;transition:background 0.15s ease;font-family:var(--font-display);"
                onmouseover="this.style.background='rgba(255,255,255,0.06)'"
                onmouseout="this.style.background=''">
-                <span style="font-size:1.1rem;">📊</span>
+                <x-admin.icon name="reportes" class="w-4 h-4 text-emerald-400" />
                 <div>
                     <div>Exportar CSV</div>
                     <div style="font-size:0.62rem;color:rgba(255,255,255,0.50);font-weight:600;">Abrir en Excel</div>
@@ -34,7 +35,7 @@
                       text-decoration:none;transition:background 0.15s ease;font-family:var(--font-display);"
                onmouseover="this.style.background='rgba(255,255,255,0.06)'"
                onmouseout="this.style.background=''">
-                <span style="font-size:1.1rem;">📄</span>
+                <x-admin.icon name="receipt" class="w-4 h-4 text-blue-400" />
                 <div>
                     <div>Descargar PDF</div>
                     <div style="font-size:0.62rem;color:rgba(255,255,255,0.50);font-weight:600;">Abre diálogo · Guardar como PDF</div>
@@ -42,7 +43,10 @@
             </a>
         </div>
     </div>
-    <a href="{{ route('admin.caja.index') }}" class="btn-gold">💰 Ver Caja</a>
+    <a href="{{ route('admin.caja.index') }}" class="btn-gold flex items-center gap-1.5">
+        <x-admin.icon name="caja" class="w-4 h-4" />
+        <span>Ver Caja</span>
+    </a>
 @endsection
 
 @section('content')
@@ -59,7 +63,9 @@
             {{-- Header sede --}}
             <div class="rpt-sede-header">
                 <div class="rpt-sede-glow"></div>
-                <span class="rpt-sede-icon">{{ $item['sede']->slug === 'instituto' ? '🏛️' : '🚗' }}</span>
+                <span class="rpt-sede-icon text-amber-400/90">
+                    <x-admin.icon :name="$item['sede']->slug === 'instituto' ? 'instituto' : 'car'" class="w-6 h-6" />
+                </span>
                 <div>
                     <div class="rpt-sede-name">{{ $item['sede']->nombre }}</div>
                     <div class="rpt-sede-sub" style="color:rgba(255,255,255,0.50);">Reporte del {{ \Carbon\Carbon::parse($fecha)->format('d/m/Y') }}</div>
@@ -95,7 +101,7 @@
             <div class="px-4 pb-4">
                 <a href="{{ route('admin.caja.cierre', $item['sede']) }}?periodo={{ $periodo }}&fecha={{ $fecha }}"
                    class="btn-ghost w-full justify-center py-2.5 text-xs">
-                    🖨️ Imprimir cierre de caja
+                    Imprimir cierre de caja
                 </a>
             </div>
         </div>
@@ -105,13 +111,16 @@
     {{-- ── Más vendidos ── --}}
     <div class="admin-card animate-fade-in" style="animation-delay:.25s">
         <div class="admin-card-header">
-            <div class="admin-card-title">🏆 Productos más vendidos</div>
+            <div class="admin-card-title flex items-center gap-2">
+                <x-admin.icon name="star" class="w-4 h-4 text-amber-400" />
+                <span>Productos más vendidos</span>
+            </div>
             <span class="rpt-label" style="margin:0; color:rgba(255,255,255,0.50);">Top 10 del día</span>
         </div>
 
         @if($masVendidos->isEmpty())
         <div class="text-center py-14" style="color:rgba(255,255,255,0.18);font-size:0.9rem;">
-            📭 Sin ventas registradas para esta fecha.
+            Sin ventas registradas para esta fecha.
         </div>
         @else
 
@@ -120,8 +129,8 @@
         <div class="p-5 space-y-3 border-b" style="border-color:rgba(255,255,255,0.05);">
             @foreach($masVendidos->take(5) as $i => $prod)
             <div class="flex items-center gap-3">
-                <div class="rpt-rank" style="color:{{ $i < 3 ? '#c9a84c' : 'rgba(255,255,255,0.2)' }}">
-                    {{ ['🥇','🥈','🥉'][$i] ?? '#'.($i+1) }}
+                <div class="rpt-rank font-black font-display" style="color:{{ $i < 3 ? '#c9a84c' : 'rgba(255,255,255,0.2)' }}">
+                    #{{ $i + 1 }}
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-center mb-1">
@@ -153,7 +162,7 @@
                     <tr>
                         <td style="font-family:var(--font-display);font-weight:900;
                                    color:{{ $i < 3 ? '#c9a84c' : 'rgba(255,255,255,0.25)' }};">
-                            {{ ['🥇','🥈','🥉'][$i] ?? '#'.($i+1) }}
+                            #{{ $i + 1 }}
                         </td>
                         <td class="col-name">{{ $prod->nombre_snapshot }}</td>
                         <td><span class="badge badge-blue">{{ $prod->total_unidades }} uds.</span></td>

@@ -31,7 +31,7 @@ class QrCuentaController extends Controller
         $qr = QrCuenta::create(array_merge($data, ['activo' => true, 'is_global' => true]));
         AuditLog::registrar('QR cuenta creada — '.$qr->nombre, QrCuenta::class, $qr->id);
 
-        return back()->with('success', '✅ Cuenta QR guardada.');
+        return back()->with('success', 'Cuenta QR guardada.');
     }
 
     public function update(Request $r, $id) { return redirect()->route('admin.qr-cuentas.index'); }
