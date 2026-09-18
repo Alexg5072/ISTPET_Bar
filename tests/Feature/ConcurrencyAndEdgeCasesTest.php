@@ -3,9 +3,12 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ConcurrencyAndEdgeCasesTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Verificar que el catálogo de productos responde 200 con formato JSON.
      */
